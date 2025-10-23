@@ -215,7 +215,7 @@
     <div id="fieldModal">
         <div class="field-modal-content">
             <span class="close-modal" onclick="closeFieldModal()">×</span>
-            <h3>Vista del campo (interactuable)</h3>
+            <h3>Vista del campo</h3>
             <div id="fieldVisualization">
                 <div id="fieldContainer">
                 </div>
@@ -2401,57 +2401,6 @@
                     fieldContainer.appendChild(circle);
                     playerNumber++;
                 });
-            });
-
-            // Setup drag and drop
-            const circles = document.querySelectorAll('.player-circle');
-            circles.forEach(circle => {
-                if (circle.draggable) {
-                    circle.addEventListener('dragstart', (e) => {
-                        e.dataTransfer.setData('text/plain', circle.dataset.playerIndex);
-                        circle.classList.add('dragging');
-                    });
-                    circle.addEventListener('dragend', (e) => {
-                        circle.classList.remove('dragging');
-                    });
-                }
-            });
-
-            fieldContainer.addEventListener('dragover', (e) => {
-                e.preventDefault();
-            });
-
-            fieldContainer.addEventListener('drop', (e) => {
-                e.preventDefault();
-                const draggedIndex = e.dataTransfer.getData('text/plain');
-                const dropTarget = e.target.closest('.player-circle');
-
-                if (dropTarget) {
-                    // Intercambiar con el jugador sobre el que se suelta
-                    const targetIndex = dropTarget.dataset.playerIndex;
-                    if (draggedIndex !== targetIndex) {
-                        swapPlayers(parseInt(draggedIndex), parseInt(targetIndex));
-                    }
-                } else {
-                    // Cambiar posición según la sección del campo
-                    const fieldRect = fieldContainer.getBoundingClientRect();
-                    const dropY = e.clientY - fieldRect.top;
-                    const percentY = (dropY / fieldRect.height) * 100;
-                    let sectionNum;
-                    if (percentY < 22.5) sectionNum = 6; // FW
-                    else if (percentY < 37.5) sectionNum = 5; // AM
-                    else if (percentY < 52.5) sectionNum = 4; // MF
-                    else if (percentY < 67.5) sectionNum = 3; // DM
-                    else if (percentY < 82.5) sectionNum = 2; // DF
-                    else sectionNum = 1; // GK
-
-                    const newPosition = getPositionFromSection(sectionNum);
-                    if (newPosition && newPosition !== 'GK') {
-                        changePlayerPosition(selectedPlayers[draggedIndex].player.name, newPosition);
-                        showFieldModal(); // Re-render the field
-                        updateLineup();
-                    }
-                }
             });
 
             // Mostrar suplentes

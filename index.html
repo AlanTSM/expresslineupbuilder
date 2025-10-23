@@ -1,0 +1,2873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Haz tu alineación</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* Estilos CSS originales completos */
+        :root{--bg-gradient:linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);--text-primary:#333;--text-secondary:#666;--bg-primary:white;--bg-secondary:#f8f9fa;--border-color:#ddd;--shadow:0 10px 30px rgba(0,0,0,0.3);--highlight:#2a5298;--error:#dc3545;--success:#28a745;--warning:#ffc107;--process:#17a2b8}body.dark{--bg-gradient:linear-gradient(135deg, #0f1419 0%, #1a2332 100%);--text-primary:#e0e0e0;--text-secondary:#b0b0b0;--bg-primary:#1a2332;--bg-secondary:#2a3441;--border-color:#444;--shadow:0 10px 30px rgba(0,0,0,0.5);--highlight:#4a7ac6;--error:#ff6b6b;--success:#51cf66;--warning:#ffd43b;--process:#20c997}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:var(--bg-gradient);color:var(--text-primary);padding:20px;min-height:100vh;transition:background .3s}.container{max-width:1400px;margin:0 auto;background:var(--bg-primary);border-radius:10px;padding:30px;box-shadow:var(--shadow);transition:background .3s,box-shadow .3s}h1{text-align:center;color:var(--highlight);margin-bottom:30px;font-family:Montserrat,sans-serif;cursor:pointer}#darkToggle{position:absolute;top:20px;right:20px;background:var(--highlight);color:#fff;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:16px;transition: background 0.3s, transform 0.3s;}#darkToggle:hover{transform: scale(1.1);background: #1e3c72;}.import-squad-link{color:var(--highlight);text-decoration:none;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;margin-left:10px;font-size:14px}.import-squad-link:hover{text-decoration:underline}.main-content{display:grid;grid-template-columns:1fr 450px;gap:30px;margin-top:30px}.players-section{overflow-y:auto}.players-section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.players-section-header h2{color:var(--text-primary);margin:0}.header-left{display:flex;align-items:center;gap:10px}.info-icon{cursor:pointer;margin-left:10px;font-size:16px;color:var(--highlight)}.team-dropdown{padding:8px;border:2px solid var(--highlight);border-radius:5px;font-size:14px;background:var(--bg-primary);color:var(--text-primary);cursor:pointer}.filter-container{display:flex;align-items:center;gap:8px}.filter-container label{font-size:14px;color:var(--text-primary);cursor:pointer}.filter-container input[type=checkbox]{cursor:pointer;width:18px;height:18px}.lineup-section{position:sticky;top:20px;height:fit-content;max-height:calc(100vh - 40px);overflow-y:auto}.players-section h2{color:var(--text-primary);margin-bottom:15px}.position-group{margin-bottom:20px}.position-title{background:var(--highlight);color:#fff;padding:10px;border-radius:5px;font-weight:700;margin-bottom:10px}.players-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}.player-card{background:var(--bg-secondary);border:2px solid var(--border-color);border-radius:5px;padding:12px;cursor:pointer;transition:all .3s;position:relative;display:flex;justify-content:space-between;align-items:center;min-height:110px}.player-card:hover{background:#e9ecef;border-color:var(--highlight);transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.1)}body.dark .player-card:hover{background:#3a4453}.player-card.selected{background:#d4edda;border-color:var(--success);cursor:default}.player-card.selected-sub{background:#fff3cd;border-color:var(--warning);cursor:default}.player-card.disabled{background:#f8d7da;border-color:var(--error);opacity:.7;cursor:not-allowed}.player-card.disabled:hover{background:#f8d7da;border-color:var(--error);transform:none;box-shadow:none}body.dark .player-card.selected{background:rgba(81,207,102,.2);border-color:var(--success)}body.dark .player-card.selected-sub{background:rgba(255,212,59,.2);border-color:var(--warning)}body.dark .player-card.disabled{background:rgba(220,53,69,.2);border-color:var(--error)}body.dark .player-card.disabled:hover{background:rgba(220,53,69,.2)}.player-details{flex:1}.player-image{width:96px;height:96px;border-radius:50%;object-fit:cover;margin-left:12px;flex-shrink:0}.remove-player{position:absolute;top:5px;right:5px;width:20px;height:20px;background:var(--error);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:12px;line-height:20px;text-align:center;padding:0;display:none;z-index:10}.position-selector{position:absolute;bottom:5px;right:5px;display:none;z-index:10;font-size:11px;padding:2px;width:60px;background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border-color)}.player-card.selected .remove-player,.player-card.selected-sub .remove-player{display:block}.player-card.selected-sub:not(.goalkeeper) .position-selector,.player-card.selected:not(.goalkeeper) .position-selector{display:block}.remove-player:hover{background:#c82333}.player-name{font-weight:700;color:var(--text-primary);font-size:13px;margin-bottom:5px;display:flex;align-items:center;gap:8px}.player-status{font-size:10px;color:var(--error);margin-left:5px}.player-info{font-size:12px;color:var(--text-secondary)}.position-experience{font-size:11px;color:#555;margin-top:3px}.fitness-container{display:flex;align-items:center;gap:5px;margin-top:5px}.fitness-bar{height:10px;background:var(--border-color);border-radius:5px;flex:1;max-width:100px}.fitness-bar div{height:100%;border-radius:5px}.fitness-value{font-size:11px;color:var(--text-primary);font-weight:700;min-width:25px}.highlight{color:brown;font-weight:700}.lineup-output{width:100%;min-height:350px;padding:15px;border:2px solid var(--border-color);border-radius:5px;font-family:monospace;font-size:13px;background:var(--bg-secondary);color:var(--text-primary);white-space:pre}.tactics-section{margin-bottom:15px}.tactics-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}input[type=file],input[type=text],select{padding:8px;border:2px solid var(--border-color);border-radius:5px;font-size:14px;background:var(--bg-primary);color:var(--text-primary)}.invalid{box-shadow:0 0 5px var(--error)}#teamAbbr{width:80px}.team-info{display:grid;grid-template-columns:auto auto;gap:15px;margin-bottom:10px}.abbr-section label,.tactics-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}.pk-agg-section{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px}.pk-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}.agg-section{margin-bottom:0}.agg-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}.agg-slider{width:100%}.agg-value{text-align:center;color:var(--text-secondary);font-size:14px;margin-top:5px}.error{color:var(--error);padding:10px;background:#f8d7da;border:1px solid #f5c6cb;border-radius:5px;margin-top:10px}body.dark .error{background:rgba(255,107,107,.1);border-color:rgba(255,107,107,.3)}.success{color:var(--success);padding:10px;background:#d4edda;border:1px solid #c3e6cb;border-radius:5px;margin-top:10px}body.dark .success{background:rgba(81,207,102,.1);border-color:rgba(81,207,102,.3)}.flag-img{width:20px;vertical-align:middle;margin-right:5px}.action-buttons{display:flex;gap:10px;margin-top:10px}button{padding:12px 24px;background:var(--highlight);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:14px;font-weight:700;transition:background .3s;display:flex;align-items:center;gap:5px}button:hover{background:#1e3c72}body.dark button:hover{background:#3a5aa0}button:disabled{background:#ccc;cursor:not-allowed}button.red{background:var(--error)}button.red:hover{background:#c82333}button.green{background:var(--success)}button.green:hover{background:#218838}button.process{background:var(--success)}button.process:hover{background:#138496}.icon-button{padding:12px;background:0 0;border:none;cursor:pointer}.icon-button img{width:24px;height:24px}#selectCountPopup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:100px;color:var(--highlight);opacity:0;transition:opacity 1s;font-family:Montserrat,sans-serif;text-shadow:2px 2px 4px rgba(0,0,0,.3);background:var(--bg-primary);padding:20px;border-radius:50%;border:5px solid var(--highlight);box-shadow:0 0 20px rgba(0,0,0,.5)}#tickAnimation{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:50px;color:var(--success);opacity:0;transition:opacity 1s}#tutorialModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:400px;text-align:center;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary)}.close-modal{cursor:pointer;float:right;font-size:20px;color:var(--text-secondary)}.close-modal:hover{color:var(--error)}.loading-message{background:#fff3cd;border:1px solid var(--warning);color:#856404;padding:10px;border-radius:5px;margin-top:10px;text-align:center;display:none}body.dark .loading-message{background:rgba(255,212,59,.1);border-color:rgba(255,212,59,.3);color:var(--warning)}#initialDropdownContainer{text-align:center;margin-bottom:20px;display:flex;flex-direction:column;align-items:center;gap:10px}#initialDropdownContainer label{font-weight:700;color:var(--text-primary)}.team-badge{width:96px;height:96px;object-fit:contain;margin-left:10px}.loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:1000}.loading-spinner{width:50px;height:50px;border:5px solid #f3f3f3;border-top:5px solid var(--highlight);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}#conditionals-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff;max-height:80vh;overflow-y:auto}#conditionals-popup .tabs{display:flex;border-bottom:1px solid #ddd;margin-bottom:15px}#conditionals-popup .tab{flex:1;padding:10px;text-align:center;cursor:pointer;background:#f8f9fa;color:#333;transition:background .2s, color .2s, border .2s;border:1px solid #ddd;border-bottom:none;border-radius:5px 5px 0 0;margin:0 2px;}#conditionals-popup .tab.active{background:#2a5298;color:#fff;border-color:var(--highlight)}#conditionals-popup .tab:hover{background:#e9ecef;border-color:var(--highlight)}#conditionals-popup .tab-content{display:none}#conditionals-popup .tab-content.active{display:block}#conditionals-popup input,#conditionals-popup select{width:100%;padding:5px;font-size:12px;border:1px solid #ddd;border-radius:5px;background:#fff;color:#333;margin-top:5px}#conditionals-popup label{font-size:12px;color:#333;display:block;margin-top:10px}body.dark #conditionals-popup label{color:#e0e0e0}#conditionals-popup .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}#conditionals-popup .buttons{display:flex;gap:10px;margin-top:15px;justify-content:center}.close-btn{cursor:pointer;float:right;font-size:20px;color:var(--text-secondary)}.close-btn:hover{color:var(--error)}#conditionals-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}.attributes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin:5px 0;font-size:11px}.attributes-header{font-weight:700;text-align:center}.attributes-values{text-align:center}.experience-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin:5px 0;font-size:11px}.experience-values{text-align:center;position:relative}.experience-high{color:green;font-weight:700}.experience-high::after{content:" ↑"}#squadModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.squad-modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:800px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary)}.squad-modal-content textarea{width:100%;min-height:300px;padding:15px;border:2px solid var(--border-color);border-radius:5px;font-family:monospace;font-size:12px;background:var(--bg-secondary);color:var(--text-primary);resize:vertical;margin-top:10px}.squad-modal-content .button-group{display:flex;gap:10px;margin-top:10px;align-items:center}.squad-modal-content button{padding:12px 24px;background:var(--highlight);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:14px;font-weight:700;transition:background .3s;display:flex;align-items:center;gap:5px}.squad-modal-content button:hover{background:#1e3c72}.squad-modal-content button.red{background:var(--error)}.squad-modal-content button.red:hover{background:#c82333}.scroll-to-top{position:fixed;bottom:20px;right:20px;width:40px;height:40px;background:var(--highlight);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:18px;display:none;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:all .3s;z-index:99}.scroll-to-top:hover{background:#1e3c72;transform:translateY(-2px)}.player-group-option{font-weight:700;background-color:#f0f0f0;padding:5px}.conditionals-management{display:flex;gap:8px;margin-top:15px;align-items:center;flex-wrap:wrap}.conditionals-management select{flex:1;padding:8px;border:2px solid var(--border-color);border-radius:5px;font-size:14px;min-width:120px;background:var(--bg-primary);color:var(--text-primary)}.conditionals-management button{flex:0 0 auto;padding:8px 12px;white-space:nowrap;font-size:12px}.stats-icon{background:0 0;border:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px;border-radius:3px;transition:all .2s}.stats-icon:hover{background:#e9ecef;color:var(--highlight)}body.dark .stats-icon:hover{background:#3a4453}#statsModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.stats-modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:400px;width:90%;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary)}.stats-table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14px}.stats-table td,.stats-table th{border:1px solid var(--border-color);padding:8px;text-align:center}.stats-table th{background-color:var(--bg-secondary);font-weight:700}.stats-info{margin-top:15px;font-size:14px}.stats-info p{margin:5px 0}.player-status-indicator{position:absolute;bottom:5px;right:5px;font-size:10px;color:var(--error);font-weight:700;background:rgba(220,53,69,.1);padding:2px 5px;border-radius:3px}#fieldModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.field-modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:400px;width:95%;max-height:90vh;overflow-y:auto;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary);position:relative}#fieldVisualization{display:flex;flex-direction:column;align-items:center;margin-top:20px}#fieldContainer{position:relative;width:290px;height:461px;margin-bottom:20px}.field-section{width:100%;display:block;margin:0;padding:0;user-drag:none;-webkit-user-drag:none;pointer-events:none;user-select:none;height:auto}.player-circle{position:absolute;width:40px;height:40px;border-radius:50%;background:var(--highlight);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:700;transform:translate(-50%,-50%);border:2px solid #fff;box-shadow:0 0 5px rgba(0,0,0,.5);z-index:10;cursor:move;transition: all 0.3s ease-in-out;} .player-circle.gk{background:#ffc107}.player-circle .number{font-size:14px}.player-circle .name{font-size:10px;text-align:center;margin-top:2px;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow: 1px 1px 0 black;} .player-circle.dragging{opacity:0.5;transform: translate(-50%, -50%) scale(1.1);} .player-circle.swap{animation: swapAnimation 0.5s ease;} @keyframes swapAnimation {0% {transform: translate(-50%, -50%) scale(1);} 50% {transform: translate(-50%, -50%) scale(1.2);} 100% {transform: translate(-50%, -50%) scale(1);}}#substitutesVisualization{width:100%;margin-top:20px}#substitutesVisualization h4{margin-bottom: 15px;}#substitutesList{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.substitute-item{background:var(--bg-secondary);padding:5px 10px;border-radius:5px;font-size:12px;display:flex;align-items:center;gap:5px}.substitute-item .number{font-weight:700;color:var(--highlight)}@media (max-width:1024px){.main-content{grid-template-columns:1fr;gap:20px}.lineup-section{position:static;max-height:none}.players-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.player-card{min-height:120px}.player-image{width:64px;height:64px}#fieldContainer{height:400px}}@media (max-width:768px){body{padding:10px}.container{padding:15px}.players-grid{grid-template-columns:1fr}.button-group{flex-direction:column}.action-buttons{flex-direction:column}#conditionals-popup{width:90%;padding:15px}#conditionals-popup .grid{grid-template-columns:1fr}.import-squad-link{margin-left:0;margin-top:10px;display:block}.conditionals-management{flex-direction:column}.conditionals-management select{min-width:100%}#initialDropdownContainer{flex-direction:column;gap:10px}.team-badge{margin-left:0}.player-image{width:64px;height:64px}#fieldContainer{height:300px}.player-circle{width:30px;height:30px}.player-circle .number{font-size:12px}.player-circle .name{font-size:8px;max-width:60px}}.highlighted-less{border-color:purple!important;box-shadow:0 0 5px purple}.abbr-section{display:flex;align-items:center;gap:10px}.abbr-section img{width:64px;height:64px;object-fit:contain}#conditionals-popup .minute-selects{display:flex;gap:5px}#conditionals-popup .minute-selects select{flex:1;padding:5px;font-size:12px;border:1px solid #ddd;border-radius:5px;background:#fff;color:#333;margin-top:5px}#current-conditionals{position:absolute;right:15px;top:70px;width:200px;background:#f0f0f0;padding:10px;border:1px solid #ddd;border-radius:5px;max-height:400px;overflow-y:auto;color:#333;font-size:12px}#current-conditionals h4{margin:0 0 10px 0;font-size:14px;cursor:pointer;display: flex; align-items: center;}#current-conditionals h4 em {margin-left: 5px;}#current-conditionals ul{list-style-type:none;padding:0;margin:0}#current-conditionals li{margin-bottom:5px;word-break:break-all}#team-badges-container{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:600px;margin:0 auto}#team-badges-container img{width:80px;height:80px;object-fit:contain;cursor:pointer;border:2px solid transparent;border-radius:5px}#team-badges-container img:hover{border-color:var(--highlight)}#iframe-fullscreen{display:none;text-align:center;margin-bottom:20px}#iframe-fullscreen button{padding:8px 16px;background:var(--highlight);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:14px;white-space:pre-wrap;text-align:center}#iframe-fullscreen span{margin-left:10px;color:var(--text-secondary)}.modal-content ol{text-align:left;padding-left:20px;margin:10px 0}.modal-content li{margin-bottom:10px}.custom-dropdown{position:relative;display:inline-block;width:100%}.dropbtn{background-color:var(--bg-primary);color:var(--text-primary);padding:8px;font-size:14px;border:2px solid var(--border-color);border-radius:5px;cursor:pointer;width:100%;text-align:left;position:relative}.dropbtn::after{content:"\f078";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;right:10px;top:50%;transform:translateY(-50%)}.dropdown-content{display:none;position:absolute;background-color:var(--bg-primary);min-width:100%;box-shadow:0 8px 16px 0 rgba(0,0,0,.2);z-index:1;border:2px solid var(--border-color);border-radius:5px}.dropdown-content a{color:var(--text-primary);padding:8px 16px;text-decoration:none;display:block;font-size:14px}.dropdown-content a:hover{background-color:#ccc}body.dark .dropdown-content a:hover{background-color:#3a4453;color:#fff}.custom-dropdown:hover .dropdown-content{display:block}.custom-dropdown:hover .dropbtn{border-color:var(--highlight)}@media (max-width:768px){.custom-dropdown .dropdown-content{display:none}.custom-dropdown.active .dropdown-content{display:block}.player-image{width:64px;height:64px}}body.iframe-mode .player-image{width:64px;height:64px}body.iframe-mode .players-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}body.iframe-mode .conditionals-management select{min-width:80px}.players-section .filter-container:last-child{margin-top:10px}.view-mode-icons{display:flex;gap:10px;margin-top:10px;justify-content:flex-start;}.view-mode-icons i{cursor:pointer;font-size:16px;color:var(--highlight);}.view-mode-icons i:hover{color:var(--text-primary);}.player-card.compact{min-height:80px;}.player-card.compact .attributes-grid,.player-card.compact .experience-grid,.player-card.compact .player-info,.player-card.compact .fitness-bar,.player-card.compact .stats-icon{display:none;}.player-card.compact .fitness-container{margin-top:0;justify-content:center;}.player-card.compact .player-details{display:flex;flex-direction:column;align-items:center;gap:5px;}.player-card.compact .player-name{margin-bottom:0;font-size:14px;}.player-card.compact .player-image{width:80px;height:80px;margin-left:0;margin-bottom:5px;}.player-card.compact .player-status-indicator,.player-card.compact .position-selector{bottom:auto;right:auto;position:relative;}.player-card.compact .remove-player{top:0;right:0;}
+
+        /* Nuevos estilos para el modal de plantilla */
+        #squadViewerModal {display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;}
+        .squad-viewer-content {background: var(--bg-primary); border-radius: 10px; padding: 20px; max-width: 90%; max-height: 90%; width: 1200px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); color: var(--text-primary);}
+        .squad-viewer-content h3 {margin-bottom: 15px; text-align: center;}
+        .squad-table-container {overflow: auto; max-height: 70vh; border: 1px solid var(--border-color); border-radius: 5px;}
+        .squad-table {width: 100%; border-collapse: collapse; font-size: 12px;}
+        .squad-table th, .squad-table td {border: 1px solid var(--border-color); padding: 6px; text-align: center;}
+        .squad-table th {background-color: var(--bg-secondary); position: sticky; top: 0; z-index: 10;}
+        .squad-table th:first-child, .squad-table td:first-child {position: sticky; left: 0; background-color: var(--bg-secondary); z-index: 11;}
+        .squad-table tr:nth-child(even) {background-color: rgba(0,0,0,0.03);}
+        body.dark .squad-table tr:nth-child(even) {background-color: rgba(255,255,255,0.03);}
+        
+        /* Cambios solicitados para la tabla de plantilla */
+        .squad-table td:first-child {text-align: left !important;}
+        .squad-table tr:hover {background-color: var(--bg-secondary);}
+        .squad-table th {cursor: pointer;}
+        .squad-table .highlight {color: brown; font-weight: 700;}
+        .squad-table .flag-img {width: 20px; height: 15px; vertical-align: middle;}
+        .squad-table tr.highlighted-row {background-color: var(--highlight) !important; color: white;}
+        .squad-table .experience-high {color: green; font-weight: 700;}
+    </style>
+</head>
+<body>
+    <button title="Cambiar tema" id="darkToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+    <button onclick="scrollToTop()" class="scroll-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    <div class="container">
+        <div id="iframe-fullscreen">
+            <button onclick="window.open('https://www.tusoccermanager.com/h92-expresslineupbuilder-html', '_blank')">Ver en pantalla completa<br />(Recomendado)</button>
+        </div>
+        <h1 onclick="if(confirm('¿Estás seguro? Los cambios se perderán.')) location.reload();">
+            Haz tu alineación
+        </h1>
+        <div id="initialDropdownContainer">
+    <label>Selecciona tu equipo:</label>
+    <div id="team-badges-container">
+    </div>
+    <img style="display: none;" alt="Escudo del equipo" src="" class="team-badge" id="teamBadge" />
+    <div style="margin-top: 10px;">
+        <a onclick="openSquadModal()" class="import-squad-link">Importar otra plantilla</a>
+    </div>
+</div>
+        <div class="main-content" id="mainContent" style="display: none;">
+            <div class="players-section">
+                <div class="players-section-header">
+                    <div class="header-left">
+                        <h2>
+                            Seleccionar jugadores<span class="info-icon" onclick="showTutorial()"><i class="fas fa-info-circle"></i></span>
+                        </h2>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="view-mode-icons">
+                            <i class="fas fa-plus" onclick="toggleViewMode(false)" title="Vista normal"></i>
+                            <i class="fas fa-minus" onclick="toggleViewMode(true)" title="Vista compacta"></i>
+                        </div>
+                        <button style="padding: 10px 20px; font-size: 13px;" onclick="openSquadViewer()"><i class="fas fa-table"></i> Ver plantilla </button>
+                        <div class="filter-container">
+                            <input type="checkbox" id="filterFit" onchange="displayPlayers()" />
+                            <label for="filterFit">Filtrar Fit < 90</label>
+                            <input type="checkbox" id="highlightLessPlayed" onchange="displayPlayers()" />
+                            <label for="highlightLessPlayed">Resaltar suplentes</label>
+                        </div>
+                    </div>
+                </div>
+                <div id="playersContainer">
+                </div>
+                <!-- Sección de gestión de condicionales movida aquí -->
+                <div class="conditionals-management">
+                    <button class="green" onclick="openConditionalsPopup()">
+                        <i class="fas fa-plus"></i> Añadir condicionales 
+                    </button>
+                    <button onclick="importConditionals()">
+                        <i class="fas fa-file-import"></i> Importar condicionales 
+                    </button>
+                    <select id="conditionalToDelete">
+                        <option selected="" disabled="" value="">Seleccionar condicional</option>
+                    </select>
+                    <button class="red" onclick="deleteConditional()">
+                        Eliminar
+                    </button>
+                </div>
+                <div class="filter-container">
+                    <input onchange="updateLineup()" type="checkbox" id="suggested-subs" />
+                    <label for="suggested-subs">Sustituciones sugeridas</label>
+                    <input onchange="updateLineup()" type="checkbox" id="suggested-conds" />
+                    <label for="suggested-conds">Condicionales sugeridos</label>
+                </div>
+            </div>
+            <div class="lineup-section">
+                <div class="team-info">
+                    <div class="abbr-section">
+                        <img style="display: none;" alt="Escudo del equipo" src="" id="teamBadgeLineup" />
+                        <label for="teamAbbr">Abreviación:</label>
+                        <input type="text" id="teamAbbr" maxlength="3" value="" placeholder="Ej: JUV" onchange="updateLineup(); removeInvalid(this)" />
+                    </div>
+                    <div class="tactics-section">
+                        <label>Táctica:</label>
+                        <div id="tactics-dropdown" class="custom-dropdown">
+                            <button id="tactics-btn" class="dropbtn">
+                                Seleccionar
+                            </button>
+                            <div class="dropdown-content">
+                                <a onclick="selectTactic('A')">A (Atacante)</a>
+                                <a onclick="selectTactic('C')">C (Contragolpe)</a>
+                                <a onclick="selectTactic('D')">D (Defensiva)</a>
+                                <a onclick="selectTactic('E')">E (Europea)</a>
+                                <a onclick="selectTactic('L')">L (Balones largos)</a>
+                                <a onclick="selectTactic('N')">N (Equilibrada)</a>
+                                <a onclick="selectTactic('P')">P (Pases cortos)</a>
+                                <a onclick="selectTactic('T')">T (Temeraria)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pk-agg-section">
+                    <div class="pk-section">
+                        <label>Penaltis:</label>
+                        <div id="pkTaker-dropdown" class="custom-dropdown">
+                            <button id="pkTaker-btn" class="dropbtn">
+                                Seleccionar lanzador
+                            </button>
+                            <div id="pkTaker-content" class="dropdown-content">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="agg-section">
+                        <label for="aggSlider">Agresividad:</label>
+                        <input type="range" id="aggSlider" class="agg-slider" min="0" max="20" value="0" oninput="updateAggValue()" />
+                        <div class="agg-value" id="aggValue">0</div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 5px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <span>Jugadores seleccionados: <span id="selectedCount">0</span>/16</span>
+                        <a onclick="document.getElementById('loadLineupFile').click()" class="import-squad-link" style="cursor: pointer;">Cargar alineación guardada</a>
+                        <input type="file" id="loadLineupFile" accept=".txt" style="display: none" onchange="loadLineupFromFile(this.files[0])" />
+                    </div>
+                </div>
+                <textarea id="lineupOutput" class="lineup-output" readonly=""></textarea>
+                <div class="action-buttons">
+                    <button class="icon-button" onclick="copyLineup()" title="Copiar alineación">
+                        <img src="https://2img.net/i.imgur.com/dFM5cLr.png" />
+                    </button>
+                    <button class="icon-button" onclick="downloadLineup()" title="Descargar alineación">
+                        <img src="https://2img.net/i.imgur.com/PsdweS7.png" />
+                    </button>
+                    <button class="red" onclick="clearSelection()">
+                        Eliminar todo
+                    </button>
+                    <button class="green" onclick="showFieldModal()">
+                        Ver campo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para ver plantilla -->
+    <div id="squadViewerModal">
+        <div class="squad-viewer-content">
+            <span class="close-modal" onclick="closeSquadViewer()">×</span>
+            <h3>Plantilla</h3>
+            <div class="squad-table-container">
+                <table id="squadTable" class="squad-table">
+                    <!-- La tabla se llenará dinámicamente -->
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Resto de modales existentes -->
+    <div id="selectCountPopup"></div>
+    <div id="tickAnimation">✓</div>
+    <div id="tutorialModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="hideTutorial()">×</span>
+            <h3>Tutorial: Cómo seleccionar jugadores</h3>
+            <ol>
+                <li>Haz clic en un jugador para añadirlo a la alineación.</li>
+                <li>El primer jugador debe ser un portero (GK).</li>
+                <li>Selecciona 11 titulares y 5 suplentes.</li>
+                <li>Usa el filtro para ver solo jugadores en forma.</li>
+                <li>Haz clic en la 'x' para quitar un jugador seleccionado.</li>
+                <li>Usa el selector de posición para cambiar la posición de un jugador seleccionado (excepto porteros).</li>
+            </ol>
+        </div>
+    </div>
+    <!-- Modal para estadísticas de jugadores -->
+    <div id="statsModal">
+        <div class="stats-modal-content">
+            <span class="close-modal" onclick="closeStatsModal()">×</span>
+            <h3 id="statsPlayerName"></h3>
+            <div id="statsContent"></div>
+        </div>
+    </div>
+    <!-- Modal para visualización del campo -->
+    <div id="fieldModal">
+        <div class="field-modal-content">
+            <span class="close-modal" onclick="closeFieldModal()">×</span>
+            <h3>Vista del campo (interactuable)</h3>
+            <div id="fieldVisualization">
+                <div id="fieldContainer">
+                </div>
+                <div id="substitutesVisualization">
+                    <h4>Suplentes</h4>
+                    <div id="substitutesList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="squadModal">
+        <div class="squad-modal-content">
+            <span class="close-modal" onclick="closeSquadModal()">×</span>
+            <h3>Importar otra plantilla</h3><br />
+            <textarea id="squadInput" placeholder="Introduce tu plantilla aquí..."></textarea>
+            <div class="button-group">
+                <button onclick="pasteFromClipboard()">
+                    <i class="fas fa-clipboard"></i> Pegar 
+                </button>
+                <label for="fileInput" style="padding: 12px 24px; background: var(--highlight); color: white; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-upload"></i> Cargar 
+                </label>
+                <input type="file" id="fileInput" accept=".txt" style="display: none;" onchange="loadFile(event)" />
+                <button onclick="resetAll()">
+                    <i class="fas fa-sync"></i> Limpiar 
+                </button>
+                <button class="process" onclick="loadSquadFromModal()">
+                    Procesar
+                </button>
+            </div>
+            <div id="loadingMessage" class="loading-message">
+                ⏳ Cargando plantilla desde Dropbox...
+            </div>
+            <div id="message"></div>
+        </div>
+    </div>
+     
+    <div id="conditionals-overlay"></div>
+    
+    <div id="conditionals-popup">
+        <span class="close-btn" onclick="closeConditionalsPopup()">×</span>        
+        <div class="tabs">
+            <div class="tab active" data-tab="tactic">
+                <img style="width: 18px; height: 18px;" src="https://2img.net/i.imgur.com/baQRXgQ.png" /> Táctica
+            </div>
+            <div class="tab" data-tab="substitution">
+                <img style="width: 18px; height: 18px;" src="https://2img.net/i.imgur.com/7MQ5CbC.png" /> Sustituciones
+            </div>
+            <div class="tab" data-tab="reposition">
+                <img style="width: 18px; height: 18px;" src="https://2img.net/i.imgur.com/ZUv4QKl.png" /> Reposicionar
+            </div>
+            <div class="tab" data-tab="aggression">
+                <img style="width: 18px; height: 18px;" src="https://2img.net/i.imgur.com/kFrxdCR.png" /> Agresividad
+            </div>
+        </div>
+        
+        <div id="tactic-tab" class="tab-content active">
+            <div class="grid">
+                <div>
+                    <label>Nueva táctica</label>
+                    <select id="tactic-new"></select>
+                </div>
+                <div>
+                    <label>Si en el minuto</label>
+                    <select id="tactic-if-min">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar minuto)</label>
+                    <div class="minute-selects">
+                        <select id="tactic-min-value1"></select>
+                        <select id="tactic-min-value2"></select>
+                        <select id="tactic-min-value3"></select>
+                    </div>
+                </div>
+                <div>
+                    <label>Si el resultado</label>
+                    <select id="tactic-if-score">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar resultado)</label>
+                    <select id="tactic-score-value">
+                        <option value="">Seleccionar</option>
+                        <option value="+3">+3</option>
+                        <option value="+2">+2</option>
+                        <option value="+1">+1</option>
+                        <option value="0">0</option>
+                        <option value="-1">-1</option>
+                        <option value="-2">-2</option>
+                        <option value="-3">-3</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Si el número de disparos</label>
+                    <select id="tactic-if-shots">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar núm. disparos)</label>
+                    <select id="tactic-shots-value"></select>
+                </div>
+                <div>
+                    <label>En caso de tarjeta amarilla</label>
+                    <select id="tactic-if-yellow"></select>
+                </div>
+                <div>
+                    <label>En caso de tarjeta roja</label>
+                    <select id="tactic-if-red"></select>
+                </div>
+                <div>
+                    <label>En caso de lesión</label>
+                    <select id="tactic-if-injured"></select>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="green" onclick="addConditional('tactic')">Añadir</button>
+                <button onclick="resetTab('tactic')">Resetear</button>
+            </div>
+        </div>
+        
+        <div id="substitution-tab" class="tab-content">
+            <div class="grid">
+                <div>
+                    <label>Se retira</label>
+                    <select id="sub-off"></select>
+                </div>
+                <div>
+                    <label>Entra</label>
+                    <select id="sub-on"></select>
+                </div>
+                <div>
+                    <label>Posición</label>
+                    <select id="sub-position">
+                        <option value="">Seleccionar</option>
+                        <option value="GK">GK</option>
+                        <option value="DF">DF</option>
+                        <option value="DM">DM</option>
+                        <option value="MF">MF</option>
+                        <option value="AM">AM</option>
+                        <option value="FW">FW</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Si en el minuto</label>
+                    <select id="sub-if-min">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar minuto)</label>
+                    <div class="minute-selects">
+                        <select id="sub-min-value1"></select>
+                        <select id="sub-min-value2"></select>
+                        <select id="sub-min-value3"></select>
+                    </div>
+                </div>
+                <div>
+                    <label>Si el resultado</label>
+                    <select id="sub-if-score">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar resultado)</label>
+                    <select id="sub-score-value">
+                        <option value="">Seleccionar</option>
+                        <option value="+3">+3</option>
+                        <option value="+2">+2</option>
+                        <option value="+1">+1</option>
+                        <option value="0">0</option>
+                        <option value="-1">-1</option>
+                        <option value="-2">-2</option>
+                        <option value="-3">-3</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Si el número de disparos</label>
+                    <select id="sub-if-shots">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar núm. disparos)</label>
+                    <select id="sub-shots-value"></select>
+                </div>
+                <div>
+                    <label>En caso de tarjeta amarilla</label>
+                    <select id="sub-if-yellow"></select>
+                </div>
+                <div>
+                    <label>En caso de tarjeta roja</label>
+                    <select id="sub-if-red"></select>
+                </div>
+                <div>
+                    <label>En caso de lesión</label>
+                    <select id="sub-if-injured"></select>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="green" onclick="addConditional('substitution')">Añadir</button>
+                <button onclick="resetTab('substitution')">Resetear</button>
+            </div>
+        </div>
+        
+        <div id="reposition-tab" class="tab-content">
+            <div class="grid">
+                <div>
+                    <label>Jugador</label>
+                    <select id="reposition-player"></select>
+                </div>
+                <div>
+                    <label>Posición</label>
+                    <select id="reposition-position">
+                        <option value="">Seleccionar</option>
+                        <option value="GK">GK</option>
+                        <option value="DF">DF</option>
+                        <option value="DM">DM</option>
+                        <option value="MF">MF</option>
+                        <option value="AM">AM</option>
+                        <option value="FW">FW</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Si en el minuto</label>
+                    <select id="reposition-if-min">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar minuto)</label>
+                    <div class="minute-selects">
+                        <select id="reposition-min-value1"></select>
+                        <select id="reposition-min-value2"></select>
+                        <select id="reposition-min-value3"></select>
+                    </div>
+                </div>
+                <div>
+                    <label>Si el resultado</label>
+                    <select id="reposition-if-score">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar resultado)</label>
+                    <select id="reposition-score-value">
+                        <option value="">Seleccionar</option>
+                        <option value="+3">+3</option>
+                        <option value="+2">+2</option>
+                        <option value="+1">+1</option>
+                        <option value="0">0</option>
+                        <option value="-1">-1</option>
+                        <option value="-2">-2</option>
+                        <option value="-3">-3</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Si el número de disparos</label>
+                    <select id="reposition-if-shots">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar núm. disparos)</label>
+                    <select id="reposition-shots-value"></select>
+                </div>
+                <div>
+                    <label>En caso de tarjeta amarilla</label>
+                    <select id="reposition-if-yellow"></select>
+                </div>
+                <div>
+                    <label>En caso de tarjeta roja</label>
+                    <select id="reposition-if-red"></select>
+                </div>
+                <div>
+                    <label>En caso de lesión</label>
+                    <select id="reposition-if-injured"></select>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="green" onclick="addConditional('reposition')">Añadir</button>
+                <button onclick="resetTab('reposition')">Resetear</button>
+            </div>
+        </div>
+        
+        <div id="aggression-tab" class="tab-content">
+            <div class="grid">
+                <div>
+                    <label>Nueva agresividad</label>
+                    <select id="aggression-new"></select>
+                </div>
+                <div>
+                    <label>Si en el minuto</label>
+                    <select id="aggression-if-min">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar minuto)</label>
+                    <div class="minute-selects">
+                        <select id="aggression-min-value1"></select>
+                        <select id="aggression-min-value2"></select>
+                        <select id="aggression-min-value3"></select>
+                    </div>
+                </div>
+                <div>
+                    <label>Si el resultado</label>
+                    <select id="aggression-if-score">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar resultado)</label>
+                    <select id="aggression-score-value">
+                        <option value="">Seleccionar</option>
+                        <option value="+3">+3</option>
+                        <option value="+2">+2</option>
+                        <option value="+1">+1</option>
+                        <option value="0">0</option>
+                        <option value="-1">-1</option>
+                        <option value="-2">-2</option>
+                        <option value="-3">-3</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Si el número de disparos</label>
+                    <select id="aggression-if-shots">
+                        <option value="">Seleccionar</option>
+                        <option value="=">= (igual a...)</option>
+                        <option value="<="><= (inferior a...)</option>
+                        <option value=">=">>= (superior a...)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>(especificar núm. disparos)</label>
+                    <select id="aggression-shots-value"></select>
+                </div>
+                <div>
+                    <label>En caso de tarjeta amarilla</label>
+                    <select id="aggression-if-yellow"></select>
+                </div>
+                <div>
+                    <label>En caso de tarjeta roja</label>
+                    <select id="aggression-if-red"></select>
+                </div>
+                <div>
+                    <label>En caso de lesión</label>
+                    <select id="aggression-if-injured"></select>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="green" onclick="addConditional('aggression')">Añadir</button>
+                <button onclick="resetTab('aggression')">Resetear</button>
+            </div>
+        </div>
+        
+        <div id="current-conditionals">
+            <h4 style="cursor: pointer;" onclick="toggleConditionalsList()">
+                Condicionales actuales: <i class="fas fa-chevron-down"></i>
+            </h4>
+            <ul id="conditionals-list"></ul>
+        </div>
+    </div>
+     
+    <script>
+        let players = [];
+        let selectedPlayers = [];
+        let removedIndices = [];
+        let playerImages = {};
+        let flags = {};
+        let fullNames = {};
+        let teamAbbrs = {};
+        let teamBadges = {};
+        let team = '';
+        let customConditionals = [];
+        let isLoadingDB = false;
+        let currentTeamSelection = '';
+        let hasSelectedTeam = false;
+        let selectSound = new Audio('https://www.tusoccermanager.com/download?id=850');
+        let hoverSound = new Audio('https://www.tusoccermanager.com/download?id=1498');
+        let confirmationSound = new Audio('https://www.tusoccermanager.com/confirmationsound');
+        let isCompactView = false;
+        
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTeamAbbreviations();
+            loadTeamBadges().then(() => {
+                initTeamBadges();
+            });
+        });
+        
+        function formatNumber(num) {
+            return num.toLocaleString('es-ES');
+        }
+        
+        // Scroll to top functionality
+        window.onscroll = function() {
+            const scrollBtn = document.querySelector('.scroll-to-top');
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                scrollBtn.style.display = 'flex';
+            } else {
+                scrollBtn.style.display = 'none';
+            }
+        };
+        
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        document.getElementById('darkToggle').onclick = () => {
+            document.body.classList.toggle('dark');
+            const icon = document.getElementById('darkToggle').querySelector('i');
+            if (document.body.classList.contains('dark')) {
+                icon.className = 'fas fa-sun';
+            } else {
+                icon.className = 'fas fa-moon';
+            }
+        };
+        
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            isLoadingDB = true;
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            isLoadingDB = false;
+        }
+        
+        function formatPlayerName(name) {
+            if (!name.includes('_')) return name;
+            const parts = name.split('_');
+            if (parts.length === 3) {
+                if (parts[0].length === 1) {
+                    return `${parts[0]}. ${parts[1]} ${parts[2]}`;
+                }
+            }
+            if (parts.length !== 2) return name.replace(/_/g, ' ');
+            const firstPart = parts[0];
+            const secondPart = parts[1];
+            if (secondPart.length === 1) {
+                return `${firstPart} ${secondPart}.`;
+            } else if (firstPart.length >= 4) {
+                return `${firstPart} ${secondPart}`;
+            } else if (firstPart.length >= 2 && firstPart.length <= 3) {
+                return `${firstPart} ${secondPart}`;
+            } else {
+                return `${firstPart}. ${secondPart}`;
+            }
+        }
+        
+        async function loadPlayerImages() {
+            try {
+                const response = await fetch('https://www.tusoccermanager.com/h88-facedb-html');
+                const text = await response.text();
+                
+                const lines = text.split('\n');
+                lines.forEach(line => {
+                    const match = line.match(/^([^:]+):\s*(https?:\/\/[^\s]+)/);
+                    if (match) {
+                        const playerName = match[1].trim();
+                        const imageUrl = match[2].trim();
+                        playerImages[playerName] = imageUrl;
+                    }
+                });
+            } catch (err) {
+                console.error('Error al cargar las imágenes de jugadores:', err);
+            }
+        }
+        
+        async function loadFlagDB() {
+            try {
+                const response = await fetch('https://www.tusoccermanager.com/h86-flagdb-html');
+                const text = await response.text();
+                const entries = text.split(/\s+/).filter(e => e);
+                for (let i = 0; i < entries.length; i += 2) {
+                    const code = entries[i].replace(':', '').trim().toLowerCase();
+                    const url = entries[i + 1]?.trim();
+                    if (url) {
+                        flags[code] = url;
+                    }
+                }
+            } catch (err) {
+                console.error('Error al cargar las banderas:', err);
+            }
+        }
+        
+        async function loadFullNameDB() {
+            try {
+                const response = await fetch('https://www.tusoccermanager.com/h87-fullnamedb-html');
+                const text = await response.text();
+                
+                const lines = text.split('\n');
+                lines.forEach(line => {
+                    const match = line.match(/^([^:]+):\s*(.+)/);
+                    if (match) {
+                        const code = match[1].trim().toLowerCase();
+                        const name = match[2].trim();
+                        fullNames[code] = name;
+                    }
+                });
+            } catch (err) {
+                console.error('Error al cargar los nombres completos:', err);
+            }
+        }
+        
+        async function loadTeamAbbreviations() {
+            try {
+                const response = await fetch('https://www.tusoccermanager.com/h95-teamabbreviationdb-html');
+                const text = await response.text();
+                const preMatch = text.match(/<pre>(.*?)<\/pre>/s);
+                if (preMatch) {
+                    const pre = preMatch[1];
+                    const lines = pre.split('\n');
+                    lines.forEach(line => {
+                        const match = line.match(/^(.+?):\s*(\w+)$/);
+                        if (match) {
+                            teamAbbrs[match[1].trim()] = match[2].trim();
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error('Error al cargar las abreviaciones de equipos:', err);
+            }
+        }
+
+        async function loadTeamBadges() {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const response = await fetch('https://www.tusoccermanager.com/h63-teambadgedb-html');
+                    const text = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(text, 'text/html');
+                    const listItems = doc.querySelectorAll('#shields-list li');
+                    
+                    listItems.forEach(li => {
+                        const textContent = li.textContent.trim();
+                        const colonIndex = textContent.indexOf(':');
+                        if (colonIndex !== -1) {
+                            const teamName = textContent.substring(0, colonIndex).trim();
+                            const badgeUrl = textContent.substring(colonIndex + 1).trim();
+                            if (teamName && badgeUrl) {
+                                teamBadges[teamName] = badgeUrl;
+                            }
+                        }
+                    });
+                    resolve();
+                } catch (err) {
+                    console.error('Error al cargar los escudos de equipos:', err);
+                    reject(err);
+                }
+            });
+        }
+        
+        async function determineTeam(squadPlayers) {
+            try {
+                const response = await fetch('https://www.tusoccermanager.com/h85-playerdb-html');
+                const text = await response.text();
+                const lines = text.split('\n');
+                
+                let teams = [];
+                let currentTeam = '';
+                let currentSquad = [];
+                let inSquad = false;
+                
+                lines.forEach(line => {
+                    line = line.trim();
+                    if (line && !line.startsWith('Name') && !line.startsWith('----') && !inSquad) {
+                        if (currentTeam) {
+                            teams.push({ name: currentTeam, players: currentSquad });
+                        }
+                        currentTeam = line;
+                        currentSquad = [];
+                        inSquad = false;
+                    } else if (line.startsWith('Name')) {
+                        inSquad = true;
+                    } else if (inSquad && line && !line.startsWith('----')) {
+                        const parts = line.split(/\s+/);
+                        if (parts.length >= 27) {
+                            currentSquad.push(parts[0]);
+                        }
+                    }
+                });
+                if (currentTeam) {
+                    teams.push({ name: currentTeam, players: currentSquad });
+                }
+                
+                const playerNames = squadPlayers.map(p => p.name);
+                for (const t of teams) {
+                    const matches = t.players.filter(p => playerNames.includes(p)).length;
+                    if (matches >= 3) {
+                        team = t.name;
+                        break;
+                    }
+                }
+            } catch (err) {
+                console.error('Error al determinar el equipo:', err);
+            }
+        }
+        
+        function initTeamBadges() {
+            const teams = [
+                { name: 'Ajax', url: 'https://www.dropbox.com/scl/fi/9njb84ywzym3hhx5i2lg5/ajx.txt?rlkey=jhym2pqc9m60sioha0mmcil0o&e=1&dl=1' },
+                { name: 'Arsenal', url: 'https://www.dropbox.com/scl/fi/wb6juf6y612xx28zrvu26/ars.txt?rlkey=6qe12dx31wj93kphgz5dh6qlz&e=1&dl=1' },
+                { name: 'Aston Villa', url: 'https://www.dropbox.com/scl/fi/ucubvl04pfvqkev518dyo/asv.txt?rlkey=ubr83xqdq2v5r2g9twadabnib&e=1&st=com1va32&dl=1' },
+                { name: 'Atalanta', url: 'https://www.dropbox.com/scl/fi/9w70qz8otcgwf57h25y07/ata.txt?rlkey=ussk413mrxz8iwe4d9tg7ls9i&e=1&st=u4t1vyqv&dl=1' },
+                { name: 'Atlético de Madrid', url: 'https://www.dropbox.com/scl/fi/tuhsywhyfywslnig6j5ar/atm.txt?rlkey=wg64adwz2y5eurb20m20201kr&e=1&dl=1' },
+                { name: 'Barcelona', url: 'https://www.dropbox.com/scl/fi/b2a0fyv07x3esuxpr1280/fcb.txt?rlkey=gjc2quuw368lwzf091a4tf89t&e=1&dl=1' },
+                { name: 'Bayer Leverkusen', url: 'https://www.dropbox.com/scl/fi/egj2qgnrkjtt7jlxuhrx0/ble.txt?rlkey=9qodoqwtvzaklfh2t96rykp9i&e=1&st=2jg7bb7k&dl=1' },
+                { name: 'Bayern de Múnich', url: 'https://www.dropbox.com/scl/fi/bq95u9q42jdhd156bw2dk/bay.txt?rlkey=9h8b1beoe8dimr9ryk1rd1mva&e=1&dl=1' },
+                { name: 'Borussia Dortmund', url: 'https://www.dropbox.com/scl/fi/6olskieubqse5hr31t6sz/bdo.txt?rlkey=wdgovvbf2npezjgjjul1101kt&e=1&dl=1' },
+                { name: 'Chelsea', url: 'https://www.dropbox.com/scl/fi/vaib05ni6t82hyrt5rg9v/che.txt?rlkey=fiv3v4p18gh9vc0ztma3v8pnv&e=1&dl=1' },
+                { name: 'Inter de Milán', url: 'https://www.dropbox.com/scl/fi/6hxb2kmntadzmqcm14zg9/int.txt?rlkey=y0gisxpu2fnixut8h3haxcydc&e=1&dl=1' },
+                { name: 'Juventus', url: 'https://www.dropbox.com/scl/fi/x9ysiu5eyrpkdaf1pfjpe/juv.txt?rlkey=jxocqh225uco9o2lx54mvtz61&e=1&dl=1' },
+                { name: 'Liverpool', url: 'https://www.dropbox.com/scl/fi/hz76l1lkyqvuuns4hrreo/liv.txt?rlkey=3afux4q929md83z041di2coxe&e=1&dl=1' },
+                { name: 'Manchester City', url: 'https://www.dropbox.com/scl/fi/wcq9i1o9bxppwbyu3ggv4/mci.txt?rlkey=kwxrxndbhcxisdf5339ldef1k&e=1&dl=1' },
+                { name: 'Manchester United', url: 'https://www.dropbox.com/scl/fi/2j17u24ig5s5hzbvg0zkp/man.txt?rlkey=9cs3sj1debd0cbw3mxkizrzfz&e=1&dl=1' },
+                { name: 'Milan', url: 'https://www.dropbox.com/scl/fi/klb7hcy0epivuvkmio8o2/mil.txt?rlkey=7plny75gkdl22tkkg8wkvmo1s&e=1&dl=1' },
+                { name: 'Nápoles', url: 'https://www.dropbox.com/scl/fi/zpou5oz6iv51u21helwdg/nap.txt?rlkey=gjekp32w79pxwtegk1s3oei06&e=1&dl=1' },
+                { name: 'Newcastle United', url: 'https://www.dropbox.com/scl/fi/46m0eyfru9g97ch8c4ryy/new.txt?rlkey=zbbt3pe37i2bocxh946sz1axf&e=1&st=bk9c4sji&dl=1' },
+                { name: 'PSG', url: 'https://www.dropbox.com/scl/fi/k2f61aq73xmm9eknqc0pm/psg.txt?rlkey=syd3nsi8zj826ysxx70ldtbur&e=1&dl=1' },
+                { name: 'RB Leipzig', url: 'https://www.dropbox.com/scl/fi/8ick97tco5apa2rgg01uv/rbl.txt?rlkey=kn17krqcqhyefeydngn2c3yqj&e=1&dl=1' },
+                { name: 'Real Madrid', url: 'https://www.dropbox.com/scl/fi/2xida739oitrf4gilso4v/rma.txt?rlkey=ybjbuajy747quooqkzt5rsai3&e=1&dl=1' },
+                { name: 'Sevilla', url: 'https://www.dropbox.com/scl/fi/n64w9h04e2f8h0tflt1kg/sev.txt?rlkey=z72w5eyq9vacdgr8655yzmthq&e=1&dl=1' },
+                { name: 'Tottenham Hotspur', url: 'https://www.dropbox.com/scl/fi/ldj3rdbrip4466xdvu54e/tot.txt?rlkey=fpj5emqz2bwxue6si2p5slkci&e=1&dl=1' },
+                { name: 'Villarreal', url: 'https://www.dropbox.com/scl/fi/bo2rw6u9sndoel5hzfcmn/vil.txt?rlkey=kz37s2mwg71cgls3903skid2p&e=1&dl=1' }
+            ];
+
+            teams.sort((a, b) => a.name.localeCompare(b.name));
+
+            const container = document.getElementById('team-badges-container');
+            teams.forEach(team => {
+                if (teamBadges[team.name]) {
+                    const img = document.createElement('img');
+                    img.src = teamBadges[team.name];
+                    img.alt = team.name;
+                    img.title = team.name;
+                    img.onclick = () => loadTeamFromUrl(team.url, team.name);
+                    container.appendChild(img);
+                }
+            });
+        }
+
+        async function loadTeamFromUrl(url, teamName) {
+            currentTeamSelection = url;
+            hasSelectedTeam = true;
+
+            // Actualizar escudo del equipo
+            const badgeImg = document.getElementById('teamBadge');
+            const badgeImgLineup = document.getElementById('teamBadgeLineup');
+            if (teamBadges[teamName]) {
+                badgeImg.src = teamBadges[teamName];
+                badgeImg.style.display = 'block';
+                badgeImgLineup.src = teamBadges[teamName];
+                badgeImgLineup.style.display = 'block';
+            } else {
+                badgeImg.style.display = 'none';
+                badgeImgLineup.style.display = 'none';
+            }
+
+            const loadingMessage = document.getElementById('loadingMessage');
+            loadingMessage.style.display = 'block';
+
+            try {
+                const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+                const response = await fetch(proxyUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status}`);
+                }
+                
+                const text = await response.text();
+                document.getElementById('squadInput').value = text;
+                await loadSquad();
+                
+                document.getElementById('teamAbbr').value = teamAbbrs[teamName] || '';
+
+                const initialContainer = document.getElementById('initialDropdownContainer');
+                initialContainer.remove();
+                
+                // Hide the import link when players are displayed
+                document.querySelector('#initialDropdownContainer .import-squad-link').style.display = 'none';
+                
+                loadingMessage.style.display = 'none';
+                
+                selectSound.play().catch(e => console.log('Error playing sound:', e));
+            } catch (error) {
+                showMessage(`Error al cargar desde Dropbox: ${error.message}`, 'error');
+                loadingMessage.style.display = 'none';
+                console.error('Error:', error);
+            }
+        }
+        
+        function openSquadModal() {
+            document.getElementById('squadModal').style.display = 'flex';
+        }
+        
+        function closeSquadModal() {
+            document.getElementById('squadModal').style.display = 'none';
+        }
+        
+        function loadSquadFromModal() {
+            closeSquadModal();
+            loadSquad();
+        }
+        
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('squadInput').value = text;
+            } catch (err) {
+                showMessage('Error al pegar del portapapeles. Por favor, pega manualmente.', 'error');
+            }
+        }
+        
+        function loadFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('squadInput').value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        }
+        
+        function validateConditional(conditional) {
+            conditional = conditional.trim();
+            if (!conditional) return false;
+
+            // Validar mayúsculas
+            if (/[a-z]/.test(conditional)) {
+                return false;
+            }
+
+            // Regex comunes para condiciones combinadas
+            const conditionPattern = `(?:(?:MIN\\s*(?:=|>=|<=)\\s+(?:[1-9]\\d?|1[01]\\d|120))|(?:SCORE\\s+(?:=|>=|<=)\\s+[+-]?\\d+)|(?:SHOTS\\s+(?:=|>=|<=)\\s+[+-]?\\d+)|(?:INJURED\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6]))|(?:YELLOW\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6]))|(?:RED\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6])))`;
+
+            // Nuevos regex permitiendo múltiples condiciones combinadas
+            const tacticRegex = new RegExp(`^TACTIC\\s+[ACDELNPT]\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+            const subRegex = new RegExp(`^SUB\\s+([1-9]|1[0-6])\\s+([1-9]|1[0-6])\\s+(GK|DF|DM|MF|AM|FW)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+            const changePosRegex = new RegExp(`^CHANGEPOS\\s+([1-9]|1[0-6])\\s+(GK|DF|DM|MF|AM|FW)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+            const changeAggRegex = new RegExp(`^CHANGEAGG\\s+([1-9]|1\\d|20)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+
+            if (tacticRegex.test(conditional)) {
+                return true;
+            } 
+            if (subRegex.test(conditional)) {
+                const minMatch = conditional.match(/MIN\s*(=|>=|<=)\s*(\d+)/);
+                if (minMatch && (parseInt(minMatch[2]) < 1 || parseInt(minMatch[2]) > 120)) {
+                    return false;
+                }
+                return true;
+            }
+            if (changePosRegex.test(conditional)) {
+                const minMatch = conditional.match(/MIN\s*(=|>=|<=)\s*(\d+)/);
+                if (minMatch && (parseInt(minMatch[2]) < 1 || parseInt(minMatch[2]) > 120)) {
+                    return false;
+                }
+                return true;
+            }
+            if (changeAggRegex.test(conditional)) {
+                const minMatch = conditional.match(/MIN\s*(=|>=|<=)\s*(\d+)/);
+                if (minMatch && (parseInt(minMatch[2]) < 1 || parseInt(minMatch[2]) > 120)) {
+                    return false;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        function importConditionals() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.txt';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const importedConditionals = e.target.result.split('\n')
+                            .map(line => line.trim())
+                            .filter(line => line !== '');
+                        
+                        const invalidLines = [];
+                        const validConditionals = [];
+                        importedConditionals.forEach((conditional, index) => {
+                            if (validateConditional(conditional)) {
+                                validConditionals.push(conditional.toUpperCase());
+                            } else {
+                                invalidLines.push(`Línea ${index + 1}: ${conditional}`);
+                            }
+                        });
+                        
+                        if (invalidLines.length > 0) {
+                            alert(`Error en las siguientes líneas:\n${invalidLines.join('\n')}\nLos condicionales no válidos no se importarán.`);
+                        }
+                        
+                        customConditionals.push(...validConditionals);
+                        updateLineup();
+                        updateConditionalsDeleteSelect();
+                        showMessage('Condicionales importados correctamente', 'success');
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+        
+        function showMessage(msg, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = msg;
+            messageDiv.className = type;
+        }
+        
+        function parseSquad(text) {
+            const lines = text.split('\n').filter(line => line.trim() !== '');
+            const playersList = [];
+            
+            let foundHeader = false;
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                
+                if (line.includes('Name') && line.includes('Age') && line.includes('Nat')) {
+                    foundHeader = true;
+                    continue;
+                }
+                
+                if (line.includes('---')) {
+                    continue;
+                }
+                
+                if (foundHeader && line.trim() !== '') {
+                    const parts = line.trim().split(/\s+/);
+                    if (parts.length >= 27) {
+                        const player = {
+                            name: parts[0],
+                            age: parts[1],
+                            nat: parts[2],
+                            st: parseInt(parts[3]),
+                            tk: parseInt(parts[4]),
+                            ps: parseInt(parts[5]),
+                            sh: parseInt(parts[6]),
+                            ag: parts[7],
+                            kab: parts[8],
+                            tab: parts[9],
+                            pab: parts[10],
+                            sab: parts[11],
+                            gam: parts[12],
+                            sub: parts[13],
+                            min: parts[14],
+                            mom: parts[15],
+                            sav: parts[16],
+                            con: parts[17],
+                            ktk: parts[18],
+                            kps: parts[19],
+                            sht: parts[20],
+                            gls: parts[21],
+                            ass: parts[22],
+                            dp: parts[23],
+                            inj: parseInt(parts[24]),
+                            sus: parseInt(parts[25]),
+                            fit: parseInt(parts[26]),
+                            customPosition: null
+                        };
+                        
+                        player.isAvailable = player.inj === 0 && player.sus === 0;
+                        
+                        const maxAttr = Math.max(player.st, player.tk, player.ps, player.sh);
+                        if (maxAttr === player.st) {
+                            player.position = 'GK';
+                            player.positionName = 'Porteros';
+                        } else if (maxAttr === player.tk) {
+                            player.position = 'DF';
+                            player.positionName = 'Defensas';
+                        } else if (maxAttr === player.ps) {
+                            player.position = 'MF';
+                            player.positionName = 'Centrocampistas';
+                        } else {
+                            player.position = 'FW';
+                            player.positionName = 'Delanteros';
+                        }
+                        
+                        playersList.push(player);
+                    }
+                }
+            }
+            
+            return playersList;
+        }
+        
+        async function loadSquad() {
+            const input = document.getElementById('squadInput').value;
+            
+            if (!input.trim()) {
+                showMessage('Por favor, introduce una plantilla', 'error');
+                return;
+            }
+            
+            try {
+                showLoading();
+                players = parseSquad(input);
+                
+                if (players.length === 0) {
+                    showMessage('No se encontraron jugadores en la plantilla', 'error');
+                    return;
+                }
+                
+                selectedPlayers = [];
+                removedIndices = [];
+                customConditionals = [];
+                
+                await loadPlayerImages();
+                await loadFlagDB();
+                await loadFullNameDB();
+                await determineTeam(players);
+                hideLoading();
+                
+                displayPlayers();
+                updatePKTakerSelect();
+                updateLineup();
+                updateConditionalsDeleteSelect();
+                document.getElementById('mainContent').style.display = 'grid';
+                showMessage(`Plantilla cargada correctamente: ${players.length} jugadores`, 'success');
+                if (window.self !== window.top) {
+                    document.getElementById('iframe-fullscreen').style.display = 'none';
+                }
+            } catch (err) {
+                hideLoading();
+                showMessage('Error al procesar la plantilla. Verifica el formato.', 'error');
+                console.error(err);
+            }
+        }
+        
+        function displayPlayers() {
+            const container = document.getElementById('playersContainer');
+            container.innerHTML = '';
+            
+            const filterFit = document.getElementById('filterFit').checked;
+            const highlightLess = document.getElementById('highlightLessPlayed').checked;
+            
+            const positions = [
+                { code: 'GK', name: 'Porteros' },
+                { code: 'DF', name: 'Defensas' },
+                { code: 'MF', name: 'Centrocampistas' },
+                { code: 'FW', name: 'Delanteros' }
+            ];
+
+            let lessPlayed = {};
+            if (highlightLess) {
+                positions.forEach(pos => {
+                    let posPlayers = players.filter(p => p.position === pos.code);
+                    posPlayers.sort((a, b) => parseInt(a.min) - parseInt(b.min));
+                    const count = pos.code === 'GK' ? 1 : pos.code === 'DF' ? 4 : pos.code === 'MF' ? 4 : 2;
+                    lessPlayed[pos.code] = posPlayers.slice(0, count).map(p => p.name);
+                });
+            }
+            
+            positions.forEach(pos => {
+                let posPlayers = players.filter(p => p.position === pos.code);
+                
+                if (filterFit) {
+                    posPlayers = posPlayers.filter(p => p.fit >= 90);
+                }
+                
+                if (posPlayers.length > 0) {
+                    const groupDiv = document.createElement('div');
+                    groupDiv.className = 'position-group';
+                    groupDiv.id = pos.code === 'GK' ? 'goalkeepers-section' : '';
+                    
+                    const titleDiv = document.createElement('div');
+                    titleDiv.className = 'position-title';
+                    titleDiv.textContent = pos.name;
+                    groupDiv.appendChild(titleDiv);
+                    
+                    const gridDiv = document.createElement('div');
+                    gridDiv.className = 'players-grid';
+                    
+                    posPlayers.forEach(player => {
+                        const card = document.createElement('div');
+                        card.className = 'player-card';
+                        if (isCompactView) card.classList.add('compact');
+                        
+                        const selectedIndex = selectedPlayers.findIndex(s => s.player && s.player.name === player.name);
+                        const isSelected = selectedIndex !== -1;
+                        
+                        if (isSelected) {
+                            if (selectedIndex < 11) {
+                                card.classList.add('selected');
+                            } else {
+                                card.classList.add('selected-sub');
+                            }
+                            
+                            if (player.position === 'GK') {
+                                card.classList.add('goalkeeper');
+                            }
+                        }
+                        
+                        if (!player.isAvailable) {
+                            card.classList.add('disabled');
+                        } else if (!isSelected) {
+                            card.onclick = () => selectPlayer(player);
+                        }
+
+                        if (highlightLess && lessPlayed[pos.code].includes(player.name)) {
+                            card.classList.add('highlighted-less');
+                        }
+                        
+                        let statusInfo = '';
+                        
+                        const playerImageUrl = playerImages[player.name] || playerImages['Unknown'] || 'https://via.placeholder.com/96';
+                        
+                        const natCode = player.nat.toLowerCase();
+                        const flagUrl = flags[natCode] || '';
+                        const fullName = fullNames[natCode] || player.nat.toUpperCase();
+                        
+                        const maxAttr = Math.max(player.st, player.tk, player.ps, player.sh);
+                        const gkClass = player.st === maxAttr ? 'highlight' : '';
+                        const dfClass = player.tk === maxAttr ? 'highlight' : '';
+                        const mfClass = player.ps === maxAttr ? 'highlight' : '';
+                        const fwClass = player.sh === maxAttr ? 'highlight' : '';
+                        
+                        let fitColor = '#ff6961';
+                        if (player.fit > 89) fitColor = 'green';
+                        else if (player.fit >= 84) fitColor = 'yellow';
+                        else if (player.fit >= 80) fitColor = 'orange';
+                        
+                        const selectedItem = selectedPlayers[selectedIndex];
+                        const currentPosition = selectedItem ? selectedItem.position : player.position;
+                        
+                        // Calculate fit percentage (50-100%)
+                        const fitPercentage = 50 + (player.fit * 0.5);
+                        
+                        // Determinar si mostrar el selector de posición o el indicador de lesión/sanción
+                        let bottomRightContent = '';
+                        if (!player.isAvailable) {
+                            // Mostrar indicador de lesión/sanción
+                            if (player.inj > 0) {
+                                bottomRightContent = `<div class="player-status-indicator">Lesión: ${player.inj}</div>`;
+                            } else if (player.sus > 0) {
+                                bottomRightContent = `<div class="player-status-indicator">Sanción: ${player.sus}</div>`;
+                            }
+                        } else if (isSelected && player.position !== 'GK') {
+                            // Mostrar selector de posición
+                            bottomRightContent = `
+                                <select class="position-selector" onchange="changePlayerPosition('${player.name}', this.value)">
+                                    <option value="DF" ${currentPosition === 'DF' ? 'selected' : ''}>DF</option>
+                                    <option value="DM" ${currentPosition === 'DM' ? 'selected' : ''}>DM</option>
+                                    <option value="MF" ${currentPosition === 'MF' ? 'selected' : ''}>MF</option>
+                                    <option value="AM" ${currentPosition === 'AM' ? 'selected' : ''}>AM</option>
+                                    <option value="FW" ${currentPosition === 'FW' ? 'selected' : ''}>FW</option>
+                                </select>
+                            `;
+                        }
+                        
+                        card.innerHTML = `
+                            <button class="remove-player" onclick="event.stopPropagation(); removePlayer('${player.name}')">×</button>
+                            ${bottomRightContent}
+                            <div class="player-details">
+                                <div class="player-name">
+                                    <button class="stats-icon" onclick="event.stopPropagation(); showPlayerStats('${player.name}')">
+                                        <i class="fas fa-bars"></i>
+                                    </button>
+                                    ${formatPlayerName(player.name)}${statusInfo}
+                                </div>
+                                <div class="player-info" title="Edad">${player.age} | ${flagUrl ? `<img src="${flagUrl}" class="flag-img" title="${fullName}">` : fullName}</div>
+                                
+                                <div class="attributes-grid">
+                                    <div class="attributes-header">GK</div>
+                                    <div class="attributes-header">DF</div>
+                                    <div class="attributes-header">MF</div>
+                                    <div class="attributes-header">FW</div>
+                                    <div class="attributes-values ${gkClass}">${player.st}</div>
+                                    <div class="attributes-values ${dfClass}">${player.tk}</div>
+                                    <div class="attributes-values ${mfClass}">${player.ps}</div>
+                                    <div class="attributes-values ${fwClass}">${player.sh}</div>
+                                </div>
+                                
+                                <div class="experience-grid">
+                                    <div class="experience-values ${player.kab >= 900 ? 'experience-high' : ''}">${player.kab}</div>
+                                    <div class="experience-values ${player.tab >= 900 ? 'experience-high' : ''}">${player.tab}</div>
+                                    <div class="experience-values ${player.pab >= 900 ? 'experience-high' : ''}">${player.pab}</div>
+                                    <div class="experience-values ${player.sab >= 900 ? 'experience-high' : ''}">${player.sab}</div>
+                                </div>
+                                
+                                <div class="fitness-container">
+                                    <div class="fitness-bar"><div style="width: ${fitPercentage}%; background: ${fitColor};"></div></div>
+                                    <div class="fitness-value">${player.fit}%</div>
+                                </div>
+                            </div>
+                            <img src="${playerImageUrl}" class="player-image" onerror="this.src='https://via.placeholder.com/96'">
+                        `;
+                        
+                        gridDiv.appendChild(card);
+                    });
+                    
+                    groupDiv.appendChild(gridDiv);
+                    container.appendChild(groupDiv);
+                }
+            });
+        }
+
+        function showPlayerStats(playerName) {
+            const player = players.find(p => p.name === playerName);
+            if (!player) return;
+
+            const modal = document.getElementById('statsModal');
+            const nameElement = document.getElementById('statsPlayerName');
+            const contentElement = document.getElementById('statsContent');
+
+            nameElement.textContent = formatPlayerName(player.name);
+
+            let statsHTML = '';
+            
+            if (player.position === 'GK') {
+                // Calcular ratio minutos por gol encajado
+                const minutes = parseInt(player.min) || 0;
+                const goalsConceded = parseInt(player.con) || 0;
+                const ratio = goalsConceded > 0 ? (minutes / goalsConceded).toFixed(0) : 'N/A';
+                
+                statsHTML = `
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>PJ</th>
+                                <th>GE</th>
+                                <th>Par</th>
+                                <th>MVP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${formatNumber(player.gam || 0)}</td>
+                                <td>${formatNumber(player.con || 0)}</td>
+                                <td>${formatNumber(player.sav || 0)}</td>
+                                <td>${formatNumber(player.mom || 0)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="stats-info">
+                        <p><b>Minutos jugados:</b> ${formatNumber(player.min || 0)}</p>
+                        <p><b>Sustituciones:</b> ${formatNumber(player.sub || 0)}</p>
+                        <p><b>Ratio minutos por gol encajado:</b> ${ratio}</p>
+                    </div>
+                `;
+            } else {
+                // Calcular ratio minutos por gol
+                const minutes = parseInt(player.min) || 0;
+                const goals = parseInt(player.gls) || 0;
+                const ratio = goals > 0 ? (minutes / goals).toFixed(0) : 'N/A';
+                
+                let extraStat = '';
+                if (player.position === 'DF') {
+                    extraStat = `<p><b>Entradas:</b> ${formatNumber(player.ktk || 0)}</p>`;
+                } else if (player.position === 'MF') {
+                    extraStat = `<p><b>Pases:</b> ${formatNumber(player.kps || 0)}</p>`;
+                } else if (player.position === 'FW') {
+                    extraStat = `<p><b>Tiros:</b> ${formatNumber(player.sht || 0)}</p>`;
+                }
+
+                statsHTML = `
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>PJ</th>
+                                <th>Gls</th>
+                                <th>Asi</th>
+                                <th>MVP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${formatNumber(player.gam || 0)}</td>
+                                <td>${formatNumber(player.gls || 0)}</td>
+                                <td>${formatNumber(player.ass || 0)}</td>
+                                <td>${formatNumber(player.mom || 0)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="stats-info">
+                        <p><b>Minutos jugados:</b> ${formatNumber(player.min || 0)}</p>
+                        <p><b>Sustituciones:</b> ${formatNumber(player.sub || 0)}</p>
+                        ${extraStat}
+                        <p><b>Ratio minutos por gol:</b> ${ratio}</p>
+                    </div>
+                `;
+            }
+
+            contentElement.innerHTML = statsHTML;
+            modal.style.display = 'flex';
+        }
+
+        function closeStatsModal() {
+            document.getElementById('statsModal').style.display = 'none';
+        }
+        
+        function changePlayerPosition(playerName, newPosition) {
+            const playerIndex = selectedPlayers.findIndex(s => s.player && s.player.name === playerName);
+            if (playerIndex !== -1) {
+                selectedPlayers[playerIndex].position = newPosition;
+                if (selectedPlayers[playerIndex].player) {
+                    selectedPlayers[playerIndex].player.customPosition = newPosition;
+                }
+                updateLineup();
+                displayPlayers();
+            }
+        }
+        
+        function selectPlayer(player) {
+            if (!player.isAvailable) return;
+            
+            const index = selectedPlayers.findIndex(s => s.player && s.player.name === player.name);
+            
+            if (index !== -1) {
+                return;
+            } else {
+                const selectedCount = selectedPlayers.filter(s => s.player).length;
+                if (selectedCount >= 16) {
+                    alert('Ya has seleccionado 16 jugadores (11 titulares + 5 suplentes)');
+                    return;
+                }
+                
+                let targetIndex = -1;
+                for (let j = 0; j < selectedPlayers.length; j++) {
+                    if (selectedPlayers[j].player === null) {
+                        targetIndex = j;
+                        break;
+                    }
+                }
+                
+                const isStarter = targetIndex === -1 ? selectedPlayers.length < 11 : targetIndex < 11;
+                const isFirstSub = targetIndex === -1 ? selectedPlayers.length === 11 : targetIndex === 11;
+                
+                if (selectedPlayers.length === 0 && player.position !== 'GK') {
+                    alert('El primer jugador debe ser un portero');
+                    return;
+                }
+                
+                if (isFirstSub && player.position !== 'GK') {
+                    alert('El primer suplente debe ser un portero');
+                    return;
+                }
+                
+                const startersGK = selectedPlayers.slice(0, 11).filter(s => s.player && (s.position === 'GK')).length;
+                const subsGK = selectedPlayers.slice(11).filter(s => s.player && (s.position === 'GK')).length;
+                
+                if (player.position === 'GK') {
+                    if (isStarter && startersGK >= 1) {
+                        alert('Solo puede haber un portero en el once titular');
+                        return;
+                    }
+                    if (!isStarter && subsGK >= 1) {
+                        alert('Solo puede haber un portero en los suplentes');
+                        return;
+                    }
+                }
+                
+                const newItem = {player, position: player.position};
+                
+                if (targetIndex !== -1) {
+                    newItem.position = selectedPlayers[targetIndex].position;
+                    player.customPosition = newItem.position;
+                    selectedPlayers[targetIndex] = newItem;
+                } else {
+                    selectedPlayers.push(newItem);
+                }
+                selectSound.play().catch(e => console.log('Error playing sound:', e));
+            }
+            
+            displayPlayers();
+            updatePKTakerSelect();
+            updateLineup();
+            showSelectCount();
+            
+            // Auto-scroll to goalkeepers section when 11th player is selected
+            if (selectedPlayers.filter(s => s.player).length === 11) {
+                setTimeout(() => {
+                    const goalkeepersSection = document.getElementById('goalkeepers-section');
+                    if (goalkeepersSection) {
+                        goalkeepersSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 300);
+            }
+        }
+        
+        function removePlayer(playerName) {
+            const index = selectedPlayers.findIndex(s => s.player && s.player.name === playerName);
+            if (index !== -1) {
+                const position = selectedPlayers[index].position;
+                selectedPlayers[index] = {player: null, position: position};
+                displayPlayers();
+                updatePKTakerSelect();
+                updateLineup();
+            }
+        }
+        
+        function updatePKTakerSelect() {
+            const content = document.getElementById('pkTaker-content');
+            const btn = document.getElementById('pkTaker-btn');
+            const currentValue = btn.dataset.value || '';
+            content.innerHTML = '';
+            
+            const starters = selectedPlayers.slice(0, 11);
+            starters.forEach((item, idx) => {
+                if (item.player) {
+                    const a = document.createElement('a');
+                    a.textContent = formatPlayerName(item.player.name);
+                    a.onclick = () => selectPKTaker(item.player.name);
+                    a.addEventListener('mouseenter', () => hoverSound.play().catch(e => console.log('Error playing sound:', e)));
+                    content.appendChild(a);
+                }
+            });
+            
+            const currentPlayer = players.find(p => p.name === currentValue);
+            if (currentPlayer && starters.some(s => s.player && s.player.name === currentValue)) {
+                btn.textContent = formatPlayerName(currentValue);
+                btn.dataset.value = currentValue;
+            } else {
+                btn.textContent = 'Seleccionar lanzador';
+                btn.dataset.value = '';
+            }
+        }
+
+        function selectPKTaker(value) {
+            const btn = document.getElementById('pkTaker-btn');
+            btn.textContent = formatPlayerName(value);
+            btn.dataset.value = value;
+            updateLineup();
+            removeInvalid(btn);
+            selectSound.play().catch(e => console.log('Error playing sound:', e));
+            // Close dropdown on select
+            document.getElementById('pkTaker-dropdown').classList.remove('active');
+        }
+        
+        function updateAggValue() {
+            const aggValue = document.getElementById('aggSlider').value;
+            document.getElementById('aggValue').textContent = aggValue;
+            updateLineup();
+        }
+        
+        function generateSuggestedSubs() {
+            const subs = [];
+            const dfPlayer = Math.random() < 0.5 ? 2 : 3;
+            const mfPlayer = Math.random() < 0.5 ? 7 : 8;
+            const fwPlayer = Math.random() < 0.5 ? 11 : 10;
+            const min1 = Math.floor(Math.random() * (90 - 45 + 1)) + 45;
+            const min2 = Math.floor(Math.random() * (90 - 45 + 1)) + 45;
+            const min3 = Math.floor(Math.random() * (90 - 45 + 1)) + 45;
+            const substitutionsList = [
+                { text: `SUB ${dfPlayer} 13 DF IF MIN = ${min1}`, min: min1 },
+                { text: `SUB ${mfPlayer} 15 MF IF MIN = ${min2}`, min: min2 },
+                { text: `SUB ${fwPlayer} 16 FW IF MIN = ${min3}`, min: min3 }
+            ];
+            substitutionsList.sort((a, b) => a.min - b.min);
+            return substitutionsList.map(sub => sub.text);
+        }
+
+        function generateSuggestedConds(currentTactic) {
+            const category1 = [
+                'TACTIC L IF SCORE = 3',
+                'TACTIC P IF SCORE = 2',
+                'TACTIC D IF SCORE = -3',
+                'TACTIC A IF MIN >= 65 SCORE <= -1',
+                'TACTIC C IF MIN >= 50 SCORE >= 1',
+                'TACTIC D IF MIN >= 70 SCORE >= 2'
+            ].filter(cond => !cond.includes(`TACTIC ${currentTactic}`));
+            const shuffledCat1 = category1.sort(() => 0.5 - Math.random());
+            const selectedCat1 = shuffledCat1.slice(0, 2);
+
+            const category2 = [
+                'CHANGEPOS 9 AM IF MIN = 65 SCORE <= -1',
+                'CHANGEPOS 7 DM IF MIN >= 65 SCORE <= 1',
+                'CHANGEAGG 18 IF SCORE <= -2',
+                'CHANGEAGG 10 IF SCORE <= 2'
+            ];
+            const numCat2 = Math.floor(Math.random() * 3);
+            const shuffledCat2 = category2.sort(() => 0.5 - Math.random());
+            const selectedCat2 = shuffledCat2.slice(0, numCat2);
+
+            return [...selectedCat1, ...selectedCat2];
+        }
+        
+        function updateLineup() {
+            const teamAbbr = document.getElementById('teamAbbr').value.toUpperCase() || '';
+            const tacticsBtn = document.getElementById('tactics-btn');
+            const tactics = tacticsBtn.dataset.value || '';
+            const pkTakerBtn = document.getElementById('pkTaker-btn');
+            const pkTaker = pkTakerBtn.dataset.value || '';
+            const aggValue = parseInt(document.getElementById('aggSlider').value);
+            
+            let lineup = '';
+            if (teamAbbr) {
+                lineup = teamAbbr + '\n';
+            }
+            lineup += tactics + '\n\n';
+            
+            const starters = selectedPlayers.slice(0, 11);
+            const subs = selectedPlayers.slice(11, 16);
+            
+            const positionOrder = {'GK': 0, 'DF': 1, 'DM': 1.5, 'MF': 2, 'AM': 2.5, 'FW': 3};
+            const sortedStarters = [...starters].sort((a, b) => positionOrder[a.position] - positionOrder[b.position]);
+            
+            sortedStarters.forEach(item => {
+                lineup += `${item.position} ${item.player ? item.player.name : ''}\n`;
+            });
+            
+            lineup += '\n';
+            
+            const sortedSubs = [...subs].sort((a, b) => positionOrder[a.position] - positionOrder[b.position]);
+            
+            sortedSubs.forEach(item => {
+                lineup += `${item.position} ${item.player ? item.player.name : ''}\n`;
+            });
+            
+            if (pkTaker) {
+                lineup += '\nPK: ' + pkTaker;
+            }
+            
+            if (aggValue > 0) {
+                lineup += '\n\nAGG ' + aggValue;
+            }
+            
+            let additional = [];
+            if (document.getElementById('suggested-subs').checked) {
+                additional.push(...generateSuggestedSubs());
+            }
+            if (document.getElementById('suggested-conds').checked) {
+                additional.push(...generateSuggestedConds(tactics));
+            }
+            
+            if (customConditionals.length > 0 || additional.length > 0) {
+                // Asegurar separación con línea vacía antes de los condicionales
+                if (pkTaker || aggValue > 0) {
+                    lineup += '\n\n';
+                } else {
+                    lineup += '\n';
+                }
+                lineup += [...customConditionals, ...additional].join('\n');
+            }
+            
+            document.getElementById('lineupOutput').value = lineup;
+            document.getElementById('selectedCount').textContent = selectedPlayers.filter(s => s.player).length;
+        }
+        
+        function validateLineup() {
+            const teamAbbr = document.getElementById('teamAbbr');
+            const tacticsBtn = document.getElementById('tactics-btn');
+            const pkTakerBtn = document.getElementById('pkTaker-btn');
+            
+            let valid = true;
+            let messages = [];
+            
+            removeInvalid(teamAbbr);
+            removeInvalid(tacticsBtn);
+            removeInvalid(pkTakerBtn);
+            
+            if (!teamAbbr.value || teamAbbr.value.length !== 3) {
+                messages.push('Abreviación debe ser de 3 letras.');
+                teamAbbr.classList.add('invalid');
+                valid = false;
+            }
+            
+            if (!tacticsBtn.dataset.value) {
+                messages.push('Selecciona una táctica.');
+                tacticsBtn.classList.add('invalid');
+                valid = false;
+            }
+            
+            if (!pkTakerBtn.dataset.value) {
+                messages.push('Selecciona un lanzador de penaltis.');
+                pkTakerBtn.classList.add('invalid');
+                valid = false;
+            }
+            
+            if (selectedPlayers.filter(s => s.player).length !== 16) {
+                messages.push('Debes seleccionar 11 titulares y 5 suplentes.');
+                valid = false;
+            }
+            
+            if (!valid) {
+                alert('Requisitos no cumplidos:\n' + messages.join('\n'));
+            }
+            
+            return valid;
+        }
+        
+        function removeInvalid(element) {
+            element.classList.remove('invalid');
+        }
+        
+        function copyLineup() {
+            if (!validateLineup()) return;
+            
+            const lineupText = document.getElementById('lineupOutput').value;
+            navigator.clipboard.writeText(lineupText).then(() => {
+                showMessage('Alineación copiada al portapapeles', 'success');
+                showTick();
+                confirmationSound.play().catch(e => console.log('Error playing sound:', e));
+            }).catch(err => {
+                showMessage('Error al copiar. Selecciona y copia manualmente.', 'error');
+            });
+        }
+        
+        function downloadLineup() {
+            if (!validateLineup()) return;
+            
+            const lineupText = document.getElementById('lineupOutput').value;
+            const teamAbbr = document.getElementById('teamAbbr').value.toLowerCase();
+            const blob = new Blob([lineupText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${teamAbbr}sht.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            confirmationSound.play().catch(e => console.log('Error playing sound:', e));
+        }
+        
+        function showTick() {
+            const tick = document.getElementById('tickAnimation');
+            tick.style.opacity = 1;
+            setTimeout(() => { tick.style.opacity = 0; }, 1000);
+        }
+        
+        function clearSelection() {
+            if (!confirm('¿Estás seguro? Los cambios no se guardarán.')) return;
+            selectedPlayers = selectedPlayers.map(item => ({player: null, position: item.position}));
+            displayPlayers();
+            updatePKTakerSelect();
+            updateLineup();
+            updateConditionalsDeleteSelect();
+            showMessage('Selección limpiada', 'success');
+        }
+        
+        function resetAll() {
+            document.getElementById('squadInput').value = '';
+            document.getElementById('mainContent').style.display = 'none';
+            players = [];
+            selectedPlayers = [];
+            removedIndices = [];
+            customConditionals = [];
+            document.getElementById('message').textContent = '';
+            document.getElementById('message').className = '';
+            team = '';
+            hasSelectedTeam = false;
+            currentTeamSelection = '';
+            document.getElementById('teamBadge').style.display = 'none';
+            document.getElementById('teamBadgeLineup').style.display = 'none';
+            // Show the import link again when resetting
+            document.querySelector('.import-squad-link').style.display = 'inline';
+        }
+        
+        function showSelectCount() {
+            const popup = document.getElementById('selectCountPopup');
+            popup.textContent = selectedPlayers.filter(s => s.player).length;
+            popup.style.opacity = 1;
+            setTimeout(() => { popup.style.opacity = 0; }, 1000);
+        }
+        
+        function showTutorial() {
+            document.getElementById('tutorialModal').style.display = 'flex';
+        }
+        
+        function hideTutorial() {
+            document.getElementById('tutorialModal').style.display = 'none';
+        }
+
+        function openConditionalsPopup() {
+            document.getElementById('conditionals-popup').style.display = 'block';
+            document.getElementById('conditionals-overlay').style.display = 'block';
+            setupConditionalsPopup();
+            updateCurrentConditionals();
+        }
+
+        function closeConditionalsPopup() {
+            const activeTab = document.querySelector('#conditionals-popup .tab.active').dataset.tab;
+            const content = document.getElementById(activeTab + '-tab');
+            const selects = content.querySelectorAll('select');
+            let hasSelections = false;
+            selects.forEach(select => {
+                if (select.value !== '') hasSelections = true;
+            });
+            if (hasSelections && !confirm('¿Estás seguro de cerrar sin añadir el condicional?')) {
+                return;
+            }
+            document.getElementById('conditionals-popup').style.display = 'none';
+            document.getElementById('conditionals-overlay').style.display = 'none';
+        }
+
+        function setupConditionalsPopup() {
+            const tabs = document.querySelectorAll('#conditionals-popup .tab');
+            const contents = document.querySelectorAll('#conditionals-popup .tab-content');
+            tabs.forEach(tab => {
+                tab.onclick = () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+                };
+            });
+
+            // Populate selects with current data
+            const starters = selectedPlayers.slice(0, 11);
+            const subs = selectedPlayers.slice(11, 16);
+            const allPlayers = [...starters, ...subs].filter(item => item.player).map(item => item.player);
+
+            // Tactic dropdown with descriptions
+            const tacticSelect = document.getElementById('tactic-new');
+            tacticSelect.innerHTML = '<option value="">Seleccionar</option>';
+            const tacticDescriptions = {
+                'A': 'A (Atacante)',
+                'C': 'C (Contragolpe)',
+                'D': 'D (Defensiva)',
+                'E': 'E (Europea)',
+                'L': 'L (Balones largos)',
+                'N': 'N (Equilibrada)',
+                'P': 'P (Pases cortos)',
+                'T': 'T (Temeraria)'
+            };
+            Object.keys(tacticDescriptions).forEach(t => {
+                tacticSelect.innerHTML += `<option value="${t}">${tacticDescriptions[t]}</option>`;
+            });
+
+            // Aggression dropdown (only numbers 0-20)
+            const aggressionSelect = document.getElementById('aggression-new');
+            aggressionSelect.innerHTML = '<option value="">Seleccionar</option>';
+            for (let i = 0; i <= 20; i++) {
+                aggressionSelect.innerHTML += `<option value="${i}">${i}</option>`;
+            }
+
+            // Player selects with fit information and grouping
+            const playerSelects = ['reposition-player'];
+            playerSelects.forEach(id => {
+                const select = document.getElementById(id);
+                select.innerHTML = '<option value="">Seleccionar</option>';
+                
+                // Add starters
+                if (starters.length > 0) {
+                    const groupOption = document.createElement('option');
+                    groupOption.disabled = true;
+                    groupOption.textContent = '── Titulares ──';
+                    groupOption.className = 'player-group-option';
+                    select.appendChild(groupOption);
+                    
+                    starters.forEach((item, idx) => {
+                        if (item.player) {
+                            const num = idx + 1;
+                            const fitInfo = ` (${item.player.fit}%)`;
+                            select.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`;
+                        }
+                    });
+                }
+                
+                // Add subs
+                if (subs.length > 0) {
+                    const groupOption = document.createElement('option');
+                    groupOption.disabled = true;
+                    groupOption.textContent = '── Suplentes ──';
+                    groupOption.className = 'player-group-option';
+                    select.appendChild(groupOption);
+                    
+                    subs.forEach((item, idx) => {
+                        if (item.player) {
+                            const num = 11 + idx + 1;
+                            const fitInfo = ` (${item.player.fit}%)`;
+                            select.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`;
+                        }
+                    });
+                }
+            });
+
+            // Special handling for substitution dropdowns
+            const subOffSelect = document.getElementById('sub-off');
+            subOffSelect.innerHTML = '<option value="">Seleccionar</option>';
+            
+            // Add starters to "Se retira"
+            if (starters.length > 0) {
+                const groupOption = document.createElement('option');
+                groupOption.disabled = true;
+                groupOption.textContent = '── Titulares ──';
+                groupOption.className = 'player-group-option';
+                subOffSelect.appendChild(groupOption);
+                
+                starters.forEach((item, idx) => {
+                    if (item.player) {
+                        const num = idx + 1;
+                        const fitInfo = ` (${item.player.fit}%)`;
+                        subOffSelect.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`;
+                    }
+                });
+            }
+            
+            // Add subs to "Se retira"
+            if (subs.length > 0) {
+                const groupOption = document.createElement('option');
+                groupOption.disabled = true;
+                groupOption.textContent = '── Suplentes ──';
+                groupOption.className = 'player-group-option';
+                subOffSelect.appendChild(groupOption);
+                
+                subs.forEach((item, idx) => {
+                    if (item.player) {
+                        const num = 11 + idx + 1;
+                        const fitInfo = ` (${item.player.fit}%)`;
+                        subOffSelect.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`;
+                    }
+                });
+            }
+            
+            // "Entra" only shows subs
+            const subOnSelect = document.getElementById('sub-on');
+            subOnSelect.innerHTML = '<option value="">Seleccionar</option>';
+            
+            if (subs.length > 0) {
+                subs.forEach((item, idx) => {
+                    if (item.player) {
+                        const num = 11 + idx + 1;
+                        const fitInfo = ` (${item.player.fit}%)`;
+                        subOnSelect.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`;
+                    }
+                });
+            }
+
+            // Update sub-on dropdown when sub-off changes
+            document.getElementById('sub-off').addEventListener('change', function() {
+                const offValue = this.value;
+                const onSelect = document.getElementById('sub-on');
+                
+                // Reset all options to visible
+                for (let i = 0; i < onSelect.options.length; i++) {
+                    onSelect.options[i].style.display = '';
+                }
+                
+                // Hide the selected player in sub-off from sub-on
+                if (offValue) {
+                    for (let i = 0; i < onSelect.options.length; i++) {
+                        if (onSelect.options[i].value === offValue) {
+                            onSelect.options[i].style.display = 'none';
+                        }
+                    }
+                }
+            });
+
+            // Special handling for condition dropdowns (yellow/red/injured)
+            const conditionSelects = ['tactic-if-yellow', 'tactic-if-red', 'tactic-if-injured', 'sub-if-yellow', 'sub-if-red', 'sub-if-injured', 'reposition-if-yellow', 'reposition-if-red', 'reposition-if-injured', 'aggression-if-yellow', 'aggression-if-red', 'aggression-if-injured'];
+            conditionSelects.forEach(id => {
+                const select = document.getElementById(id);
+                select.innerHTML = '<option value="">Seleccionar</option>';
+                
+                // Add starters
+                if (starters.length > 0) {
+                    const groupOption = document.createElement('option');
+                    groupOption.disabled = true;
+                    groupOption.textContent = '── Titulares ──';
+                    groupOption.className = 'player-group-option';
+                    select.appendChild(groupOption);
+                    
+                    starters.forEach((item, idx) => {
+                        if (item.player) {
+                            const num = idx + 1;
+                            select.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})</option>`;
+                        }
+                    });
+                }
+                
+                // Add subs
+                if (subs.length > 0) {
+                    const groupOption = document.createElement('option');
+                    groupOption.disabled = true;
+                    groupOption.textContent = '── Suplentes ──';
+                    groupOption.className = 'player-group-option';
+                    select.appendChild(groupOption);
+                    
+                    subs.forEach((item, idx) => {
+                        if (item.player) {
+                            const num = 11 + idx + 1;
+                            select.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})</option>`;
+                        }
+                    });
+                }
+                
+                // Add position options
+                ['GK', 'DF', 'DM', 'MF', 'AM', 'FW'].forEach(pos => {
+                    select.innerHTML += `<option value="${pos}">${pos}</option>`;
+                });
+            });
+
+            // Minute and value selects
+            ['tactic', 'reposition', 'aggression', 'sub'].forEach(prefix => {
+                const minSelect1 = document.getElementById(prefix + '-min-value1');
+                const minSelect2 = document.getElementById(prefix + '-min-value2');
+                const minSelect3 = document.getElementById(prefix + '-min-value3');
+
+                if (minSelect1 && minSelect2 && minSelect3) {
+                    minSelect1.innerHTML = '<option value="">1-30</option>';
+                    for (let i = 1; i <= 30; i++) minSelect1.innerHTML += `<option value="${i}">${i}</option>`;
+
+                    minSelect2.innerHTML = '<option value="">31-60</option>';
+                    for (let i = 31; i <= 60; i++) minSelect2.innerHTML += `<option value="${i}">${i}</option>`;
+
+                    minSelect3.innerHTML = '<option value="">61-120</option>';
+                    for (let i = 61; i <= 120; i++) minSelect3.innerHTML += `<option value="${i}">${i}</option>`;
+
+                    // Add listeners to reset others
+                    minSelect1.addEventListener('change', () => {
+                        if (minSelect1.value !== '') {
+                            minSelect2.value = '';
+                            minSelect3.value = '';
+                        }
+                    });
+                    minSelect2.addEventListener('change', () => {
+                        if (minSelect2.value !== '') {
+                            minSelect1.value = '';
+                            minSelect3.value = '';
+                        }
+                    });
+                    minSelect3.addEventListener('change', () => {
+                        if (minSelect3.value !== '') {
+                            minSelect1.value = '';
+                            minSelect2.value = '';
+                        }
+                    });
+                }
+
+                const shotsSelect = document.getElementById(prefix + '-shots-value');
+                if (shotsSelect) {
+                    shotsSelect.innerHTML = '<option value="">Seleccionar</option>';
+                    for (let i = 0; i <= 30; i++) shotsSelect.innerHTML += `<option value="${i}">${i}</option>`;
+                }
+            });
+
+            const scoreSelects = document.querySelectorAll('[id$="-score-value"]');
+            scoreSelects.forEach(select => {
+                select.innerHTML = '<option value="">Seleccionar</option>';
+                for (let i = -3; i <= 3; i++) select.innerHTML += `<option value="${i}">${i}</option>`;
+            });
+        }
+
+        function addConditional(tab) {
+            let conditional = '';
+            switch (tab) {
+                case 'tactic':
+                    const newTactic = document.getElementById('tactic-new').value;
+                    if (!newTactic) return;
+                    conditional = `TACTIC ${newTactic}`;
+                    break;
+                case 'substitution':
+                    const off = document.getElementById('sub-off').value;
+                    const on = document.getElementById('sub-on').value;
+                    const pos = document.getElementById('sub-position').value;
+                    if (!off || !on || !pos) return;
+                    conditional = `SUB ${off} ${on} ${pos}`;
+                    break;
+                case 'reposition':
+                    const player = document.getElementById('reposition-player').value;
+                    const newPos = document.getElementById('reposition-position').value;
+                    if (!player || !newPos) return;
+                    conditional = `CHANGEPOS ${player} ${newPos}`;
+                    break;
+                case 'aggression':
+                    const newAgg = document.getElementById('aggression-new').value;
+                    if (!newAgg) return;
+                    conditional = `CHANGEAGG ${newAgg}`;
+                    break;
+            }
+
+            // Add conditions with only one IF
+            let conditions = [];
+            
+            // Para la pestaña de sustituciones, el prefijo es 'sub'
+            const prefix = tab === 'substitution' ? 'sub' : tab;
+            
+            const ifMin = document.getElementById(prefix + '-if-min').value;
+            let minVal;
+            if (prefix === 'sub') {
+                const minVal1 = document.getElementById('sub-min-value1').value;
+                const minVal2 = document.getElementById('sub-min-value2').value;
+                const minVal3 = document.getElementById('sub-min-value3').value;
+                minVal = minVal1 || minVal2 || minVal3;
+            } else {
+                const minVal1 = document.getElementById(prefix + '-min-value1').value;
+                const minVal2 = document.getElementById(prefix + '-min-value2').value;
+                const minVal3 = document.getElementById(prefix + '-min-value3').value;
+                minVal = minVal1 || minVal2 || minVal3;
+            }
+            if (ifMin && minVal) conditions.push(`MIN ${ifMin} ${minVal}`);
+
+            const ifScore = document.getElementById(prefix + '-if-score').value;
+            const scoreVal = document.getElementById(prefix + '-score-value').value;
+            if (ifScore && scoreVal) {
+                conditions.push(`SCORE ${ifScore} ${scoreVal}`);
+            }
+
+            const ifShots = document.getElementById(prefix + '-if-shots').value;
+            const shotsVal = document.getElementById(prefix + '-shots-value').value;
+            if (ifShots && shotsVal) conditions.push(`SHOTS ${ifShots} ${shotsVal}`);
+
+            ['yellow', 'red', 'injured'].forEach(type => {
+                const ifType = document.getElementById(prefix + '-if-' + type).value;
+                if (ifType) conditions.push(`${type.toUpperCase()} ${ifType}`);
+            });
+            
+            // Add conditions with only one IF
+            if (conditions.length > 0) {
+                conditional += ` IF ${conditions.join(' ')}`;
+            }
+
+            if (!validateConditional(conditional)) {
+                alert('El condicional no es válido o está incompleto.');
+                return;
+            }
+
+            customConditionals.push(conditional);
+            updateLineup();
+            updateConditionalsDeleteSelect();
+            updateCurrentConditionals();
+            resetTab(tab);
+        }
+
+        function getGroupForId(tab, id) {
+            let groups = {};
+            switch (tab) {
+                case 'tactic':
+                    groups = {
+                        'main': ['tactic-new'],
+                        'min': ['tactic-if-min', 'tactic-min-value1', 'tactic-min-value2', 'tactic-min-value3'],
+                        'score': ['tactic-if-score', 'tactic-score-value'],
+                        'shots': ['tactic-if-shots', 'tactic-shots-value'],
+                        'yellow': ['tactic-if-yellow'],
+                        'red': ['tactic-if-red'],
+                        'injured': ['tactic-if-injured']
+                    };
+                    break;
+                case 'substitution':
+                    groups = {
+                        'main': ['sub-off', 'sub-on', 'sub-position'],
+                        'min': ['sub-if-min', 'sub-min-value1', 'sub-min-value2', 'sub-min-value3'],
+                        'score': ['sub-if-score', 'sub-score-value'],
+                        'shots': ['sub-if-shots', 'sub-shots-value'],
+                        'yellow': ['sub-if-yellow'],
+                        'red': ['sub-if-red'],
+                        'injured': ['sub-if-injured']
+                    };
+                    break;
+                case 'reposition':
+                    groups = {
+                        'main': ['reposition-player', 'reposition-position'],
+                        'min': ['reposition-if-min', 'reposition-min-value1', 'reposition-min-value2', 'reposition-min-value3'],
+                        'score': ['reposition-if-score', 'reposition-score-value'],
+                        'shots': ['reposition-if-shots', 'reposition-shots-value'],
+                        'yellow': ['reposition-if-yellow'],
+                        'red': ['reposition-if-red'],
+                        'injured': ['reposition-if-injured']
+                    };
+                    break;
+                case 'aggression':
+                    groups = {
+                        'main': ['aggression-new'],
+                        'min': ['aggression-if-min', 'aggression-min-value1', 'aggression-min-value2', 'aggression-min-value3'],
+                        'score': ['aggression-if-score', 'aggression-score-value'],
+                        'shots': ['aggression-if-shots', 'aggression-shots-value'],
+                        'yellow': ['aggression-if-yellow'],
+                        'red': ['aggression-if-red'],
+                        'injured': ['aggression-if-injured']
+                    };
+                    break;
+            }
+            for (const group in groups) {
+                if (groups[group].includes(id)) {
+                    return group;
+                }
+            }
+            return null;
+        }
+
+        function resetTab(tab) {
+            const content = document.getElementById(tab + '-tab');
+            content.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        }
+
+        // Nueva función para actualizar el select de eliminación de condicionales
+        function updateConditionalsDeleteSelect() {
+            const select = document.getElementById('conditionalToDelete');
+            select.innerHTML = '<option value="" disabled selected>Seleccionar condicional</option>';
+            select.innerHTML += '<option value="all">Todos los condicionales</option>';
+            
+            customConditionals.forEach((conditional, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = conditional;
+                select.appendChild(option);
+            });
+        }
+
+        // Nueva función para eliminar condicionales
+        function deleteConditional() {
+            const select = document.getElementById('conditionalToDelete');
+            const value = select.value;
+            
+            if (value === "all") {
+                // Eliminar todos los condicionales
+                customConditionals = [];
+                document.getElementById('suggested-subs').checked = false;
+                document.getElementById('suggested-conds').checked = false;
+            } else {
+                const index = parseInt(value);
+                if (isNaN(index) || index < 0 || index >= customConditionals.length) {
+                    alert('Por favor, selecciona un condicional para eliminar.');
+                    return;
+                }
+                customConditionals.splice(index, 1);
+            }
+            
+            updateLineup();
+            updateConditionalsDeleteSelect();
+            updateCurrentConditionals();
+            
+            // Resetear el select
+            select.selectedIndex = 0;
+        }
+
+        function updateCurrentConditionals() {
+            const list = document.getElementById('conditionals-list');
+            list.innerHTML = '';
+            
+            let allConditionals = [...customConditionals];
+            
+            if (document.getElementById('suggested-subs').checked) {
+                allConditionals.push(...generateSuggestedSubs());
+            }
+            if (document.getElementById('suggested-conds').checked) {
+                allConditionals.push(...generateSuggestedConds(document.getElementById('tactics-btn').dataset.value || ''));
+            }
+            
+            allConditionals.forEach(cond => {
+                const li = document.createElement('li');
+                li.textContent = cond;
+                list.appendChild(li);
+            });
+        }
+
+        function toggleConditionalsList() {
+            const list = document.getElementById('conditionals-list');
+            const icon = document.querySelector('#current-conditionals h4 i');
+            if (list.style.display === 'none') {
+                list.style.display = 'block';
+                icon.className = 'fas fa-chevron-up';
+            } else {
+                list.style.display = 'none';
+                icon.className = 'fas fa-chevron-down';
+            }
+        }
+
+        // Funciones para el modal del campo
+        function showFieldModal() {
+            const modal = document.getElementById('fieldModal');
+            modal.style.display = 'flex';
+
+            // Limpiar el campo y los suplentes
+            document.getElementById('fieldContainer').innerHTML = '';
+            document.getElementById('substitutesList').innerHTML = '';
+
+            // Obtener los titulares (primeros 11) y suplentes (siguientes 5)
+            const starters = selectedPlayers.slice(0, 11);
+            const substitutes = selectedPlayers.slice(11, 16);
+
+            // Si no hay 11 titulares, mostrar un mensaje
+            if (starters.filter(s => s.player).length < 11) {
+                const message = document.createElement('div');
+                message.textContent = 'Debes seleccionar 11 titulares para ver el campo.';
+                message.style.textAlign = 'center';
+                message.style.padding = '20px';
+                message.style.color = 'var(--text-primary)';
+                document.getElementById('fieldContainer').appendChild(message);
+                return;
+            }
+
+            // Añadir las secciones del campo
+            const fieldContainer = document.getElementById('fieldContainer');
+            const sections = [
+                { num: 6, src: 'https://2img.net/i.imgur.com/lFtvphv.png' },
+                { num: 5, src: 'https://2img.net/i.imgur.com/SxJKpyn.jpeg' },
+                { num: 4, src: 'https://2img.net/i.imgur.com/XtiRV56.jpeg' },
+                { num: 3, src: 'https://2img.net/i.imgur.com/fM6CtVG.jpeg' },
+                { num: 2, src: 'https://2img.net/i.imgur.com/jtQNsGs.jpeg' },
+                { num: 1, src: 'https://2img.net/i.imgur.com/Bd2gNtr.jpeg' }
+            ];
+
+            sections.forEach(sec => {
+                const img = document.createElement('img');
+                img.dataset.section = sec.num;
+                img.alt = `Field Section ${sec.num}`;
+                img.className = 'field-section';
+                img.src = sec.src;
+                img.style.pointerEvents = 'auto'; // Habilitar pointer-events para drop en secciones
+                fieldContainer.appendChild(img);
+            });
+
+            // Agrupar titulares por posición
+            const positions = {
+                'GK': { section: 1, players: [] },
+                'DF': { section: 2, players: [] },
+                'DM': { section: 3, players: [] },
+                'MF': { section: 4, players: [] },
+                'AM': { section: 5, players: [] },
+                'FW': { section: 6, players: [] }
+            };
+
+            starters.forEach(item => {
+                if (item.player) {
+                    const pos = item.position;
+                    if (positions[pos]) {
+                        positions[pos].players.push(item.player);
+                    } else {
+                        positions['MF'].players.push(item.player);
+                    }
+                }
+            });
+
+            // Para cada sección, distribuir los jugadores
+            let playerNumber = 1;
+            Object.keys(positions).forEach(pos => {
+                const group = positions[pos];
+                const n = group.players.length;
+                if (n === 0) return;
+
+                const sectionTop = getSectionTop(pos);
+                group.players.forEach((player, idx) => {
+                    const left = getLeftPosition(n, idx);
+                    const circle = document.createElement('div');
+                    circle.className = 'player-circle';
+                    if (pos === 'GK') {
+                        circle.classList.add('gk');
+                    }
+                    circle.dataset.playerName = player.name;
+                    circle.dataset.playerIndex = playerNumber - 1; // Index in starters
+                    circle.draggable = pos !== 'GK'; // GK no draggable
+                    circle.innerHTML = `
+                        <div class="number">${playerNumber}</div>
+                        <div class="name">${formatPlayerName(player.name)}</div>
+                    `;
+                    circle.style.left = `${left}%`;
+                    circle.style.top = `${sectionTop}%`;
+                    fieldContainer.appendChild(circle);
+                    playerNumber++;
+                });
+            });
+
+            // Setup drag and drop
+            const circles = document.querySelectorAll('.player-circle');
+            circles.forEach(circle => {
+                if (circle.draggable) {
+                    circle.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', circle.dataset.playerIndex);
+                        circle.classList.add('dragging');
+                    });
+                    circle.addEventListener('dragend', (e) => {
+                        circle.classList.remove('dragging');
+                    });
+                }
+            });
+
+            fieldContainer.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            fieldContainer.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggedIndex = e.dataTransfer.getData('text/plain');
+                const dropTarget = e.target.closest('.player-circle');
+
+                if (dropTarget) {
+                    // Intercambiar con el jugador sobre el que se suelta
+                    const targetIndex = dropTarget.dataset.playerIndex;
+                    if (draggedIndex !== targetIndex) {
+                        swapPlayers(parseInt(draggedIndex), parseInt(targetIndex));
+                    }
+                } else {
+                    // Cambiar posición según la sección del campo
+                    const fieldRect = fieldContainer.getBoundingClientRect();
+                    const dropY = e.clientY - fieldRect.top;
+                    const percentY = (dropY / fieldRect.height) * 100;
+                    let sectionNum;
+                    if (percentY < 22.5) sectionNum = 6; // FW
+                    else if (percentY < 37.5) sectionNum = 5; // AM
+                    else if (percentY < 52.5) sectionNum = 4; // MF
+                    else if (percentY < 67.5) sectionNum = 3; // DM
+                    else if (percentY < 82.5) sectionNum = 2; // DF
+                    else sectionNum = 1; // GK
+
+                    const newPosition = getPositionFromSection(sectionNum);
+                    if (newPosition && newPosition !== 'GK') {
+                        changePlayerPosition(selectedPlayers[draggedIndex].player.name, newPosition);
+                        showFieldModal(); // Re-render the field
+                        updateLineup();
+                    }
+                }
+            });
+
+            // Mostrar suplentes
+            substitutes.forEach((item, idx) => {
+                const subNumber = 12 + idx;
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'substitute-item';
+                itemDiv.innerHTML = `
+                    <span class="number">${subNumber}</span>
+                    ${item.player ? formatPlayerName(item.player.name) : ''} (${item.position})
+                `;
+                document.getElementById('substitutesList').appendChild(itemDiv);
+            });
+        }
+
+        function swapPlayers(index1, index2) {
+            // Intercambiar los jugadores y sus posiciones
+            const tempPlayer = selectedPlayers[index1].player;
+            const tempPosition = selectedPlayers[index1].position;
+            selectedPlayers[index1].player = selectedPlayers[index2].player;
+            selectedPlayers[index1].position = selectedPlayers[index2].position;
+            selectedPlayers[index2].player = tempPlayer;
+            selectedPlayers[index2].position = tempPosition;
+
+            // Actualizar las posiciones personalizadas
+            if (selectedPlayers[index1].player) {
+                selectedPlayers[index1].player.customPosition = selectedPlayers[index1].position;
+            }
+            if (selectedPlayers[index2].player) {
+                selectedPlayers[index2].player.customPosition = selectedPlayers[index2].position;
+            }
+
+            updateLineup();
+            displayPlayers();
+            showFieldModal(); // Re-render the field
+        }
+
+        function closeFieldModal() {
+            document.getElementById('fieldModal').style.display = 'none';
+        }
+
+        function getPositionFromSection(section) {
+            const mapping = {
+                '1': 'GK',
+                '2': 'DF',
+                '3': 'DM',
+                '4': 'MF',
+                '5': 'AM',
+                '6': 'FW'
+            };
+            return mapping[section];
+        }
+
+        function getSectionTop(pos) {
+            const tops = {
+                'GK': 90,
+                'DF': 75,
+                'DM': 60,
+                'MF': 45,
+                'AM': 30,
+                'FW': 15
+            };
+            return tops[pos] || 50; // Default to middle if unknown
+        }
+
+        function getLeftPosition(n, idx) {
+            if (n === 1) return 50;
+            const totalWidth = 80;
+            const spacing = totalWidth / (n + 1);
+            return 10 + (idx + 1) * spacing;
+        }
+
+        // Funciones para el modal de plantilla
+        function openSquadViewer() {
+            document.getElementById('squadViewerModal').style.display = 'flex';
+            populateSquadTable();
+        }
+
+        function closeSquadViewer() {
+            document.getElementById('squadViewerModal').style.display = 'none';
+        }
+
+        function populateSquadTable() {
+            const table = document.getElementById('squadTable');
+            table.innerHTML = '';
+
+            // Crear cabecera
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            const headers = [
+                {text: 'Nombre', title: ''}, 
+                {text: 'Edad', title: ''}, 
+                {text: 'Nac', title: ''}, 
+                {text: 'ST', title: 'Atributo como portero'}, 
+                {text: 'TK', title: 'Atributo como defensa'}, 
+                {text: 'PS', title: 'Atributo como centrocampista'}, 
+                {text: 'SH', title: 'Atributo como delantero'}, 
+                {text: 'AG', title: 'Agresividad'}, 
+                {text: 'KAb', title: 'Experiencia como portero'}, 
+                {text: 'TAb', title: 'Experiencia como defensa'}, 
+                {text: 'PAb', title: 'Experiencia como centrocampista'}, 
+                {text: 'SAb', title: 'Experiencia como delantero'}, 
+                {text: 'Gam', title: 'Partidos jugados'}, 
+                {text: 'Sub', title: 'Sustituciones'}, 
+                {text: 'Min', title: 'Minutos jugados'}, 
+                {text: 'Mom', title: 'MVPs conseguidos'}, 
+                {text: 'Sav', title: 'Paradas realizadas'}, 
+                {text: 'Con', title: 'Goles concedidos'}, 
+                {text: 'KTk', title: 'Entradas realizadas'}, 
+                {text: 'KPs', title: 'Pases dados'}, 
+                {text: 'Sht', title: 'Disparos realizados'}, 
+                {text: 'Gls', title: 'Goles anotados'}, 
+                {text: 'Ass', title: 'Asistencias dadas'}, 
+                {text: 'DP', title: 'Puntos de discipline'}, 
+                {text: 'Inj', title: 'Lesionado (número de partidos)'}, 
+                {text: 'Sus', title: 'Sancionado (número de partidos)'}, 
+                {text: 'Fit', title: 'Estado de forma'}
+            ];
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header.text;
+                if (header.title) {
+                    th.title = header.title;
+                }
+                th.addEventListener('click', () => sortTableByColumn(table, headers.indexOf(header)));
+                headerRow.appendChild(th);
+            });
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Crear cuerpo
+            const tbody = document.createElement('tbody');
+            players.forEach(player => {
+                const row = document.createElement('tr');
+                const fields = ['name', 'age', 'nat', 'st', 'tk', 'ps', 'sh', 'ag', 'kab', 'tab', 'pab', 'sab', 'gam', 'sub', 'min', 'mom', 'sav', 'con', 'ktk', 'kps', 'sht', 'gls', 'ass', 'dp', 'inj', 'sus', 'fit'];
+                const maxAttr = Math.max(player.st, player.tk, player.ps, player.sh);
+                fields.forEach((field, index) => {
+                    const td = document.createElement('td');
+                    if (field === 'name') {
+                        td.textContent = formatPlayerName(player[field]);
+                        td.style.textAlign = 'left';
+                        td.style.cursor = 'pointer';
+                        td.addEventListener('click', () => {
+                            const highlighted = document.querySelector('.highlighted-row');
+                            if (highlighted) highlighted.classList.remove('highlighted-row');
+                            row.classList.add('highlighted-row');
+                        });
+                    } else if (field === 'nat') {
+                        const natCode = player[field].toLowerCase();
+                        const flagUrl = flags[natCode] || '';
+                        const fullName = fullNames[natCode] || player[field].toUpperCase();
+                        if (flagUrl) {
+                            td.innerHTML = `<img src="${flagUrl}" class="flag-img" title="${fullName}">`;
+                        } else {
+                            td.textContent = player[field];
+                        }
+                    } else {
+                        td.textContent = player[field];
+                    }
+                    if (field === 'st' && player.st === maxAttr) td.classList.add('highlight');
+                    if (field === 'tk' && player.tk === maxAttr) td.classList.add('highlight');
+                    if (field === 'ps' && player.ps === maxAttr) td.classList.add('highlight');
+                    if (field === 'sh' && player.sh === maxAttr) td.classList.add('highlight');
+                    if (field === 'kab' && parseInt(player.kab) >= 900) td.classList.add('experience-high');
+                    if (field === 'tab' && parseInt(player.tab) >= 900) td.classList.add('experience-high');
+                    if (field === 'pab' && parseInt(player.pab) >= 900) td.classList.add('experience-high');
+                    if (field === 'sab' && parseInt(player.sab) >= 900) td.classList.add('experience-high');
+                    row.appendChild(td);
+                });
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+        }
+
+        function sortTableByColumn(table, column) {
+            const rows = Array.from(table.tBodies[0].rows);
+            const isNumeric = column > 1; // Las columnas después de Edad son numéricas, Nombre es texto
+
+            rows.sort((a, b) => {
+                let aValue = a.cells[column].textContent.trim();
+                let bValue = b.cells[column].textContent.trim();
+
+                if (column === 0) { // Nombre: orden alfabético ascendente
+                    return aValue.localeCompare(bValue);
+                } else if (isNumeric) {
+                    aValue = parseFloat(aValue) || 0;
+                    bValue = parseFloat(bValue) || 0;
+                    return bValue - aValue; // De mayor a menor
+                }
+            });
+
+            rows.forEach(row => table.tBodies[0].appendChild(row));
+        }
+
+        // Funciones para cargar alineación
+        function loadLineupFromFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                if (selectedPlayers.filter(s => s.player).length > 0) {
+                    if (!confirm('Los cambios realizados hasta el momento se perderán. ¿Deseas continuar?')) {
+                        return;
+                    }
+                }
+                parseAndLoadLineup(content);
+                document.getElementById('loadLineupFile').value = ''; // Reset input para permitir recargar el mismo archivo
+            };
+            reader.readAsText(file);
+        }
+
+        function parseAndLoadLineup(content) {
+            const lines = content.split('\n').map(line => line.trim()).filter(line => line !== '');
+            let errors = [];
+            let warnings = [];
+
+            // Resetear selección actual
+            selectedPlayers = [];
+            removedIndices = [];
+            customConditionals = [];
+
+            // Parsear abreviación (primera línea)
+            if (lines.length > 0 && lines[0].length === 3) {
+                document.getElementById('teamAbbr').value = lines[0].toUpperCase();
+            }
+
+            // Parsear táctica (segunda línea)
+            if (lines.length > 1 && lines[1].length === 1 && 'ACDELNPT'.includes(lines[1])) {
+                selectTactic(lines[1]);
+            }
+
+            // Parsear jugadores
+            let i = 2;
+            let parsingStarters = true;
+            let startersCount = 0;
+            let subsCount = 0;
+
+            while (i < lines.length) {
+                const line = lines[i];
+                
+                // Detectar fin de titulares (línea vacía)
+                if (line === '') {
+                    parsingStarters = false;
+                    i++;
+                    continue;
+                }
+
+                // Detectar secciones especiales
+                if (line.startsWith('PK:') || line.startsWith('AGG') || 
+                    line.startsWith('SUB') || line.startsWith('TACTIC') || 
+                    line.startsWith('CHANGEPOS') || line.startsWith('CHANGEAGG')) {
+                    break;
+                }
+
+                // Parsear línea de jugador
+                const playerMatch = line.match(/^(GK|DF|DM|MF|AM|FW)\s+(.+)$/);
+                if (playerMatch) {
+                    let position = playerMatch[1];
+                    const playerName = playerMatch[2];
+                    const player = players.find(p => p.name === playerName);
+
+                    if (!parsingStarters && subsCount === 0) {
+                        position = 'GK';
+                    }
+
+                    const item = {position, player: null};
+                    if (player && player.isAvailable) {
+                        item.player = player;
+                        player.customPosition = position;
+                    } else {
+                        if (player) {
+                            warnings.push(`El jugador ${playerName} está lesionado o sancionado y no se ha incluido.`);
+                        } else {
+                            errors.push(`El jugador ${playerName} no se encuentra en la plantilla.`);
+                        }
+                    }
+                    selectedPlayers.push(item);
+                    if (parsingStarters) {
+                        startersCount++;
+                    } else {
+                        subsCount++;
+                    }
+                }
+                i++;
+            }
+
+            // Parsear PK
+            const pkLine = lines.find(line => line.startsWith('PK:'));
+            if (pkLine) {
+                const pkPlayerName = pkLine.substring(3).trim();
+                const pkPlayer = players.find(p => p.name === pkPlayerName);
+                if (pkPlayer && selectedPlayers.slice(0, 11).some(s => s.player && s.player.name === pkPlayerName) && pkPlayer.isAvailable) {
+                    selectPKTaker(pkPlayerName);
+                } else {
+                    warnings.push(`El lanzador de penaltis ${pkPlayerName} no es válido.`);
+                }
+            }
+
+            // Parsear AGG
+            const aggLine = lines.find(line => line.startsWith('AGG'));
+            if (aggLine) {
+                const aggValue = parseInt(aggLine.substring(3).trim());
+                if (aggValue >= 0 && aggValue <= 20) {
+                    document.getElementById('aggSlider').value = aggValue;
+                    updateAggValue();
+                } else {
+                    warnings.push(`El valor de agresividad ${aggValue} no es válido.`);
+                }
+            }
+
+            // Parsear condicionales
+            for (let j = i; j < lines.length; j++) {
+                const line = lines[j];
+                if (validateConditional(line)) {
+                    customConditionals.push(line);
+                } else if (line.startsWith('SUB') || line.startsWith('TACTIC') || 
+                          line.startsWith('CHANGEPOS') || line.startsWith('CHANGEAGG')) {
+                    warnings.push(`El condicional "${line}" no es válido y no se ha importado.`);
+                }
+            }
+
+            // Actualizar interfaz
+            displayPlayers();
+            updatePKTakerSelect();
+            updateLineup();
+            updateConditionalsDeleteSelect();
+
+            // Mostrar alertas
+            if (errors.length > 0 || warnings.length > 0) {
+                let alertMessage = '';
+                if (errors.length > 0) {
+                    alertMessage += 'Errores:\n' + errors.join('\n') + '\n\n';
+                }
+                if (warnings.length > 0) {
+                    alertMessage += 'Advertencias:\n' + warnings.join('\n');
+                }
+                alert(alertMessage);
+            }
+        }
+
+        // Cargar todas las bases de datos al iniciar
+        loadTeamAbbreviations();
+        initTeamBadges();
+
+        // Check if in iframe
+        if (window.self !== window.top) {
+            document.getElementById('iframe-fullscreen').style.display = 'block';
+            document.body.classList.add('iframe-mode');
+            document.body.classList.add('dark');
+            const icon = document.getElementById('darkToggle').querySelector('i');
+            icon.className = 'fas fa-sun';
+        }
+
+        // Setup tactics dropdown
+        const tacticsDropdown = document.getElementById('tactics-dropdown');
+        const tacticsBtn = document.getElementById('tactics-btn');
+        tacticsBtn.dataset.value = '';
+
+        // Add hover sound to tactics options
+        const tacticsOptions = document.querySelectorAll('#tactics-dropdown .dropdown-content a');
+        tacticsOptions.forEach(option => {
+            option.addEventListener('mouseenter', () => hoverSound.play().catch(e => console.log('Error playing sound:', e)));
+        });
+
+        // Setup pkTaker dropdown
+        const pkTakerDropdown = document.getElementById('pkTaker-dropdown');
+        const pkTakerBtn = document.getElementById('pkTaker-btn');
+        pkTakerBtn.dataset.value = '';
+
+        // Add click toggle for mobile
+        [tacticsDropdown, pkTakerDropdown].forEach(dropdown => {
+            const btn = dropdown.querySelector('.dropbtn');
+            btn.addEventListener('click', () => {
+                dropdown.classList.toggle('active');
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!tacticsDropdown.contains(event.target)) {
+                tacticsDropdown.classList.remove('active');
+            }
+            if (!pkTakerDropdown.contains(event.target)) {
+                pkTakerDropdown.classList.remove('active');
+            }
+        });
+
+        function selectTactic(value) {
+            const btn = document.getElementById('tactics-btn');
+            btn.textContent = value + ' (' + getTacticDescription(value) + ')';
+            btn.dataset.value = value;
+            updateLineup();
+            removeInvalid(btn);
+            selectSound.play().catch(e => console.log('Error playing sound:', e));
+            // Close dropdown on select
+            document.getElementById('tactics-dropdown').classList.remove('active');
+        }
+
+        function getTacticDescription(value) {
+            const descriptions = {
+                'A': 'Atacante',
+                'C': 'Contragolpe',
+                'D': 'Defensiva',
+                'E': 'Europea',
+                'L': 'Balones largos',
+                'N': 'Equilibrada',
+                'P': 'Pases cortos',
+                'T': 'Temeraria'
+            };
+            return descriptions[value] || '';
+        }
+
+        // Función para cambiar el modo de vista
+        function toggleViewMode(compact) {
+            isCompactView = compact;
+            displayPlayers();
+        }
+    </script>
+</body>
+</html>

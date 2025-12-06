@@ -6,18 +6,20 @@
     <title>Haz tu alineación</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <style>
         /* Estilos CSS originales completos */
-        :root{--bg-gradient:linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);--text-primary:#333;--text-secondary:#666;--bg-primary:white;--bg-secondary:#f8f9fa;--border-color:#ddd;--shadow:0 10px 30px rgba(0,0,0,0.3);--highlight:#2a5298;--error:#dc3545;--success:#28a745;--warning:#ffc107;--process:#17a2b8}body.dark{--bg-gradient:linear-gradient(135deg, #0f1419 0%, #1a2332 100%);--text-primary:#e0e0e0;--text-secondary:#b0b0b0;--bg-primary:#1a2332;--bg-secondary:#2a3441;--border-color:#444;--shadow:0 10px 30px rgba(0,0,0,0.5);--highlight:#4a7ac6;--error:#ff6b6b;--success:#51cf66;--warning:#ffd43b;--process:#20c997}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:var(--bg-gradient);color:var(--text-primary);padding:20px;min-height:100vh;transition:background .3s}.container{max-width:1400px;margin:0 auto;background:var(--bg-primary);border-radius:10px;padding:30px;box-shadow:var(--shadow);transition:background .3s,box-shadow .3s}h1{text-align:center;color:var(--highlight);margin-bottom:30px;font-family:Montserrat,sans-serif;cursor:pointer}#darkToggle{position:absolute;top:20px;right:20px;background:var(--highlight);color:#fff;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:16px;transition: background 0.3s, transform 0.3s;}#darkToggle:hover{transform: scale(1.1);background: #1e3c72;}.import-squad-link{color:var(--highlight);text-decoration:none;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;margin-left:10px;font-size:14px}.import-squad-link:hover{text-decoration:underline}.main-content{display:grid;grid-template-columns:1fr 450px;gap:30px;margin-top:30px}.players-section{overflow-y:auto}.players-section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.players-section-header h2{color:var(--text-primary);margin:0}.header-left{display:flex;align-items:center;gap:10px}.info-icon{cursor:pointer;margin-left:10px;font-size:16px;color:var(--highlight)}.team-dropdown{padding:8px;border:2px solid var(--highlight);border-radius:5px;font-size:14px;background:var(--bg-primary);color:var(--text-primary);cursor:pointer}.filter-container{display:flex;align-items:center;gap:8px}.filter-container label{font-size:14px;color:var(--text-primary);cursor:pointer}.filter-container input[type=checkbox]{cursor:pointer;width:18px;height:18px}.lineup-section{position:sticky;top:20px;height:fit-content;max-height:calc(100vh - 40px);overflow-y:auto}.players-section h2{color:var(--text-primary);margin-bottom:15px}.position-group{margin-bottom:20px}.position-title{background:var(--highlight);color:#fff;padding:10px;border-radius:5px;font-weight:700;margin-bottom:10px}.players-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}.player-card{background:var(--bg-secondary);border:2px solid var(--border-color);border-radius:5px;padding:12px;cursor:pointer;transition:all .3s;position:relative;display:flex;justify-content:space-between;align-items:center;min-height:110px}.player-card:hover{background:#e9ecef;border-color:var(--highlight);transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.1)}body.dark .player-card:hover{background:#3a4453}.player-card.selected{background:#d4edda;border-color:var(--success);cursor:default}.player-card.selected-sub{background:#fff3cd;border-color:var(--warning);cursor:default}.player-card.disabled{background:#f8d7da;border-color:var(--error);opacity:.7;cursor:not-allowed}.player-card.disabled:hover{background:#f8d7da;border-color:var(--error);transform:none;box-shadow:none}body.dark .player-card.selected{background:rgba(81,207,102,.2);border-color:var(--success)}body.dark .player-card.selected-sub{background:rgba(255,212,59,.2);border-color:var(--warning)}body.dark .player-card.disabled{background:rgba(220,53,69,.2);border-color:var(--error)}body.dark .player-card.disabled:hover{background:rgba(220,53,69,.2)}.player-details{flex:1}.player-image{width:96px;height:96px;border-radius:50%;object-fit:cover;margin-left:12px;flex-shrink:0}.remove-player{position:absolute;top:5px;right:5px;width:20px;height:20px;background:var(--error);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:12px;line-height:20px;text-align:center;padding:0;display:none;z-index:10}.position-selector{position:absolute;bottom:5px;right:5px;display:none;z-index:10;font-size:11px;padding:2px;width:60px;background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border-color)}.player-card.selected .remove-player,.player-card.selected-sub .remove-player{display:block}.player-card.selected-sub:not(.goalkeeper) .position-selector,.player-card.selected:not(.goalkeeper) .position-selector{display:block}.remove-player:hover{background:#c82333}.player-name{font-weight:700;color:var(--text-primary);font-size:13px;margin-bottom:5px;display:flex;align-items:center;gap:8px}.player-status{font-size:10px;color:var(--error);margin-left:5px}.player-info{font-size:12px;color:var(--text-secondary)}.position-experience{font-size:11px;color:#555;margin-top:3px}.fitness-container{display:flex;align-items:center;gap:5px;margin-top:5px}.fitness-bar{height:10px;background:var(--border-color);border-radius:5px;flex:1;max-width:100px}.fitness-bar div{height:100%;border-radius:5px}.fitness-value{font-size:11px;color:var(--text-primary);font-weight:700;min-width:25px}.highlight{color:brown;font-weight:700}.lineup-output{width:100%;min-height:350px;padding:15px;border:2px solid var(--border-color);border-radius:5px;font-family:monospace;font-size:13px;background:var(--bg-secondary);color:var(--text-primary);white-space:pre}.tactics-section{margin-bottom:15px}.tactics-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}input[type=file],input[type=text],select{padding:8px;border:2px solid var(--border-color);border-radius:5px;font-size:14px;background:var(--bg-primary);color:var(--text-primary)}.invalid{box-shadow:0 0 5px var(--error)}#teamAbbr{width:80px}.team-info{display:grid;grid-template-columns:auto auto;gap:15px;margin-bottom:10px}.abbr-section label,.tactics-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}.pk-agg-section{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px}.pk-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}.agg-section{margin-bottom:0}.agg-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}.agg-slider{width:100%}.agg-value{text-align:center;color:var(--text-secondary);font-size:14px;margin-top:5px}.error{color:var(--error);padding:10px;background:#f8d7da;border:1px solid #f5c6cb;border-radius:5px;margin-top:10px}body.dark .error{background:rgba(255,107,107,.1);border-color:rgba(255,107,107,.3)}.success{color:var(--success);padding:10px;background:#d4edda;border:1px solid #c3e6cb;border-radius:5px;margin-top:10px}body.dark .success{background:rgba(81,207,102,.1);border-color:rgba(81,207,102,.3)}.flag-img{width:20px;vertical-align:middle;margin-right:5px}.action-buttons{display:flex;gap:10px;margin-top:10px}button{padding:12px 24px;background:var(--highlight);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:14px;font-weight:700;transition:background .3s;display:flex;align-items:center;gap:5px}button:hover{background:#1e3c72}body.dark button:hover{background:#3a5aa0}button:disabled{background:#ccc;cursor:not-allowed}button.red{background:var(--error)}button.red:hover{background:#c82333}button.green{background:var(--success)}button.green:hover{background:#218838}button.process{background:var(--success)}button.process:hover{background:#138496}.icon-button{padding:12px;background:0 0;border:none;cursor:pointer}.icon-button img{width:24px;height:24px}#selectCountPopup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:100px;color:var(--highlight);opacity:0;transition:opacity 1s;font-family:Montserrat,sans-serif;text-shadow:2px 2px 4px rgba(0,0,0,.3);background:var(--bg-primary);padding:20px;border-radius:50%;border:5px solid var(--highlight);box-shadow:0 0 20px rgba(0,0,0,.5)}#tickAnimation{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:50px;color:var(--success);opacity:0;transition:opacity 1s}#tutorialModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:400px;text-align:center;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary)}.close-modal{cursor:pointer;float:right;font-size:20px;color:var(--text-secondary)}.close-modal:hover{color:var(--error)}.loading-message{background:#fff3cd;border:1px solid var(--warning);color:#856404;padding:10px;border-radius:5px;margin-top:10px;text-align:center;display:none}body.dark .loading-message{background:rgba(255,212,59,.1);border-color:rgba(255,212,59,.3);color:var(--warning)}#initialDropdownContainer{text-align:center;margin-bottom:20px;display:flex;flex-direction:column;align-items:center;gap:10px}#initialDropdownContainer label{font-weight:700;color:var(--text-primary)}.team-badge{width:96px;height:96px;object-fit:contain;margin-left:10px}.loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:1000}.loading-spinner{width:50px;height:50px;border:5px solid #f3f3f3;border-top:5px solid var(--highlight);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}#conditionals-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff;max-height:80vh;overflow-y:auto}#conditionals-popup .tabs{display:flex;border-bottom:1px solid #ddd;margin-bottom:15px}#conditionals-popup .tab{flex:1;padding:10px;text-align:center;cursor:pointer;background:#f8f9fa;color:#333;transition:background .2s, color .2s, border .2s;border:1px solid #ddd;border-bottom:none;border-radius:5px 5px 0 0;margin:0 2px;}#conditionals-popup .tab.active{background:#2a5298;color:#fff;border-color:var(--highlight)}#conditionals-popup .tab:hover{background:#e9ecef;border-color:var(--highlight)}#conditionals-popup .tab-content{display:none}#conditionals-popup .tab-content.active{display:block}#conditionals-popup input,#conditionals-popup select{width:100%;padding:5px;font-size:12px;border:1px solid #ddd;border-radius:5px;background:#fff;color:#333;margin-top:5px}#conditionals-popup label{font-size:12px;color:#333;display:block;margin-top:10px}body.dark #conditionals-popup label{color:#e0e0e0}#conditionals-popup .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}#conditionals-popup .buttons{display:flex;gap:10px;margin-top:15px;justify-content:center}.close-btn{cursor:pointer;float:right;font-size:20px;color:var(--text-secondary)}.close-btn:hover{color:var(--error)}#conditionals-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}.attributes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin:5px 0;font-size:11px}.attributes-header{font-weight:700;text-align:center}.attributes-values{text-align:center}.experience-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin:5px 0;font-size:11px}.experience-values{text-align:center;position:relative}.experience-high{color:green;font-weight:700}.experience-high::after{content:" ↑"}#squadModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.squad-modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:800px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary)}.squad-modal-content textarea{width:100%;min-height:300px;padding:15px;border:2px solid var(--border-color);border-radius:5px;font-family:monospace;font-size:12px;background:var(--bg-secondary);color:var(--text-primary);resize:vertical;margin-top:10px}.squad-modal-content .button-group{display:flex;gap:10px;margin-top:10px;align-items:center}.squad-modal-content button{padding:12px 24px;background:var(--highlight);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:14px;font-weight:700;transition:background .3s;display:flex;align-items:center;gap:5px}.squad-modal-content button:hover{background:#1e3c72}.squad-modal-content button.red{background:var(--error)}.squad-modal-content button.red:hover{background:#c82333}.scroll-to-top{position:fixed;bottom:20px;right:20px;width:40px;height:40px;background:var(--highlight);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:18px;display:none;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:all .3s;z-index:99}.scroll-to-top:hover{background:#1e3c72;transform:translateY(-2px)}.player-group-option{font-weight:700;background-color:#f0f0f0;padding:5px}.conditionals-management{display:flex;gap:8px;margin-top:15px;align-items:center;flex-wrap:wrap}.conditionals-management select{flex:1;padding:8px;border:2px solid var(--border-color);border-radius:5px;font-size:14px;min-width:120px;background:var(--bg-primary);color:var(--text-primary)}.conditionals-management button{flex:0 0 auto;padding:8px 12px;white-space:nowrap;font-size:12px}.stats-icon{background:0 0;border:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px;border-radius:3px;transition:all .2s}.stats-icon:hover{background:#e9ecef;color:var(--highlight)}body.dark .stats-icon:hover{background:#3a4453}#statsModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.stats-modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:400px;width:90%;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary)}.stats-table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14px}.stats-table td,.stats-table th{border:1px solid var(--border-color);padding:8px;text-align:center}.stats-table th{background-color:var(--bg-secondary);font-weight:700}.stats-info{margin-top:15px;font-size:14px}.stats-info p{margin:5px 0}.player-status-indicator{position:absolute;bottom:5px;right:5px;font-size:10px;color:var(--error);font-weight:700;background:rgba(220,53,69,.1);padding:2px 5px;border-radius:3px}#fieldModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.field-modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:400px;width:95%;max-height:90vh;overflow-y:auto;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary);position:relative}#fieldVisualization{display:flex;flex-direction:column;align-items:center;margin-top:20px}#fieldContainer{position:relative;width:290px;height:461px;margin-bottom:20px}.field-section{width:100%;display:block;margin:0;padding:0;user-drag:none;-webkit-user-drag:none;pointer-events:none;user-select:none;height:auto}.player-circle{position:absolute;width:40px;height:40px;border-radius:50%;background:var(--highlight);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:700;transform:translate(-50%,-50%);border:2px solid #fff;box-shadow:0 0 5px rgba(0,0,0,.5);z-index:10;cursor:default;transition: all 0.3s ease-in-out;} .player-circle.gk{background:#ffc107}.player-circle .number{font-size:14px}.player-circle .name{font-size:10px;text-align:center;margin-top:2px;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow: 1px 1px 0 black;} .player-circle.dragging{opacity:0.5;transform: translate(-50%, -50%) scale(1.1);} .player-circle.swap{animation: swapAnimation 0.5s ease;} @keyframes swapAnimation {0% {transform: translate(-50%, -50%) scale(1);} 50% {transform: translate(-50%, -50%) scale(1.2);} 100% {transform: translate(-50%, -50%) scale(1);}}#substitutesVisualization{width:100%;margin-top:20px}#substitutesVisualization h4{margin-bottom: 15px;}#substitutesList{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.substitute-item{background:var(--bg-secondary);padding:5px 10px;border-radius:5px;font-size:12px;display:flex;align-items:center;gap:5px}.substitute-item .number{font-weight:700;color:var(--highlight)}@media (max-width:1024px){.main-content{grid-template-columns:1fr;gap:20px}.lineup-section{position:static;max-height:none}.players-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.player-card{min-height:120px}.player-image{width:64px;height:64px}#fieldContainer{height:400px}}@media (max-width:768px){body{padding:10px}.container{padding:15px}.players-grid{grid-template-columns:1fr}.button-group{flex-direction:column}.action-buttons{flex-direction:column}#conditionals-popup{width:90%;padding:15px}#conditionals-popup .grid{grid-template-columns:1fr}.import-squad-link{margin-left:0;margin-top:10px;display:block}.conditionals-management{flex-direction:column}.conditionals-management select{min-width:100%}#initialDropdownContainer{flex-direction:column;gap:10px}.team-badge{margin-left:0}.player-image{width:64px;height:64px}#fieldContainer{height:300px}.player-circle{width:30px;height:30px}.player-circle .number{font-size:12px}.player-circle .name{font-size:8px;max-width:60px}}.highlighted-less{border-color:purple!important;box-shadow:0 0 5px purple}.abbr-section{display:flex;align-items:center;gap:10px}.abbr-section img{width:64px;height:64px;object-fit:contain}#conditionals-popup .minute-selects{display:flex;gap:5px}#conditionals-popup .minute-selects select{flex:1;padding:5px;font-size:12px;border:1px solid #ddd;border-radius:5px;background:#fff;color:#333;margin-top:5px}#current-conditionals{position:absolute;right:15px;top:70px;width:200px;background:#f0f0f0;padding:10px;border:1px solid #ddd;border-radius:5px;max-height:400px;overflow-y:auto;color:#333;font-size:12px}#current-conditionals h4{margin:0 0 10px 0;font-size:14px;cursor:pointer;display: flex; align-items: center;}#current-conditionals h4 em {margin-left: 5px;}#current-conditionals ul{list-style-type:none;padding:0;margin:0}#current-conditionals li{margin-bottom:5px;word-break:break-all}#team-badges-container{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:600px;margin:0 auto}#team-badges-container img{width:80px;height:80px;object-fit:contain;cursor:pointer;border:2px solid transparent;border-radius:5px;opacity:0;transform:scale(0.9);animation:fadeInScale 0.5s ease forwards;animation-delay:calc(0.1s * var(--index));}#team-badges-container img:hover{border-color:var(--highlight)}@keyframes fadeInScale{0%{opacity:0;transform:scale(0.9);}100%{opacity:1;transform:scale(1);}}#iframe-fullscreen{display:none;text-align:center;margin-bottom:20px}#iframe-fullscreen button{padding:8px 16px;background:var(--highlight);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:14px;white-space:pre-wrap;text-align:center}#iframe-fullscreen span{margin-left:10px;color:var(--text-secondary)}.modal-content ol{text-align:left;padding-left:20px;margin:10px 0}.modal-content li{margin-bottom:10px}.custom-dropdown{position:relative;display:inline-block;width:100%}.dropbtn{background-color:var(--bg-primary);color:var(--text-primary);padding:8px;font-size:14px;border:2px solid var(--border-color);border-radius:5px;cursor:pointer;width:100%;text-align:left;position:relative}.dropbtn::after{content:"\f078";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;right:10px;top:50%;transform:translateY(-50%)}.dropdown-content{display:none;position:absolute;background-color:var(--bg-primary);min-width:100%;box-shadow:0 8px 16px 0 rgba(0,0,0,.2);z-index:1;border:2px solid var(--border-color);border-radius:5px}.dropdown-content a{color:var(--text-primary);padding:8px 16px;text-decoration:none;display:block;font-size:14px}.dropdown-content a:hover{background-color:#ccc}body.dark .dropdown-content a:hover{background-color:#3a4453;color:#fff}.custom-dropdown:hover .dropdown-content{display:block}.custom-dropdown:hover .dropbtn{border-color:var(--highlight)}@media (max-width:768px){.custom-dropdown .dropdown-content{display:none}.custom-dropdown.active .dropdown-content{display:block}.player-image{width:64px;height:64px}}body.iframe-mode .player-image{width:64px;height:64px}body.iframe-mode .players-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}body.iframe-mode .conditionals-management select{min-width:80px}.players-section .filter-container:last-child{margin-top:10px}.view-mode-icons{display:flex;gap:10px;margin-top:10px;justify-content:flex-start;}.view-mode-icons i{cursor:pointer;font-size:16px;color:var(--highlight);}.view-mode-icons i:hover{color:var(--text-primary);}.player-card.compact{min-height:80px;}.player-card.compact .attributes-grid,.player-card.compact .experience-grid,.player-card.compact .player-info,.player-card.compact .fitness-bar,.player-card.compact .stats-icon{display:none;}.player-card.compact .fitness-container{margin-top:0;justify-content:center;}.player-card.compact .player-details{display:flex;flex-direction:column;align-items:center;gap:5px;}.player-card.compact .player-name{margin-bottom:0;font-size:14px;}.player-card.compact .player-image{width:80px;height:80px;margin-left:0;margin-bottom:5px;}.player-card.compact .player-status-indicator,.player-card.compact .position-selector{bottom:auto;right:auto;position:relative;}.player-card.compact .remove-player{top:0;right:0;}
+        :root{--bg-gradient:linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);--text-primary:#333;--text-secondary:#666;--bg-primary:white;--bg-secondary:#f8f9fa;--border-color:#ddd;--shadow:0 10px 30px rgba(0,0,0,0.3);--highlight:#2a5298;--error:#dc3545;--success:#28a745;--warning:#ffc107;--process:#17a2b8}body.dark{--bg-gradient:linear-gradient(135deg, #0f1419 0%, #1a2332 100%);--text-primary:#e0e0e0;--text-secondary:#b0b0b0;--bg-primary:#1a2332;--bg-secondary:#2a3441;--border-color:#444;--shadow:0 10px 30px rgba(0,0,0,0.5);--highlight:#4a7ac6;--error:#ff6b6b;--success:#51cf66;--warning:#ffd43b;--process:#20c997}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:var(--bg-gradient);color:var(--text-primary);padding:20px;min-height:100vh;transition:background .3s}.container{max-width:1400px;margin:0 auto;background:var(--bg-primary);border-radius:10px;padding:30px;box-shadow:var(--shadow);transition:background .3s,box-shadow .3s}h1{text-align:center;color:var(--highlight);margin-bottom:30px;font-family:Montserrat,sans-serif;cursor:pointer}#darkToggle{position:absolute;top:20px;right:20px;background:var(--highlight);color:#fff;border:none;border-radius:50%;width:40px;height:40px;cursor:pointer;font-size:16px;transition: background 0.3s, transform 0.3s;}#darkToggle:hover{transform: scale(1.1);background: #1e3c72;}.import-squad-link{color:var(--highlight);text-decoration:none;font-weight:700;cursor:pointer;font-family:Montserrat,sans-serif;margin-left:10px;font-size:14px}.import-squad-link:hover{text-decoration:underline}.main-content{display:grid;grid-template-columns:1fr 450px;gap:30px;margin-top:30px}.players-section{overflow-y:auto}.players-section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.players-section-header h2{color:var(--text-primary);margin:0}.header-left{display:flex;align-items:center;gap:10px}.info-icon{cursor:pointer;margin-left:10px;font-size:16px;color:var(--highlight)}.team-dropdown{padding:8px;border:2px solid var(--highlight);border-radius:5px;font-size:14px;background:var(--bg-primary);color:var(--text-primary);cursor:pointer}.filter-container{display:flex;align-items:center;gap:8px}.filter-container label{font-size:14px;color:var(--text-primary);cursor:pointer}.filter-container input[type=checkbox]{cursor:pointer;width:18px;height:18px}.lineup-section{position:sticky;top:20px;height:fit-content;max-height:calc(100vh - 40px);overflow-y:auto}.players-section h2{color:var(--text-primary);margin-bottom:15px}.position-group{margin-bottom:20px}.position-title{background:var(--highlight);color:#fff;padding:10px;border-radius:5px;font-weight:700;margin-bottom:10px}.players-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}.player-card{background:var(--bg-secondary);border:2px solid var(--border-color);border-radius:5px;padding:12px;cursor:pointer;transition:all .3s;position:relative;display:flex;justify-content:space-between;align-items:center;min-height:110px}.player-card:hover{background:#e9ecef;border-color:var(--highlight);transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,.1)}body.dark .player-card:hover{background:#3a4453}.player-card.selected{background:#d4edda;border-color:var(--success);cursor:default}.player-card.selected-sub{background:#fff3cd;border-color:var(--warning);cursor:default}.player-card.disabled{background:#f8d7da;border-color:var(--error);opacity:.7;cursor:not-allowed}.player-card.disabled:hover{background:#f8d7da;border-color:var(--error);transform:none;box-shadow:none}body.dark .player-card.selected{background:rgba(81,207,102,.2);border-color:var(--success)}body.dark .player-card.selected-sub{background:rgba(255,212,59,.2);border-color:var(--warning)}body.dark .player-card.disabled{background:rgba(220,53,69,.2);border-color:var(--error)}body.dark .player-card.disabled:hover{background:rgba(220,53,69,.2)}.player-details{flex:1}.player-image{width:96px;height:96px;border-radius:50%;object-fit:cover;margin-left:12px;flex-shrink:0}.remove-player{position:absolute;top:5px;right:5px;width:20px;height:20px;background:var(--error);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:12px;line-height:20px;text-align:center;padding:0;display:none;z-index:10}.position-selector{position:absolute;bottom:5px;right:5px;display:none;z-index:10;font-size:11px;padding:2px;width:60px;background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border-color)}.player-card.selected .remove-player,.player-card.selected-sub .remove-player{display:block}.player-card.selected-sub:not(.goalkeeper) .position-selector,.player-card.selected:not(.goalkeeper) .position-selector{display:block}.remove-player:hover{background:#c82333}.player-name{font-weight:700;color:var(--text-primary);font-size:13px;margin-bottom:5px;display:flex;align-items:center;gap:8px}.player-status{font-size:10px;color:var(--error);margin-left:5px}.player-info{font-size:12px;color:var(--text-secondary)}.position-experience{font-size:11px;color:#555;margin-top:3px}.fitness-container{display:flex;align-items:center;gap:5px;margin-top:5px}.fitness-bar{height:10px;background:var(--border-color);border-radius:5px;flex:1;max-width:100px}.fitness-bar div{height:100%;border-radius:5px}.fitness-value{font-size:11px;color:var(--text-primary);font-weight:700;min-width:25px}.highlight{color:brown;font-weight:700}.lineup-output{width:100%;min-height:350px;padding:15px;border:2px solid var(--border-color);border-radius:5px;font-family:monospace;font-size:13px;background:var(--bg-secondary);color:var(--text-primary);white-space:pre}.tactics-section{margin-bottom:15px}.tactics-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}input[type=file],input[type=text],select{padding:8px;border:2px solid var(--border-color);border-radius:5px;font-size:14px;background:var(--bg-primary);color:var(--text-primary)}.invalid{box-shadow:0 0 5px var(--error)}#teamAbbr{width:80px}.team-info{display:grid;grid-template-columns:auto auto;gap:15px;margin-bottom:10px}.abbr-section label,.tactics-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}.pk-agg-section{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px}.pk-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}.agg-section{margin-bottom:0}.agg-section label{display:block;margin-bottom:5px;font-weight:700;color:var(--text-primary)}.agg-slider{width:100%}.agg-value{text-align:center;color:var(--text-secondary);font-size:14px;margin-top:5px}.error{color:var(--error);padding:10px;background:#f8d7da;border:1px solid #f5c6cb;border-radius:5px;margin-top:10px}body.dark .error{background:rgba(255,107,107,.1);border-color:rgba(255,107,107,.3)}.success{color:var(--success);padding:10px;background:#d4edda;border:1px solid #c3e6cb;border-radius:5px;margin-top:10px}body.dark .success{background:rgba(81,207,102,.1);border-color:rgba(81,207,102,.3)}.flag-img{width:20px;vertical-align:middle;margin-right:5px}.action-buttons{display:flex;gap:10px;margin-top:10px}button{padding:12px 24px;background:var(--highlight);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:14px;font-weight:700;transition:background .3s;display:flex;align-items:center;gap:5px}button:hover{background:#1e3c72}body.dark button:hover{background:#3a5aa0}button:disabled{background:#ccc;cursor:not-allowed}button.red{background:var(--error)}button.red:hover{background:#c82333}button.green{background:var(--success)}button.green:hover{background:#218838}button.process{background:var(--process)}button.process:hover{background:#138496}.icon-button{padding:12px;background:0 0;border:none;cursor:pointer}.icon-button img{width:24px;height:24px}#selectCountPopup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:100px;color:var(--highlight);opacity:0;transition:opacity 1s;font-family:Montserrat,sans-serif;text-shadow:2px 2px 4px rgba(0,0,0,.3);background:var(--bg-primary);padding:20px;border-radius:50%;border:5px solid var(--highlight);box-shadow:0 0 20px rgba(0,0,0,.5)}#tickAnimation{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:50px;color:var(--success);opacity:0;transition:opacity 1s}#tutorialModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:400px;text-align:center;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary)}.close-modal{cursor:pointer;float:right;font-size:20px;color:var(--text-secondary)}.close-modal:hover{color:var(--error)}.loading-message{background:#fff3cd;border:1px solid var(--warning);color:#856404;padding:10px;border-radius:5px;margin-top:10px;text-align:center;display:none}body.dark .loading-message{background:rgba(255,212,59,.1);border-color:rgba(255,212,59,.3);color:var(--warning)}#initialDropdownContainer{text-align:center;margin-bottom:20px;display:flex;flex-direction:column;align-items:center;gap:10px}#initialDropdownContainer label{font-weight:700;color:var(--text-primary)}.team-badge{width:96px;height:96px;object-fit:contain;margin-left:10px}.loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:1000}.loading-spinner{width:50px;height:50px;border:5px solid #f3f3f3;border-top:5px solid var(--highlight);border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}#conditionals-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff;max-height:80vh;overflow-y:auto}#conditionals-popup .tabs{display:flex;border-bottom:1px solid #ddd;margin-bottom:15px}#conditionals-popup .tab{flex:1;padding:10px;text-align:center;cursor:pointer;background:#f8f9fa;color:#333;transition:background .2s, color .2s, border .2s;border:1px solid #ddd;border-bottom:none;border-radius:5px 5px 0 0;margin:0 2px;}#conditionals-popup .tab.active{background:#2a5298;color:#fff;border-color:var(--highlight)}#conditionals-popup .tab:hover{background:#e9ecef;border-color:var(--highlight)}#conditionals-popup .tab-content{display:none}#conditionals-popup .tab-content.active{display:block}#conditionals-popup input,#conditionals-popup select{width:100%;padding:5px;font-size:12px;border:1px solid #ddd;border-radius:5px;background:#fff;color:#333;margin-top:5px}#conditionals-popup label{font-size:12px;color:#333;display:block;margin-top:10px}body.dark #conditionals-popup label{color:#e0e0e0}#conditionals-popup .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}#conditionals-popup .buttons{display:flex;gap:10px;margin-top:15px;justify-content:center}.close-btn{cursor:pointer;float:right;font-size:20px;color:var(--text-secondary)}.close-btn:hover{color:var(--error)}#conditionals-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}.attributes-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin:5px 0;font-size:11px}.attributes-header{font-weight:700;text-align:center}.attributes-values{text-align:center}.experience-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin:5px 0;font-size:11px}.experience-values{text-align:center;position:relative}.experience-high{color:green;font-weight:700}.experience-high::after{content:" ↑"}#squadModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.squad-modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:800px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary)}.squad-modal-content textarea{width:100%;min-height:300px;padding:15px;border:2px solid var(--border-color);border-radius:5px;font-family:monospace;font-size:12px;background:var(--bg-secondary);color:var(--text-primary);resize:vertical;margin-top:10px}.squad-modal-content .button-group{display:flex;gap:10px;margin-top:10px;align-items:center}.squad-modal-content button{padding:12px 24px;background:var(--highlight);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:14px;font-weight:700;transition:background .3s;display:flex;align-items:center;gap:5px}.squad-modal-content button:hover{background:#1e3c72}.squad-modal-content button.red{background:var(--error)}.squad-modal-content button.red:hover{background:#c82333}.scroll-to-top{position:fixed;bottom:20px;right:20px;width:40px;height:40px;background:var(--highlight);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:18px;display:none;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.2);transition:all .3s;z-index:99}.scroll-to-top:hover{background:#1e3c72;transform:translateY(-2px)}.player-group-option{font-weight:700;background-color:#f0f0f0;padding:5px}.conditionals-management{display:flex;gap:8px;margin-top:15px;align-items:center;flex-wrap:wrap}.conditionals-management select{flex:1;padding:8px;border:2px solid var(--border-color);border-radius:5px;font-size:14px;min-width:120px;background:var(--bg-primary);color:var(--text-primary)}.conditionals-management button{flex:0 0 auto;padding:8px 12px;white-space:nowrap;font-size:12px}.stats-icon{background:0 0;border:none;cursor:pointer;color:var(--text-secondary);font-size:12px;padding:4px;border-radius:3px;transition:all .2s}.stats-icon:hover{background:#e9ecef;color:var(--highlight)}body.dark .stats-icon:hover{background:#3a4453}#statsModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.stats-modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:400px;width:90%;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary)}.stats-table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14px}.stats-table td,.stats-table th{border:1px solid var(--border-color);padding:8px;text-align:center}.stats-table th{background-color:var(--bg-secondary);font-weight:700}.stats-info{margin-top:15px;font-size:14px}.stats-info p{margin:5px 0}.player-status-indicator{position:absolute;bottom:5px;right:5px;font-size:10px;color:var(--error);font-weight:700;background:rgba(220,53,69,.1);padding:2px 5px;border-radius:3px}#fieldModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);justify-content:center;align-items:center;z-index:100}.field-modal-content{background:var(--bg-primary);padding:20px;border-radius:10px;max-width:400px;width:95%;max-height:90vh;overflow-y:auto;box-shadow:0 4px 8px rgba(0,0,0,.2);color:var(--text-primary);position:relative}#fieldVisualization{display:flex;flex-direction:column;align-items:center;margin-top:20px}#fieldContainer{position:relative;width:290px;height:461px;margin-bottom:20px}.field-section{width:100%;display:block;margin:0;padding:0;user-drag:none;-webkit-user-drag:none;pointer-events:none;user-select:none;height:auto}.player-circle{position:absolute;width:40px;height:40px;border-radius:50%;background:var(--highlight);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:700;transform:translate(-50%,-50%);border:2px solid #fff;box-shadow:0 0 5px rgba(0,0,0,.5);z-index:10;cursor:default;transition: all 0.3s ease-in-out;} .player-circle.gk{background:#ffc107}.player-circle .number{font-size:14px}.player-circle .name{font-size:10px;text-align:center;margin-top:2px;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow: 1px 1px 0 black;} .player-circle.dragging{opacity:0.5;transform: translate(-50%, -50%) scale(1.1);} .player-circle.swap{animation: swapAnimation 0.5s ease;} @keyframes swapAnimation {0% {transform: translate(-50%, -50%) scale(1);} 50% {transform: translate(-50%, -50%) scale(1.2);} 100% {transform: translate(-50%, -50%) scale(1);}}#substitutesVisualization{width:100%;margin-top:20px}#substitutesVisualization h4{margin-bottom: 15px;}#substitutesList{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}.substitute-item{background:var(--bg-secondary);padding:5px 10px;border-radius:5px;font-size:12px;display:flex;align-items:center;gap:5px}.substitute-item .number{font-weight:700;color:var(--highlight)}@media (max-width:1024px){.main-content{grid-template-columns:1fr;gap:20px}.lineup-section{position:static;max-height:none}.players-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.player-card{min-height:120px}.player-image{width:64px;height:64px}#fieldContainer{height:400px}}@media (max-width:768px){body{padding:10px}.container{padding:15px}.players-grid{grid-template-columns:1fr}.button-group{flex-direction:column}.action-buttons{flex-direction:column}#conditionals-popup{width:90%;padding:15px}#conditionals-popup .grid{grid-template-columns:1fr}.import-squad-link{margin-left:0;margin-top:10px;display:block}.conditionals-management{flex-direction:column}.conditionals-management select{min-width:100%}#initialDropdownContainer{flex-direction:column;gap:10px}.team-badge{margin-left:0}.player-image{width:64px;height:64px}#fieldContainer{height:300px}.player-circle{width:30px;height:30px}.player-circle .number{font-size:12px}.player-circle .name{font-size:8px;max-width:60px}}.highlighted-less{border-color:purple!important;box-shadow:0 0 5px purple}.abbr-section{display:flex;align-items:center;gap:10px}.abbr-section img{width:64px;height:64px;object-fit:contain}#conditionals-popup .minute-selects{display:flex;gap:5px}#conditionals-popup .minute-selects select{flex:1;padding:5px;font-size:12px;border:1px solid #ddd;border-radius:5px;background:#fff;color:#333;margin-top:5px}#current-conditionals{position:absolute;right:15px;top:70px;width:200px;background:#f0f0f0;padding:10px;border:1px solid #ddd;border-radius:5px;max-height:400px;overflow-y:auto;color:#333;font-size:12px}#current-conditionals h4{margin:0 0 10px 0;font-size:14px;cursor:pointer;display: flex; align-items: center;}#current-conditionals h4 em {margin-left: 5px;}#current-conditionals ul{list-style-type:none;padding:0;margin:0}#current-conditionals li{margin-bottom:5px;word-break:break-all}#team-badges-container{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:600px;margin:0 auto}#team-badges-container img{width:80px;height:80px;object-fit:contain;cursor:pointer;border:2px solid transparent;border-radius:5px;opacity:0;transform:scale(0.9);animation:fadeInScale 0.5s ease forwards;animation-delay:calc(0.1s * var(--index));}#team-badges-container img:hover{border-color:var(--highlight)}@keyframes fadeInScale{0%{opacity:0;transform:scale(0.9);}100%{opacity:1;transform:scale(1);}}#iframe-fullscreen{display:none;text-align:center;margin-bottom:20px}#iframe-fullscreen button{padding:8px 16px;background:var(--highlight);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:14px;white-space:pre-wrap;text-align:center}#iframe-fullscreen span{margin-left:10px;color:var(--text-secondary)}.modal-content ol{text-align:left;padding-left:20px;margin:10px 0}.modal-content li{margin-bottom:10px}.custom-dropdown{position:relative;display:inline-block;width:100%}.dropbtn{background-color:var(--bg-primary);color:var(--text-primary);padding:8px;font-size:14px;border:2px solid var(--border-color);border-radius:5px;cursor:pointer;width:100%;text-align:left;position:relative}.dropbtn::after{content:"\f078";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;right:10px;top:50%;transform:translateY(-50%)}.dropdown-content{display:none;position:absolute;background-color:var(--bg-primary);min-width:100%;box-shadow:0 8px 16px 0 rgba(0,0,0,.2);z-index:1;border:2px solid var(--border-color);border-radius:5px}.dropdown-content a{color:var(--text-primary);padding:8px 16px;text-decoration:none;display:block;font-size:14px}.dropdown-content a:hover{background-color:#ccc}body.dark .dropdown-content a:hover{background-color:#3a4453;color:#fff}.custom-dropdown:hover .dropdown-content{display:block}.custom-dropdown:hover .dropbtn{border-color:var(--highlight)}@media (max-width:768px){.custom-dropdown .dropdown-content{display:none}.custom-dropdown.active .dropdown-content{display:block}.player-image{width:64px;height:64px}}body.iframe-mode .player-image{width:64px;height:64px}body.iframe-mode .players-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}body.iframe-mode .conditionals-management select{min-width:80px}.players-section .filter-container:last-child{margin-top:10px}.view-mode-icons{display:flex;gap:10px;margin-top:10px;justify-content:flex-start;}.view-mode-icons i{cursor:pointer;font-size:16px;color:var(--highlight);}.view-mode-icons i:hover{color:var(--text-primary);}.player-card.compact{min-height:80px;}.player-card.compact .attributes-grid,.player-card.compact .experience-grid,.player-card.compact .player-info,.player-card.compact .fitness-bar,.player-card.compact .stats-icon{display:none;}.player-card.compact .fitness-container{margin-top:0;justify-content:center;}.player-card.compact .player-details{display:flex;flex-direction:column;align-items:center;gap:5px;}.player-card.compact .player-name{margin-bottom:0;font-size:14px;}.player-card.compact .player-image{width:80px;height:80px;margin-left:0;margin-bottom:5px;}.player-card.compact .player-status-indicator,.player-card.compact .position-selector{bottom:auto;right:auto;position:relative;}.player-card.compact .remove-player{top:0;right:0;}
 
         /* Nuevos estilos para el modal de plantilla */
         #squadViewerModal {display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;}
         .squad-viewer-content {background: var(--bg-primary); border-radius: 10px; padding: 20px; max-width: 90%; max-height: 90%; width: 1200px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); color: var(--text-primary);}
-        .squad-viewer-content h3 {margin-bottom: 15px; text-align: center;}
+        .squad-viewer-content h3 {margin-bottom: 10px; text-align: center;}
+        .squad-viewer-content .description {font-size: 12px; color: var(--text-secondary); text-align: center; margin-bottom: 15px;}
         .squad-table-container {overflow: auto; max-height: 70vh; border: 1px solid var(--border-color); border-radius: 5px;}
         .squad-table {width: 100%; border-collapse: collapse; font-size: 12px;}
         .squad-table th, .squad-table td {border: 1px solid var(--border-color); padding: 6px; text-align: center;}
-        .squad-table th {background-color: var(--bg-secondary); position: sticky; top: 0; z-index: 10;}
+        .squad-table th {background-color: var(--bg-secondary); position: sticky; top: 0; z-index: 10; cursor: pointer;}
         .squad-table th:first-child, .squad-table td:first-child {position: sticky; left: 0; background-color: var(--bg-secondary); z-index: 11;}
         .squad-table tr:nth-child(even) {background-color: rgba(0,0,0,0.03);}
         body.dark .squad-table tr:nth-child(even) {background-color: rgba(255,255,255,0.03);}
@@ -25,16 +27,229 @@
         /* Cambios solicitados para la tabla de plantilla */
         .squad-table td:first-child {text-align: left !important;}
         .squad-table tr:hover {background-color: var(--bg-secondary);}
-        .squad-table th {cursor: pointer;}
         .squad-table .highlight {color: brown; font-weight: 700;}
         .squad-table .flag-img {width: 20px; height: 15px; vertical-align: middle;}
-        .squad-table tr.highlighted-row {background-color: var(--highlight) !important; color: white;}
+        .squad-table tr.highlighted-row {background-color: var(--highlight) !important; color: #333 !important;}
+        body.dark .squad-table tr.highlighted-row {color: #fff !important;}
         .squad-table .experience-high {color: green; font-weight: 700;}
+
+        /* Ajuste para texto blanco en fila seleccionada en modo claro */
+        body:not(.dark) .squad-table tr.highlighted-row td:not(:first-child) {
+            color: white !important;
+        }
 
         /* Estilos para los enlaces de opciones */
         .option-link {color: var(--highlight); text-decoration: none; display: block; margin: 5px 0;}
         .option-link:hover {text-decoration: underline;}
         body.dark .option-link {color: #ffffff;}
+        
+        /* Flechas para los enlaces de opciones */
+        .option-link i {
+            margin-right: 8px;
+            color: var(--highlight);
+            transition: transform 0.2s;
+        }
+        
+        .option-link:hover i {
+            transform: translateX(3px);
+        }
+
+        /* Estilos para scrollbars consistentes */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--highlight);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1e3c72;
+        }
+        
+        body.dark ::-webkit-scrollbar-thumb {
+            background: var(--highlight);
+        }
+        
+        body.dark ::-webkit-scrollbar-thumb:hover {
+            background: #3a5aa0;
+        }
+        
+        /* Scrollbars específicos para elementos con overflow */
+        .players-section,
+        .lineup-section,
+        .squad-table-container,
+        .lineup-output,
+        #conditionals-popup,
+        #current-conditionals,
+        .squad-viewer-content {
+            scrollbar-width: thin;
+            scrollbar-color: var(--highlight) var(--bg-secondary);
+        }
+        
+        /* Mejoras para móvil */
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .action-buttons button {
+                flex: 1 0 auto;
+                min-width: 120px;
+            }
+        }
+
+        /* Estilos para el botón de captura de pantalla */
+        .btn-screenshot {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: var(--highlight);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: 100%;
+        }
+
+        .btn-screenshot:hover {
+            background: #1e3c72;
+        }
+
+        /* Estilos para el modal de alineación rápida */
+        #quickLineupModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quick-lineup-content {
+            background: var(--bg-primary);
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            color: var(--text-primary);
+        }
+
+        .quick-lineup-content h3 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .quick-lineup-content .description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .quick-lineup-content .input-group {
+            margin-bottom: 15px;
+        }
+
+        .quick-lineup-content label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .quick-lineup-content select, .quick-lineup-content input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .quick-lineup-content .range-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quick-lineup-content .range-container input {
+            flex: 1;
+        }
+
+        .quick-lineup-content .range-value {
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .quick-lineup-content .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .quick-lineup-content .checkbox-group input {
+            width: auto;
+        }
+
+        .quick-lineup-content .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .quick-lineup-content .buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .quick-lineup-content .buttons .btn-generate {
+            background: var(--success);
+            color: white;
+        }
+
+        .quick-lineup-content .buttons .btn-cancel {
+            background: var(--error);
+            color: white;
+        }
+
+        /* Asegurar que las imágenes del campo se muestren en la captura */
+        .field-section {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        /* Estilo para descripciones en modal de alineación rápida */
+        .quick-note {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 5px 0 15px 0;
+            text-align: center;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -63,9 +278,9 @@
         <a onclick="openSquadModal()" class="import-squad-link">Importar otra plantilla</a>
     </div>
     <h4>Más opciones</h4>
-    <a class="option-link" href="https://www.tusoccermanager.com/h47-visuallineupbuilder-html" target="_blank" title="Haz tu alineación de forma interactiva, al estilo Football Manager, con círculos y un terreno de juego.">Al estilo Football Manager</a>
-    <a class="option-link" href="https://www.tusoccermanager.com/h43-lineupgenerator-html" target="_blank" title="Deja que el sistema genere varias alineaciones sugeridas para ti. Además pueden personalizarse en segundos.">Alineaciones en segundos</a>
-    <a class="option-link" href="https://www.tusoccermanager.com/h35-lineupvalidator-html" target="_blank" title="Utiliza esta herramienta y asegúrate de que tus alineaciones hechas manualmente nunca contengan ningún error.">Comprueba tu alineación</a>
+    <a class="option-link" href="https://www.tusoccermanager.com/h47-visuallineupbuilder-html" target="_blank" title="Haz tu alineación de forma interactiva, al estilo Football Manager, con círculos y un terreno de juego."><i class="fas fa-arrow-right"></i> Al estilo Football Manager</a>
+    <a class="option-link" href="https://www.tusoccermanager.com/h43-lineupgenerator-html" target="_blank" title="Deja que el sistema genere varias alineaciones sugeridas para ti. Además pueden personalizarse en segundos."><i class="fas fa-arrow-right"></i> Alineaciones en segundos</a>
+    <a class="option-link" href="https://www.tusoccermanager.com/h35-lineupvalidator-html" target="_blank" title="Utiliza esta herramienta y asegúrate de que tus alineaciones hechas manualmente nunca contengan ningún error."><i class="fas fa-arrow-right"></i> Comprueba tu alineación</a>
 </div>
         <div class="main-content" id="mainContent" style="display: none;">
             <div class="players-section">
@@ -107,10 +322,11 @@
                     </button>
                 </div>
                 <div class="filter-container">
-                    <input onchange="updateLineup()" type="checkbox" id="suggested-subs" />
+                    <input onchange="toggleSuggestedSubs()" type="checkbox" id="suggested-subs" />
                     <label for="suggested-subs">Sustituciones sugeridas</label>
-                    <input onchange="updateLineup()" type="checkbox" id="suggested-conds" />
+                    <input onchange="toggleSuggestedConds()" type="checkbox" id="suggested-conds" />
                     <label for="suggested-conds">Condicionales sugeridos</label>
+                    <a onclick="openQuickLineupModal()" class="import-squad-link" style="cursor: pointer;">Alineación rápida</a>
                 </div>
             </div>
             <div class="lineup-section">
@@ -187,10 +403,74 @@
         <div class="squad-viewer-content">
             <span class="close-modal" onclick="closeSquadViewer()">×</span>
             <h3>Plantilla</h3>
+            <p class="description">Haz clic en cualquier columna para ordenar los valores de mayor a menor.</p>
             <div class="squad-table-container">
                 <table id="squadTable" class="squad-table">
                     <!-- La tabla se llenará dinámicamente -->
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de alineación rápida -->
+    <div id="quickLineupModal">
+        <div class="quick-lineup-content">
+            <span class="close-modal" onclick="closeQuickLineupModal()">×</span>
+            <h3>Alineación rápida</h3>
+            <p class="description">La alineación generada puede ser ajustada manualmente después.</p>
+            <p class="quick-note">Nota: El sistema no incluirá jugadores lesionados o suspendidos.</p>
+            <div class="input-group">
+                <label for="quickFormation">Formación</label>
+                <select id="quickFormation">
+                    <option value="Aleatoria">Aleatoria</option>
+                    <option value="4-4-2">4-4-2</option>
+                    <option value="4-3-3">4-3-3</option>
+                    <option value="4-5-1">4-5-1</option>
+                    <option value="5-3-2">5-3-2</option>
+                    <option value="3-4-3">3-4-3</option>
+                    <option value="3-5-2">3-5-2</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="quickTactic">Táctica</label>
+                <select id="quickTactic">
+                    <option value="Aleatoria">Aleatoria</option>
+                    <option value="A">A (Atacante)</option>
+                    <option value="C">C (Contragolpe)</option>
+                    <option value="D">D (Defensiva)</option>
+                    <option value="E">E (Europea)</option>
+                    <option value="L">L (Balones largos)</option>
+                    <option value="N">N (Equilibrada)</option>
+                    <option value="P">P (Pases cortos)</option>
+                    <option value="T">T (Temeraria)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Opciones avanzadas</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="quickFitPriority" />
+                    <label for="quickFitPriority">Solo jugadores con Fit > 90</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="quickPriorizeSubs" />
+                    <label for="quickPriorizeSubs">Priorizar suplentes (ideal para la Copa Total)</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="quickMixPlayers" />
+                    <label for="quickMixPlayers">Combinar titulares con suplentes</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="quickAggression" />
+                    <label for="quickAggression">Agresividad</label>
+                </div>
+                <div class="range-container" id="quickAggressionSlider" style="display:none;">
+                    <input type="range" id="quickAggressionValue" min="0" max="20" value="10" oninput="document.getElementById('quickAggressionDisplay').textContent = this.value" />
+                    <span class="range-value" id="quickAggressionDisplay">10</span>
+                </div>
+            </div>
+            <div class="buttons">
+                <button class="btn-generate" onclick="generateQuickLineup()">Generar alineación</button>
+                <button class="btn-cancel" onclick="closeQuickLineupModal()">Cancelar</button>
             </div>
         </div>
     </div>
@@ -225,6 +505,9 @@
         <div class="field-modal-content">
             <span class="close-modal" onclick="closeFieldModal()">×</span>
             <h3>Vista del campo</h3>
+            <button onclick="takeScreenshot()" class="btn-screenshot" title="La captura se descargará automáticamente">
+                <i class="fas fa-camera"></i> Tomar captura de pantalla
+            </button>
             <div id="fieldVisualization">
                 <div id="fieldContainer">
                 </div>
@@ -246,7 +529,7 @@
                 </button>
                 <label for="fileInput" style="padding: 12px 24px; background: var(--highlight); color: white; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 5px;">
                     <i class="fas fa-upload"></i> Cargar 
-                </label>
+                </button>
                 <input type="file" id="fileInput" accept=".txt" style="display: none;" onchange="loadFile(event)" />
                 <button onclick="resetAll()">
                     <i class="fas fa-sync"></i> Limpiar 
@@ -418,7 +701,7 @@
                         <option value="-2">-2</option>
                         <option value="-3">-3</option>
                     </select>
-                </div>
+    </div>
                 <div>
                     <label>Si el número de disparos</label>
                     <select id="sub-if-shots">
@@ -644,15 +927,104 @@
         let confirmationSound = new Audio('https://www.tusoccermanager.com/confirmationsound');
         let isCompactView = false;
         
+        // Nuevas variables para condicionales sugeridos
+        let suggestedSubs = [];
+        let suggestedConds = [];
+        
+        // Variables para colores de equipos
+        let teamColors = {};
+
         // Inicializar la página
         document.addEventListener('DOMContentLoaded', function() {
             loadTeamAbbreviations();
             loadTeamBadges().then(() => {
                 initTeamBadges();
             });
+            loadTeamColors();
+            
+            // Configurar cierre de modales con clic fuera
+            setupModalCloseListeners();
+            
+            // Configurar cierre con tecla Escape
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeAllModals();
+                }
+            });
+            
+            // Configurar checkboxes mutuamente excluyentes en modal de alineación rápida
+            document.getElementById('quickPriorizeSubs').addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('quickMixPlayers').checked = false;
+                }
+            });
+            
+            document.getElementById('quickMixPlayers').addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('quickPriorizeSubs').checked = false;
+                }
+            });
+            
+            // Mostrar/ocultar slider de agresividad
+            document.getElementById('quickAggression').addEventListener('change', function() {
+                document.getElementById('quickAggressionSlider').style.display = this.checked ? 'flex' : 'none';
+            });
         });
         
+        function setupModalCloseListeners() {
+            // Cerrar modales al hacer clic fuera
+            window.addEventListener('click', function(event) {
+                const quickModal = document.getElementById('quickLineupModal');
+                if (event.target === quickModal) {
+                    closeQuickLineupModal();
+                }
+                
+                const squadViewerModal = document.getElementById('squadViewerModal');
+                if (event.target === squadViewerModal) {
+                    closeSquadViewer();
+                }
+                
+                const fieldModal = document.getElementById('fieldModal');
+                if (event.target === fieldModal) {
+                    closeFieldModal();
+                }
+                
+                const conditionalsPopup = document.getElementById('conditionals-popup');
+                if (event.target === document.getElementById('conditionals-overlay')) {
+                    closeConditionalsPopup();
+                }
+                
+                const squadModal = document.getElementById('squadModal');
+                if (event.target === squadModal) {
+                    closeSquadModal();
+                }
+                
+                const statsModal = document.getElementById('statsModal');
+                if (event.target === statsModal) {
+                    closeStatsModal();
+                }
+                
+                const tutorialModal = document.getElementById('tutorialModal');
+                if (event.target === tutorialModal) {
+                    hideTutorial();
+                }
+            });
+        }
+        
+        function closeAllModals() {
+            closeQuickLineupModal();
+            closeSquadViewer();
+            closeFieldModal();
+            closeConditionalsPopup();
+            closeSquadModal();
+            closeStatsModal();
+            hideTutorial();
+        }
+        
         function formatNumber(num) {
+            if (typeof num !== 'number') {
+                num = parseFloat(num) || 0;
+            }
             return num.toLocaleString('es-ES');
         }
         
@@ -816,6 +1188,33 @@
                     reject(err);
                 }
             });
+        }
+
+        // Función para cargar colores de equipos
+        async function loadTeamColors() {
+            try {
+                const response = await fetch('https://www.tusoccermanager.com/h96-teamcolourdb-html');
+                const text = await response.text();
+                
+                // Parsear el pre para extraer los colores
+                const preMatch = text.match(/<pre>([\s\S]*?)<\/pre>/);
+                if (preMatch) {
+                    const preContent = preMatch[1];
+                    const lines = preContent.split('\n');
+                    
+                    lines.forEach(line => {
+                        const match = line.match(/([^:]+):\s*\{primary:\s*"([^"]+)",\s*secondary:\s*"([^"]+)"\}/);
+                        if (match) {
+                            const teamName = match[1].trim();
+                            const primary = match[2];
+                            const secondary = match[3];
+                            teamColors[teamName] = { primary, secondary };
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error('Error al cargar colores de equipos:', err);
+            }
         }
         
         async function determineTeam(squadPlayers) {
@@ -1176,6 +1575,11 @@
                 selectedPlayers = [];
                 removedIndices = [];
                 customConditionals = [];
+                suggestedSubs = [];
+                suggestedConds = [];
+                
+                document.getElementById('suggested-subs').checked = false;
+                document.getElementById('suggested-conds').checked = false;
                 
                 await loadPlayerImages();
                 await loadFlagDB();
@@ -1595,8 +1999,25 @@
             updateLineup();
             removeInvalid(btn);
             selectSound.play().catch(e => console.log('Error playing sound:', e));
-            // Close dropdown on select
-            document.getElementById('pkTaker-dropdown').classList.remove('active');
+            
+            // Cerrar el dropdown y mover el cursor
+            const dropdown = document.getElementById('pkTaker-dropdown');
+            dropdown.classList.remove('active');
+            
+            // Mover el cursor un poco hacia un lado para que el dropdown se cierre
+            const btnRect = btn.getBoundingClientRect();
+            const x = btnRect.left + btnRect.width + 10;
+            const y = btnRect.top + btnRect.height / 2;
+            
+            // Simular un clic fuera del dropdown
+            setTimeout(() => {
+                const fakeEvent = new MouseEvent('click', {
+                    clientX: x,
+                    clientY: y,
+                    bubbles: true
+                });
+                document.dispatchEvent(fakeEvent);
+            }, 10);
         }
         
         function updateAggValue() {
@@ -1647,6 +2068,29 @@
             return [...selectedCat1, ...selectedCat2];
         }
         
+        function toggleSuggestedSubs() {
+            const checkbox = document.getElementById('suggested-subs');
+            if (checkbox.checked) {
+                // Generar nuevas sustituciones sugeridas
+                suggestedSubs = generateSuggestedSubs();
+            } else {
+                suggestedSubs = [];
+            }
+            updateLineup();
+        }
+        
+        function toggleSuggestedConds() {
+            const checkbox = document.getElementById('suggested-conds');
+            if (checkbox.checked) {
+                // Generar nuevos condicionales sugeridos
+                const tactics = document.getElementById('tactics-btn').dataset.value || '';
+                suggestedConds = generateSuggestedConds(tactics);
+            } else {
+                suggestedConds = [];
+            }
+            updateLineup();
+        }
+        
         function updateLineup() {
             const teamAbbr = document.getElementById('teamAbbr').value.toUpperCase() || '';
             const tacticsBtn = document.getElementById('tactics-btn');
@@ -1688,12 +2132,7 @@
             }
             
             let additional = [];
-            if (document.getElementById('suggested-subs').checked) {
-                additional.push(...generateSuggestedSubs());
-            }
-            if (document.getElementById('suggested-conds').checked) {
-                additional.push(...generateSuggestedConds(tactics));
-            }
+            additional.push(...suggestedSubs, ...suggestedConds);
             
             if (customConditionals.length > 0 || additional.length > 0) {
                 // Asegurar separación con línea vacía antes de los condicionales
@@ -1707,6 +2146,13 @@
             
             document.getElementById('lineupOutput').value = lineup;
             document.getElementById('selectedCount').textContent = selectedPlayers.filter(s => s.player).length;
+            
+            // Actualizar el select de eliminación
+            updateConditionalsDeleteSelect();
+            
+            // Actualizar el estado de los checkboxes basado en si hay condicionales
+            document.getElementById('suggested-subs').checked = suggestedSubs.length > 0;
+            document.getElementById('suggested-conds').checked = suggestedConds.length > 0;
         }
         
         function validateLineup() {
@@ -1759,13 +2205,41 @@
             if (!validateLineup()) return;
             
             const lineupText = document.getElementById('lineupOutput').value;
-            navigator.clipboard.writeText(lineupText).then(() => {
-                showMessage('Alineación copiada al portapapeles', 'success');
-                showTick();
-                confirmationSound.play().catch(e => console.log('Error playing sound:', e));
-            }).catch(err => {
-                showMessage('Error al copiar. Selecciona y copia manualmente.', 'error');
-            });
+            const textArea = document.createElement('textarea');
+            textArea.value = lineupText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            textArea.setSelectionRange(0, 99999); // Para dispositivos móviles
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showMessage('Alineación copiada al portapapeles', 'success');
+                    showTick();
+                    // Reproducir sonido de confirmación
+                    confirmationSound.currentTime = 0;
+                    confirmationSound.play().catch(e => console.log('Error playing sound:', e));
+                } else {
+                    throw new Error('Falló el comando copy');
+                }
+            } catch (err) {
+                // Fallback a la API del portapapeles si está disponible
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(lineupText).then(() => {
+                        showMessage('Alineación copiada al portapapeles', 'success');
+                        showTick();
+                        // Reproducir sonido de confirmación
+                        confirmationSound.currentTime = 0;
+                        confirmationSound.play().catch(e => console.log('Error playing sound:', e));
+                    }).catch(err2 => {
+                        showMessage('Error al copiar. Selecciona y copia manualmente.', 'error');
+                    });
+                } else {
+                    showMessage('Error al copiar. Selecciona y copia manualmente.', 'error');
+                }
+            } finally {
+                document.body.removeChild(textArea);
+            }
         }
         
         function downloadLineup() {
@@ -1780,6 +2254,9 @@
             a.download = `${teamAbbr}sht.txt`;
             a.click();
             URL.revokeObjectURL(url);
+            
+            // Reproducir sonido de confirmación
+            confirmationSound.currentTime = 0;
             confirmationSound.play().catch(e => console.log('Error playing sound:', e));
         }
         
@@ -1806,6 +2283,10 @@
             selectedPlayers = [];
             removedIndices = [];
             customConditionals = [];
+            suggestedSubs = [];
+            suggestedConds = [];
+            document.getElementById('suggested-subs').checked = false;
+            document.getElementById('suggested-conds').checked = false;
             document.getElementById('message').textContent = '';
             document.getElementById('message').className = '';
             team = '';
@@ -2263,9 +2744,26 @@
             select.innerHTML = '<option value="" disabled selected>Seleccionar condicional</option>';
             select.innerHTML += '<option value="all">Todos los condicionales</option>';
             
+            // Añadir condicionales personalizados
             customConditionals.forEach((conditional, index) => {
                 const option = document.createElement('option');
-                option.value = index;
+                option.value = `custom_${index}`;
+                option.textContent = conditional;
+                select.appendChild(option);
+            });
+            
+            // Añadir sustituciones sugeridas
+            suggestedSubs.forEach((conditional, index) => {
+                const option = document.createElement('option');
+                option.value = `suggestedSub_${index}`;
+                option.textContent = conditional;
+                select.appendChild(option);
+            });
+            
+            // Añadir condicionales sugeridos
+            suggestedConds.forEach((conditional, index) => {
+                const option = document.createElement('option');
+                option.value = `suggestedCond_${index}`;
                 option.textContent = conditional;
                 select.appendChild(option);
             });
@@ -2279,15 +2777,39 @@
             if (value === "all") {
                 // Eliminar todos los condicionales
                 customConditionals = [];
+                suggestedSubs = [];
+                suggestedConds = [];
                 document.getElementById('suggested-subs').checked = false;
                 document.getElementById('suggested-conds').checked = false;
-            } else {
-                const index = parseInt(value);
+            } else if (value.startsWith('custom_')) {
+                const index = parseInt(value.split('_')[1]);
                 if (isNaN(index) || index < 0 || index >= customConditionals.length) {
                     alert('Por favor, selecciona un condicional para eliminar.');
                     return;
                 }
                 customConditionals.splice(index, 1);
+            } else if (value.startsWith('suggestedSub_')) {
+                const index = parseInt(value.split('_')[1]);
+                if (isNaN(index) || index < 0 || index >= suggestedSubs.length) {
+                    alert('Por favor, selecciona un condicional para eliminar.');
+                    return;
+                }
+                suggestedSubs.splice(index, 1);
+                // Si ya no hay sustituciones sugeridas, actualizar el estado
+                if (suggestedSubs.length === 0) {
+                    document.getElementById('suggested-subs').checked = false;
+                }
+            } else if (value.startsWith('suggestedCond_')) {
+                const index = parseInt(value.split('_')[1]);
+                if (isNaN(index) || index < 0 || index >= suggestedConds.length) {
+                    alert('Por favor, selecciona un condicional para eliminar.');
+                    return;
+                }
+                suggestedConds.splice(index, 1);
+                // Si ya no hay condicionales sugeridos, actualizar el estado
+                if (suggestedConds.length === 0) {
+                    document.getElementById('suggested-conds').checked = false;
+                }
             }
             
             updateLineup();
@@ -2302,14 +2824,7 @@
             const list = document.getElementById('conditionals-list');
             list.innerHTML = '';
             
-            let allConditionals = [...customConditionals];
-            
-            if (document.getElementById('suggested-subs').checked) {
-                allConditionals.push(...generateSuggestedSubs());
-            }
-            if (document.getElementById('suggested-conds').checked) {
-                allConditionals.push(...generateSuggestedConds(document.getElementById('tactics-btn').dataset.value || ''));
-            }
+            let allConditionals = [...customConditionals, ...suggestedSubs, ...suggestedConds];
             
             allConditionals.forEach(cond => {
                 const li = document.createElement('li');
@@ -2396,6 +2911,11 @@
                 }
             });
 
+            // Obtener colores del equipo
+            const colors = teamColors[team] || { primary: '#2a5298', secondary: '#ffffff' };
+            const primaryColor = colors.primary;
+            const secondaryColor = colors.secondary;
+
             // Para cada sección, distribuir los jugadores
             let playerNumber = 1;
             Object.keys(positions).forEach(pos => {
@@ -2410,6 +2930,12 @@
                     circle.className = 'player-circle';
                     if (pos === 'GK') {
                         circle.classList.add('gk');
+                        circle.style.background = '#ffc107';
+                        circle.style.borderColor = secondaryColor;
+                    } else {
+                        // Usar color del equipo para jugadores no porteros
+                        circle.style.background = primaryColor;
+                        circle.style.borderColor = secondaryColor;
                     }
                     circle.dataset.playerName = player.name;
                     circle.dataset.playerIndex = playerNumber - 1; // Index in starters
@@ -2439,6 +2965,82 @@
 
         function closeFieldModal() {
             document.getElementById('fieldModal').style.display = 'none';
+        }
+
+        // Función para tomar captura de pantalla
+        function takeScreenshot() {
+            const fieldContent = document.querySelector('.field-modal-content');
+            const screenshotBtn = fieldContent.querySelector('.btn-screenshot');
+            
+            // Ocultar el botón temporalmente para que no aparezca en la captura
+            if (screenshotBtn) {
+                screenshotBtn.style.display = 'none';
+            }
+            
+            // Asegurarse de que las imágenes del campo estén cargadas
+            const fieldImages = fieldContent.querySelectorAll('.field-section');
+            let loadedImages = 0;
+            const totalImages = fieldImages.length;
+            
+            if (totalImages === 0) {
+                // Si no hay imágenes, tomar captura directamente
+                captureScreenshot(fieldContent);
+                return;
+            }
+            
+            // Esperar a que todas las imágenes se carguen
+            fieldImages.forEach(img => {
+                if (img.complete) {
+                    loadedImages++;
+                } else {
+                    img.onload = () => {
+                        loadedImages++;
+                        if (loadedImages === totalImages) {
+                            captureScreenshot(fieldContent);
+                        }
+                    };
+                    img.onerror = () => {
+                        loadedImages++;
+                        if (loadedImages === totalImages) {
+                            captureScreenshot(fieldContent);
+                        }
+                    };
+                }
+            });
+            
+            // Si todas las imágenes ya estaban cargadas
+            if (loadedImages === totalImages) {
+                captureScreenshot(fieldContent);
+            }
+        }
+
+        function captureScreenshot(element) {
+            html2canvas(element, {
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: null,
+                scale: 2 // Aumentar calidad
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'campo-alineacion.png';
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+                
+                // Restaurar el botón después de la captura
+                const screenshotBtn = element.querySelector('.btn-screenshot');
+                if (screenshotBtn) {
+                    screenshotBtn.style.display = 'block';
+                }
+            }).catch(err => {
+                console.error('Error al tomar captura:', err);
+                alert('Error al tomar la captura. Intenta de nuevo.');
+                
+                // Restaurar el botón en caso de error
+                const screenshotBtn = element.querySelector('.btn-screenshot');
+                if (screenshotBtn) {
+                    screenshotBtn.style.display = 'block';
+                }
+            });
         }
 
         function getPositionFromSection(section) {
@@ -2619,6 +3221,10 @@
             selectedPlayers = [];
             removedIndices = [];
             customConditionals = [];
+            suggestedSubs = [];
+            suggestedConds = [];
+            document.getElementById('suggested-subs').checked = false;
+            document.getElementById('suggested-conds').checked = false;
 
             // Parsear abreviación (primera línea)
             if (lines.length > 0 && lines[0].length === 3) {
@@ -2724,11 +3330,26 @@
             for (let j = i; j < lines.length; j++) {
                 const line = lines[j];
                 if (validateConditional(line)) {
-                    customConditionals.push(line);
+                    // Verificar si es un condicional sugerido
+                    if (line.includes('SUB') && line.includes('IF MIN =')) {
+                        suggestedSubs.push(line);
+                    } else if (line.startsWith('TACTIC') || line.startsWith('CHANGEPOS') || line.startsWith('CHANGEAGG')) {
+                        suggestedConds.push(line);
+                    } else {
+                        customConditionals.push(line);
+                    }
                 } else if (line.startsWith('SUB') || line.startsWith('TACTIC') || 
                           line.startsWith('CHANGEPOS') || line.startsWith('CHANGEAGG')) {
                     warnings.push(`El condicional "${line}" no es válido y no se ha importado.`);
                 }
+            }
+
+            // Marcar checkboxes si hay condicionales sugeridos
+            if (suggestedSubs.length > 0) {
+                document.getElementById('suggested-subs').checked = true;
+            }
+            if (suggestedConds.length > 0) {
+                document.getElementById('suggested-conds').checked = true;
             }
 
             // Actualizar interfaz
@@ -2748,6 +3369,178 @@
                 }
                 alert(alertMessage);
             }
+        }
+
+        // Funciones para el modal de alineación rápida
+        function openQuickLineupModal() {
+            // Verificar si ya hay jugadores seleccionados
+            if (selectedPlayers.filter(s => s.player).length > 0) {
+                if (!confirm('La alineación seleccionada hasta el momento será reemplazada por la nueva alineación. ¿Deseas continuar?')) {
+                    return;
+                }
+            }
+            document.getElementById('quickLineupModal').style.display = 'flex';
+        }
+
+        function closeQuickLineupModal() {
+            document.getElementById('quickLineupModal').style.display = 'none';
+        }
+
+        function generateQuickLineup() {
+            // Obtener valores del modal
+            const formation = document.getElementById('quickFormation').value;
+            const tactic = document.getElementById('quickTactic').value;
+            const fitPriority = document.getElementById('quickFitPriority').checked;
+            const priorizeSubs = document.getElementById('quickPriorizeSubs').checked;
+            const mixPlayers = document.getElementById('quickMixPlayers').checked;
+            const aggressionChecked = document.getElementById('quickAggression').checked;
+            const aggressionValue = aggressionChecked ? document.getElementById('quickAggressionValue').value : 0;
+
+            // Validar que haya jugadores
+            if (players.length === 0) {
+                alert('Primero carga una plantilla.');
+                return;
+            }
+
+            // Generar alineación
+            const lineup = generateLineup(formation, tactic, fitPriority, priorizeSubs, mixPlayers, aggressionValue);
+
+            // Limpiar selección actual
+            selectedPlayers = [];
+            removedIndices = [];
+            customConditionals = [];
+            suggestedSubs = [];
+            suggestedConds = [];
+            document.getElementById('suggested-subs').checked = false;
+            document.getElementById('suggested-conds').checked = false;
+
+            // Asignar los titulares (primeros 11) a selectedPlayers
+            // Primero, llenamos los 11 slots de titulares
+            for (let i = 0; i < 11; i++) {
+                if (lineup.starters[i]) {
+                    const player = lineup.starters[i];
+                    selectedPlayers.push({ player: player, position: player.position });
+                } else {
+                    selectedPlayers.push({ player: null, position: i === 0 ? 'GK' : 'DF' });
+                }
+            }
+
+            // Luego, los 5 suplentes
+            for (let i = 0; i < 5; i++) {
+                if (lineup.subs[i]) {
+                    const player = lineup.subs[i];
+                    selectedPlayers.push({ player: player, position: player.position });
+                } else {
+                    selectedPlayers.push({ player: null, position: i === 0 ? 'GK' : 'DF' });
+                }
+            }
+
+            // Actualizar la táctica si no es aleatoria
+            if (tactic !== 'Aleatoria') {
+                selectTactic(tactic);
+            } else {
+                // Si es aleatoria, obtener la táctica generada
+                const randomTactic = getRandomTactic();
+                selectTactic(randomTactic);
+            }
+
+            // Actualizar el lanzador de penaltis (elegir el primer delantero o centrocampista)
+            const pkTaker = lineup.starters.find(p => p.position === 'FW') || lineup.starters.find(p => p.position === 'MF');
+            if (pkTaker) {
+                selectPKTaker(pkTaker.name);
+            }
+
+            // Actualizar la agresividad
+            if (aggressionChecked && aggressionValue > 0) {
+                document.getElementById('aggSlider').value = aggressionValue;
+                updateAggValue();
+            }
+
+            // Actualizar la interfaz
+            displayPlayers();
+            updatePKTakerSelect();
+            updateLineup();
+            updateConditionalsDeleteSelect();
+
+            // Cerrar el modal automáticamente
+            closeQuickLineupModal();
+        }
+
+        // Funciones auxiliares para generar la alineación
+        function generateLineup(formation, tactic, fitPriority, priorizeSubs, mixPlayers, aggressionValue) {
+            // Filtrar jugadores disponibles (no lesionados ni sancionados)
+            let availablePlayers = players.filter(p => p.isAvailable);
+
+            // Si priorizar suplentes, ordenar por minutos (ascendente)
+            if (priorizeSubs) {
+                availablePlayers.sort((a, b) => parseInt(a.min) - parseInt(b.min));
+            }
+            // Si combinar titulares con suplentes, mezclar jugadores con más y menos minutos
+            else if (mixPlayers) {
+                // Ordenar por minutos (ascendente)
+                availablePlayers.sort((a, b) => parseInt(a.min) - parseInt(b.min));
+                
+                // Dividir la lista en dos mitades
+                const mid = Math.floor(availablePlayers.length / 2);
+                const lowMinutes = availablePlayers.slice(0, mid);
+                const highMinutes = availablePlayers.slice(mid);
+                
+                // Intercalar jugadores de ambas mitades
+                let mixed = [];
+                for (let i = 0; i < Math.max(lowMinutes.length, highMinutes.length); i++) {
+                    if (i < lowMinutes.length) mixed.push(lowMinutes[i]);
+                    if (i < highMinutes.length) mixed.push(highMinutes[i]);
+                }
+                availablePlayers = mixed;
+            }
+            // Si fitPriority, ordenar por fit (de mayor a menor)
+            else if (fitPriority) {
+                availablePlayers.sort((a, b) => b.fit - a.fit);
+            }
+
+            // Determinar la formación
+            const formationConfig = {
+                '4-4-2': { df: 4, mf: 4, fw: 2 },
+                '4-3-3': { df: 4, mf: 3, fw: 3 },
+                '4-5-1': { df: 4, mf: 5, fw: 1 },
+                '5-3-2': { df: 5, mf: 3, fw: 2 },
+                '3-4-3': { df: 3, mf: 4, fw: 3 },
+                '3-5-2': { df: 3, mf: 5, fw: 2 }
+            };
+
+            let config = formationConfig[formation];
+            if (!config && formation === 'Aleatoria') {
+                const randomFormation = Object.keys(formationConfig)[Math.floor(Math.random() * Object.keys(formationConfig).length)];
+                config = formationConfig[randomFormation];
+            }
+
+            // Separar por posición
+            const gks = availablePlayers.filter(p => p.position === 'GK');
+            const dfs = availablePlayers.filter(p => p.position === 'DF');
+            const mfs = availablePlayers.filter(p => p.position === 'MF');
+            const fws = availablePlayers.filter(p => p.position === 'FW');
+
+            // Seleccionar titulares
+            const starters = [
+                ...gks.slice(0, 1).map(p => ({ ...p, position: 'GK' })),
+                ...dfs.slice(0, config.df).map(p => ({ ...p, position: 'DF' })),
+                ...mfs.slice(0, config.mf).map(p => ({ ...p, position: 'MF' })),
+                ...fws.slice(0, config.fw).map(p => ({ ...p, position: 'FW' }))
+            ];
+
+            // Los jugadores restantes serán suplentes (hasta 5)
+            const usedNames = new Set(starters.map(p => p.name));
+            const remaining = availablePlayers.filter(p => !usedNames.has(p.name));
+            const subs = remaining.slice(0, 5).map(player => {
+                return { ...player, position: player.position };
+            });
+
+            return { starters, subs };
+        }
+
+        function getRandomTactic() {
+            const tactics = ['A', 'C', 'D', 'E', 'L', 'N', 'P', 'T'];
+            return tactics[Math.floor(Math.random() * tactics.length)];
         }
 
         // Cargar todas las bases de datos al iniciar

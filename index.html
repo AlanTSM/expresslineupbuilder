@@ -170,7 +170,7 @@
         .quick-lineup-content label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
+            font-weight: normal; /* Cambiado de bold a normal según solicitud */
             color: var(--text-primary);
         }
 
@@ -418,7 +418,7 @@
             <span class="close-modal" onclick="closeQuickLineupModal()">×</span>
             <h3>Alineación rápida</h3>
             <p class="description">La alineación generada puede ser ajustada manualmente después.</p>
-            <p class="quick-note">Nota: El sistema no incluirá jugadores lesionados o suspendidos.</p>
+            <p class="quick-note">El sistema no incluirá jugadores lesionados o suspendidos.</p>
             <div class="input-group">
                 <label for="quickFormation">Formación</label>
                 <select id="quickFormation">
@@ -2967,10 +2967,19 @@
             document.getElementById('fieldModal').style.display = 'none';
         }
 
-        // Función para tomar captura de pantalla
+        // Función para tomar captura de pantalla (modificada para preguntar por suplentes)
         function takeScreenshot() {
+            const includeSubs = confirm('¿Deseas incluir a los suplentes en la captura de pantalla?');
+            
             const fieldContent = document.querySelector('.field-modal-content');
             const screenshotBtn = fieldContent.querySelector('.btn-screenshot');
+            const subsSection = document.getElementById('substitutesVisualization');
+            
+            // Ocultar temporalmente la sección de suplentes si el usuario no quiere incluirla
+            const originalDisplay = subsSection.style.display;
+            if (!includeSubs) {
+                subsSection.style.display = 'none';
+            }
             
             // Ocultar el botón temporalmente para que no aparezca en la captura
             if (screenshotBtn) {
@@ -2982,9 +2991,20 @@
             let loadedImages = 0;
             const totalImages = fieldImages.length;
             
+            const captureAndRestore = () => {
+                captureScreenshot(fieldContent);
+                // Restaurar visibilidad de elementos
+                if (!includeSubs) {
+                    subsSection.style.display = originalDisplay;
+                }
+                if (screenshotBtn) {
+                    screenshotBtn.style.display = 'block';
+                }
+            };
+            
             if (totalImages === 0) {
                 // Si no hay imágenes, tomar captura directamente
-                captureScreenshot(fieldContent);
+                captureAndRestore();
                 return;
             }
             
@@ -2996,13 +3016,13 @@
                     img.onload = () => {
                         loadedImages++;
                         if (loadedImages === totalImages) {
-                            captureScreenshot(fieldContent);
+                            captureAndRestore();
                         }
                     };
                     img.onerror = () => {
                         loadedImages++;
                         if (loadedImages === totalImages) {
-                            captureScreenshot(fieldContent);
+                            captureAndRestore();
                         }
                     };
                 }
@@ -3010,7 +3030,7 @@
             
             // Si todas las imágenes ya estaban cargadas
             if (loadedImages === totalImages) {
-                captureScreenshot(fieldContent);
+                captureAndRestore();
             }
         }
 
@@ -3025,21 +3045,9 @@
                 link.download = 'campo-alineacion.png';
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
-                
-                // Restaurar el botón después de la captura
-                const screenshotBtn = element.querySelector('.btn-screenshot');
-                if (screenshotBtn) {
-                    screenshotBtn.style.display = 'block';
-                }
             }).catch(err => {
                 console.error('Error al tomar captura:', err);
                 alert('Error al tomar la captura. Intenta de nuevo.');
-                
-                // Restaurar el botón en caso de error
-                const screenshotBtn = element.querySelector('.btn-screenshot');
-                if (screenshotBtn) {
-                    screenshotBtn.style.display = 'block';
-                }
             });
         }
 
@@ -3371,14 +3379,9 @@
             }
         }
 
-        // Funciones para el modal de alineación rápida
+        // Funciones para el modal de alineación rápida - MODIFICADAS
         function openQuickLineupModal() {
-            // Verificar si ya hay jugadores seleccionados
-            if (selectedPlayers.filter(s => s.player).length > 0) {
-                if (!confirm('La alineación seleccionada hasta el momento será reemplazada por la nueva alineación. ¿Deseas continuar?')) {
-                    return;
-                }
-            }
+            // Eliminamos la confirmación aquí (se moverá a generateQuickLineup)
             document.getElementById('quickLineupModal').style.display = 'flex';
         }
 
@@ -3386,7 +3389,15 @@
             document.getElementById('quickLineupModal').style.display = 'none';
         }
 
+        // Nueva función mejorada para generar alineación rápida basada en la página de referencia
         function generateQuickLineup() {
+            // Verificar si ya hay jugadores seleccionados y mostrar confirmación (aquí es donde debe aparecer)
+            if (selectedPlayers.filter(s => s.player).length > 0) {
+                if (!confirm('La alineación seleccionada hasta el momento será reemplazada por la nueva alineación. ¿Deseas continuar?')) {
+                    return;
+                }
+            }
+
             // Obtener valores del modal
             const formation = document.getElementById('quickFormation').value;
             const tactic = document.getElementById('quickTactic').value;
@@ -3402,8 +3413,8 @@
                 return;
             }
 
-            // Generar alineación
-            const lineup = generateLineup(formation, tactic, fitPriority, priorizeSubs, mixPlayers, aggressionValue);
+            // Generar alineación usando la lógica mejorada
+            const lineup = generateImprovedLineup(formation, tactic, fitPriority, priorizeSubs, mixPlayers, aggressionValue);
 
             // Limpiar selección actual
             selectedPlayers = [];
@@ -3464,38 +3475,64 @@
 
             // Cerrar el modal automáticamente
             closeQuickLineupModal();
+            
+            // Mostrar mensaje de éxito
+            showMessage('Alineación generada correctamente', 'success');
         }
 
-        // Funciones auxiliares para generar la alineación
-        function generateLineup(formation, tactic, fitPriority, priorizeSubs, mixPlayers, aggressionValue) {
+        // Función mejorada para generar alineación basada en la lógica de la página de referencia
+        function generateImprovedLineup(formation, tactic, fitPriority, priorizeSubs, mixPlayers, aggressionValue) {
             // Filtrar jugadores disponibles (no lesionados ni sancionados)
             let availablePlayers = players.filter(p => p.isAvailable);
-
-            // Si priorizar suplentes, ordenar por minutos (ascendente)
-            if (priorizeSubs) {
-                availablePlayers.sort((a, b) => parseInt(a.min) - parseInt(b.min));
+            
+            if (availablePlayers.length < 16) {
+                alert('No hay suficientes jugadores disponibles (mínimo 16).');
+                return { starters: [], subs: [] };
             }
-            // Si combinar titulares con suplentes, mezclar jugadores con más y menos minutos
-            else if (mixPlayers) {
-                // Ordenar por minutos (ascendente)
-                availablePlayers.sort((a, b) => parseInt(a.min) - parseInt(b.min));
+
+            // Convertir atributos al formato de la página de referencia
+            const convertedPlayers = availablePlayers.map(player => ({
+                ...player,
+                gk: player.st,
+                df: player.tk,
+                mf: player.ps,
+                fw: player.sh,
+                totalScore: player.st + player.tk + player.ps + player.sh
+            }));
+
+            // Asignar roles a los centrocampistas (DM/MF/AM)
+            const playersWithRoles = assignMidfieldRolesImproved(convertedPlayers);
+
+            // Ordenar jugadores según las opciones seleccionadas
+            let sortedPlayers = [...playersWithRoles];
+            
+            if (fitPriority) {
+                sortedPlayers.sort((a, b) => b.fit - a.fit);
+            }
+            
+            if (priorizeSubs) {
+                // Ordenar por minutos ascendente (jugadores con menos minutos primero)
+                sortedPlayers.sort((a, b) => parseInt(a.min || 0) - parseInt(b.min || 0));
+            } else if (mixPlayers) {
+                // Mezclar jugadores con más y menos minutos
+                sortedPlayers.sort((a, b) => parseInt(a.min || 0) - parseInt(b.min || 0));
+                const mid = Math.floor(sortedPlayers.length / 2);
+                const lowMinutes = sortedPlayers.slice(0, mid);
+                const highMinutes = sortedPlayers.slice(mid);
                 
-                // Dividir la lista en dos mitades
-                const mid = Math.floor(availablePlayers.length / 2);
-                const lowMinutes = availablePlayers.slice(0, mid);
-                const highMinutes = availablePlayers.slice(mid);
-                
-                // Intercalar jugadores de ambas mitades
                 let mixed = [];
                 for (let i = 0; i < Math.max(lowMinutes.length, highMinutes.length); i++) {
                     if (i < lowMinutes.length) mixed.push(lowMinutes[i]);
                     if (i < highMinutes.length) mixed.push(highMinutes[i]);
                 }
-                availablePlayers = mixed;
-            }
-            // Si fitPriority, ordenar por fit (de mayor a menor)
-            else if (fitPriority) {
-                availablePlayers.sort((a, b) => b.fit - a.fit);
+                sortedPlayers = mixed;
+            } else {
+                // Ordenar por mejor atributo principal (default)
+                sortedPlayers.sort((a, b) => {
+                    const aMax = Math.max(a.gk, a.df, a.mf, a.fw);
+                    const bMax = Math.max(b.gk, b.df, b.mf, b.fw);
+                    return bMax - aMax;
+                });
             }
 
             // Determinar la formación
@@ -3514,28 +3551,137 @@
                 config = formationConfig[randomFormation];
             }
 
-            // Separar por posición
-            const gks = availablePlayers.filter(p => p.position === 'GK');
-            const dfs = availablePlayers.filter(p => p.position === 'DF');
-            const mfs = availablePlayers.filter(p => p.position === 'MF');
-            const fws = availablePlayers.filter(p => p.position === 'FW');
+            // Separar por posición basada en el mejor atributo
+            const gks = sortedPlayers.filter(p => p.gk === Math.max(p.gk, p.df, p.mf, p.fw));
+            const dfs = sortedPlayers.filter(p => p.df === Math.max(p.gk, p.df, p.mf, p.fw));
+            const mfs = sortedPlayers.filter(p => p.mf === Math.max(p.gk, p.df, p.mf, p.fw));
+            const fws = sortedPlayers.filter(p => p.fw === Math.max(p.gk, p.df, p.mf, p.fw));
 
-            // Seleccionar titulares
+            // Seleccionar titulares asegurando roles DM/AM
             const starters = [
                 ...gks.slice(0, 1).map(p => ({ ...p, position: 'GK' })),
                 ...dfs.slice(0, config.df).map(p => ({ ...p, position: 'DF' })),
-                ...mfs.slice(0, config.mf).map(p => ({ ...p, position: 'MF' })),
+                ...selectMidfieldersWithRoles(mfs, config.mf),
                 ...fws.slice(0, config.fw).map(p => ({ ...p, position: 'FW' }))
             ];
 
-            // Los jugadores restantes serán suplentes (hasta 5)
-            const usedNames = new Set(starters.map(p => p.name));
-            const remaining = availablePlayers.filter(p => !usedNames.has(p.name));
-            const subs = remaining.slice(0, 5).map(player => {
-                return { ...player, position: player.position };
-            });
+            // Asegurar que no haya más de 2 DMs y 2 AMs, y al menos 2 MFs
+            adjustMidfieldRoles(starters);
 
-            return { starters, subs };
+            // Seleccionar suplentes (1 GK, 2 DF, 1 MF, 1 FW)
+            const usedNames = new Set(starters.map(p => p.name));
+            const remaining = sortedPlayers.filter(p => !usedNames.has(p.name));
+            
+            const subs = [
+                ...remaining.filter(p => p.gk === Math.max(p.gk, p.df, p.mf, p.fw)).slice(0, 1).map(p => ({ ...p, position: 'GK' })),
+                ...remaining.filter(p => p.df === Math.max(p.gk, p.df, p.mf, p.fw)).slice(0, 2).map(p => ({ ...p, position: 'DF' })),
+                ...remaining.filter(p => p.mf === Math.max(p.gk, p.df, p.mf, p.fw)).slice(0, 1).map(p => ({ ...p, position: 'MF' })),
+                ...remaining.filter(p => p.fw === Math.max(p.gk, p.df, p.mf, p.fw)).slice(0, 1).map(p => ({ ...p, position: 'FW' }))
+            ];
+
+            // Asegurar que tenemos suplentes completos
+            if (subs.filter(s => s.position === 'GK').length === 0) {
+                // Si no hay portero suplente, buscar cualquier jugador con atributo GK decente
+                const potentialGK = remaining.find(p => p.gk >= 15);
+                if (potentialGK) {
+                    subs.push({ ...potentialGK, position: 'GK' });
+                }
+            }
+
+            return { starters, subs: subs.slice(0, 5) };
+        }
+
+        // Función para asignar roles a centrocampistas (mejorada)
+        function assignMidfieldRolesImproved(players) {
+            return players.map(player => {
+                // Si no es un centrocampista primario, dejarlo como MF
+                if (player.mf < Math.max(player.gk, player.df, player.fw)) {
+                    return { ...player, role: 'MF' };
+                }
+
+                const dfScore = player.df;
+                const fwScore = player.fw;
+                let role = 'MF';
+
+                // Probabilidades basadas en atributos
+                const baseProbability = (score) => {
+                    if (score <= 5) return 0;
+                    return Math.min(0.95, 0.50 + (score - 6) * (0.45 / 9));
+                };
+
+                if (dfScore > fwScore && dfScore > 5) {
+                    const probDM = baseProbability(dfScore);
+                    if (Math.random() < probDM) {
+                        role = 'DM';
+                    }
+                } else if (fwScore > dfScore && fwScore > 5) {
+                    const probAM = baseProbability(fwScore);
+                    if (Math.random() < probAM) {
+                        role = 'AM';
+                    }
+                }
+
+                return { ...player, role };
+            });
+        }
+
+        // Función para seleccionar centrocampistas con roles
+        function selectMidfieldersWithRoles(midfielders, count) {
+            // Ordenar por calidad de centrocampista
+            midfielders.sort((a, b) => b.mf - a.mf);
+            
+            // Tomar los mejores
+            const selected = midfielders.slice(0, count);
+            
+            // Asignar posiciones basadas en roles
+            return selected.map(player => {
+                let position = 'MF';
+                if (player.role === 'DM') position = 'DM';
+                if (player.role === 'AM') position = 'AM';
+                return { ...player, position };
+            });
+        }
+
+        // Función para ajustar roles de centrocampistas
+        function adjustMidfieldRoles(starters) {
+            const midfielders = starters.filter(p => ['DM', 'MF', 'AM'].includes(p.position));
+            
+            const dmCount = midfielders.filter(p => p.position === 'DM').length;
+            const amCount = midfielders.filter(p => p.position === 'AM').length;
+            const mfCount = midfielders.filter(p => p.position === 'MF').length;
+            
+            // Limitar a máximo 2 DMs y 2 AMs
+            if (dmCount > 2) {
+                let converted = 0;
+                starters.forEach((player, index) => {
+                    if (player.position === 'DM' && converted < dmCount - 2) {
+                        starters[index].position = 'MF';
+                        converted++;
+                    }
+                });
+            }
+            
+            if (amCount > 2) {
+                let converted = 0;
+                starters.forEach((player, index) => {
+                    if (player.position === 'AM' && converted < amCount - 2) {
+                        starters[index].position = 'MF';
+                        converted++;
+                    }
+                });
+            }
+            
+            // Asegurar al menos 2 MFs
+            const currentMFCount = starters.filter(p => p.position === 'MF').length;
+            if (currentMFCount < 2) {
+                let needed = 2 - currentMFCount;
+                starters.forEach((player, index) => {
+                    if (needed > 0 && (player.position === 'DM' || player.position === 'AM')) {
+                        starters[index].position = 'MF';
+                        needed--;
+                    }
+                });
+            }
         }
 
         function getRandomTactic() {

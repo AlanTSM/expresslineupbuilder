@@ -1390,48 +1390,118 @@
             }
         }
         
+        // NUEVA FUNCIÓN DE VALIDACIÓN MEJORADA BASADA EN LA PÁGINA DE REFERENCIA
         function validateConditional(conditional) {
             conditional = conditional.trim();
             if (!conditional) return false;
 
-            // Validar mayúsculas
+            // Validar que esté completamente en mayúsculas
             if (/[a-z]/.test(conditional)) {
                 return false;
             }
 
-            // Regex comunes para condiciones combinadas
+            // Contar el número de "IF"
+            const ifCount = (conditional.match(/IF/g) || []).length;
+            if (ifCount !== 1) {
+                return false;
+            }
+
+            // Patrones de condiciones individuales (igual que en la página de referencia)
             const conditionPattern = `(?:(?:MIN\\s*(?:=|>=|<=)\\s+(?:[1-9]\\d?|1[01]\\d|120))|(?:SCORE\\s+(?:=|>=|<=)\\s+[+-]?\\d+)|(?:SHOTS\\s+(?:=|>=|<=)\\s+[+-]?\\d+)|(?:INJURED\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6]))|(?:YELLOW\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6]))|(?:RED\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6])))`;
 
-            // Nuevos regex permitiendo múltiples condiciones combinadas
-            const tacticRegex = new RegExp(`^TACTIC\\s+[ACDELNPT]\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+            // Regex para cada tipo de condicional
+            const tacticRegex = new RegExp(`^TACTIC\\s+[ACELNPDT]\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
             const subRegex = new RegExp(`^SUB\\s+([1-9]|1[0-6])\\s+([1-9]|1[0-6])\\s+(GK|DF|DM|MF|AM|FW)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+            const subNewRegex = new RegExp(`^SUB\\s+(GK|DF|DM|MF|AM|FW)\\s+(1[2-6])\\s+(GK|DF|DM|MF|AM|FW)\\s+IF\\s+(INJURED|YELLOW|RED)\\s+(GK|DF|DM|MF|AM|FW)$`);
             const changePosRegex = new RegExp(`^CHANGEPOS\\s+([1-9]|1[0-6])\\s+(GK|DF|DM|MF|AM|FW)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
-            const changeAggRegex = new RegExp(`^CHANGEAGG\\s+([1-9]|1\\d|20)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+            const changeAggRegex = new RegExp(`^CHANGEAGG\\s+([1-9]\\d|20)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
 
+            // Validar cada tipo
             if (tacticRegex.test(conditional)) {
+                const parts = conditional.split(/\s+/);
+                const letStr = parts[1];
+                if (letStr.length !== 1 || !'ACELNPDT'.includes(letStr)) {
+                    return false;
+                }
                 return true;
-            } 
+            }
+            
             if (subRegex.test(conditional)) {
+                const parts = conditional.split(/\s+/);
+                const outNum = parseInt(parts[1]);
+                const inNum = parseInt(parts[2]);
+                const pos = parts[3];
+                
+                if (isNaN(outNum) || outNum < 1 || outNum > 16) return false;
+                if (isNaN(inNum) || inNum < 12 || inNum > 16) return false;
+                if (outNum === inNum) return false;
+                if (!['GK', 'DF', 'DM', 'MF', 'AM', 'FW'].includes(pos)) return false;
+                
+                // Validar minutos si existe condición MIN
                 const minMatch = conditional.match(/MIN\s*(=|>=|<=)\s*(\d+)/);
-                if (minMatch && (parseInt(minMatch[2]) < 1 || parseInt(minMatch[2]) > 120)) {
-                    return false;
+                if (minMatch) {
+                    const minValue = parseInt(minMatch[2]);
+                    if (minValue < 1 || minValue > 120) {
+                        return false;
+                    }
                 }
                 return true;
             }
+            
+            if (subNewRegex.test(conditional)) {
+                const parts = conditional.split(/\s+/);
+                const posOut = parts[1];
+                const inNum = parseInt(parts[2]);
+                const posIn = parts[3];
+                const condType = parts[5];
+                const posCond = parts[6];
+                
+                if (!['GK', 'DF', 'DM', 'MF', 'AM', 'FW'].includes(posOut)) return false;
+                if (isNaN(inNum) || inNum < 12 || inNum > 16) return false;
+                if (!['GK', 'DF', 'DM', 'MF', 'AM', 'FW'].includes(posIn)) return false;
+                if (!['INJURED', 'YELLOW', 'RED'].includes(condType)) return false;
+                if (!['GK', 'DF', 'DM', 'MF', 'AM', 'FW'].includes(posCond)) return false;
+                if (posOut !== posCond) return false;
+                
+                return true;
+            }
+            
             if (changePosRegex.test(conditional)) {
+                const parts = conditional.split(/\s+/);
+                const num = parseInt(parts[1]);
+                const pos = parts[2];
+                
+                if (isNaN(num) || num < 2 || num > 11) return false;
+                if (!['GK', 'DF', 'DM', 'MF', 'AM', 'FW'].includes(pos)) return false;
+                
+                // Validar minutos si existe condición MIN
                 const minMatch = conditional.match(/MIN\s*(=|>=|<=)\s*(\d+)/);
-                if (minMatch && (parseInt(minMatch[2]) < 1 || parseInt(minMatch[2]) > 120)) {
-                    return false;
+                if (minMatch) {
+                    const minValue = parseInt(minMatch[2]);
+                    if (minValue < 1 || minValue > 120) {
+                        return false;
+                    }
                 }
                 return true;
             }
+            
             if (changeAggRegex.test(conditional)) {
+                const parts = conditional.split(/\s+/);
+                const agg = parseInt(parts[1]);
+                
+                if (isNaN(agg) || agg < 1 || agg > 20) return false;
+                
+                // Validar minutos si existe condición MIN
                 const minMatch = conditional.match(/MIN\s*(=|>=|<=)\s*(\d+)/);
-                if (minMatch && (parseInt(minMatch[2]) < 1 || parseInt(minMatch[2]) > 120)) {
-                    return false;
+                if (minMatch) {
+                    const minValue = parseInt(minMatch[2]);
+                    if (minValue < 1 || minValue > 120) {
+                        return false;
+                    }
                 }
                 return true;
             }
+            
             return false;
         }
 

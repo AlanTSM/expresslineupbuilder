@@ -170,7 +170,7 @@
         .quick-lineup-content label {
             display: block;
             margin-bottom: 5px;
-            font-weight: normal; /* Cambiado de bold a normal según solicitud */
+            font-weight: normal;
             color: var(--text-primary);
         }
 
@@ -250,6 +250,30 @@
             text-align: center;
             font-style: italic;
         }
+
+        /* Estilo para el selector de región */
+        .region-dropdown {
+            padding: 6px 12px;
+            border-radius: 5px;
+            border: 2px solid var(--highlight);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: normal;
+            cursor: pointer;
+            margin-left: 10px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .region-dropdown:hover {
+            border-color: #1e3c72;
+        }
+        @media (max-width: 768px) {
+            .region-dropdown {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -270,18 +294,24 @@
             Haz tu alineación
         </h1>
         <div id="initialDropdownContainer">
-    <label>Selecciona tu equipo:</label>
-    <div id="team-badges-container">
-    </div>
-    <img style="display: none;" alt="Escudo del equipo" src="" class="team-badge" id="teamBadge" />
-    <div style="margin-top: 10px;">
-        <a onclick="openSquadModal()" class="import-squad-link">Importar otra plantilla</a>
-    </div>
-    <h4>Más opciones</h4>
-    <a class="option-link" href="https://alantsm.github.io/visuallineup/" target="_blank" title="Haz tu alineación de forma interactiva, al estilo Football Manager, con círculos y un terreno de juego."><i class="fas fa-arrow-right"></i> Al estilo Football Manager</a>
-    <a class="option-link" href="https://www.tusoccermanager.com/h43-lineupgenerator-html" target="_blank" title="Deja que el sistema genere varias alineaciones sugeridas para ti. Además pueden personalizarse en segundos."><i class="fas fa-arrow-right"></i> Alineaciones en segundos</a>
-    <a class="option-link" href="https://www.tusoccermanager.com/h35-lineupvalidator-html" target="_blank" title="Utiliza esta herramienta y asegúrate de que tus alineaciones hechas manualmente nunca contengan ningún error."><i class="fas fa-arrow-right"></i> Comprueba tu alineación</a>
-</div>
+            <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;">
+                <label>Selecciona tu equipo:</label>
+                <select id="regionSelect" class="region-dropdown">
+                    <option value="europa" selected>Europa</option>
+                    <option value="america">América</option>
+                </select>
+            </div>
+            <div id="team-badges-container">
+            </div>
+            <img style="display: none;" alt="Escudo del equipo" src="" class="team-badge" id="teamBadge" />
+            <div style="margin-top: 10px;">
+                <a onclick="openSquadModal()" class="import-squad-link">Importar otra plantilla</a>
+            </div>
+            <h4>Más opciones</h4>
+            <a class="option-link" href="https://alantsm.github.io/visuallineup/" target="_blank" title="Haz tu alineación de forma interactiva, al estilo Football Manager, con círculos y un terreno de juego."><i class="fas fa-arrow-right"></i> Al estilo Football Manager</a>
+            <a class="option-link" href="https://www.tusoccermanager.com/h43-lineupgenerator-html" target="_blank" title="Deja que el sistema genere varias alineaciones sugeridas para ti. Además pueden personalizarse en segundos."><i class="fas fa-arrow-right"></i> Alineaciones en segundos</a>
+            <a class="option-link" href="https://www.tusoccermanager.com/h35-lineupvalidator-html" target="_blank" title="Utiliza esta herramienta y asegúrate de que tus alineaciones hechas manualmente nunca contengan ningún error."><i class="fas fa-arrow-right"></i> Comprueba tu alineación</a>
+        </div>
         <div class="main-content" id="mainContent" style="display: none;">
             <div class="players-section">
                 <div class="players-section-header">
@@ -529,7 +559,7 @@
                 </button>
                 <label for="fileInput" style="padding: 12px 24px; background: var(--highlight); color: white; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 5px;">
                     <i class="fas fa-upload"></i> Cargar 
-                </button>
+                </label>
                 <input type="file" id="fileInput" accept=".txt" style="display: none;" onchange="loadFile(event)" />
                 <button onclick="resetAll()">
                     <i class="fas fa-sync"></i> Limpiar 
@@ -701,7 +731,7 @@
                         <option value="-2">-2</option>
                         <option value="-3">-3</option>
                     </select>
-    </div>
+                </div>
                 <div>
                     <label>Si el número de disparos</label>
                     <select id="sub-if-shots">
@@ -934,11 +964,55 @@
         // Variables para colores de equipos
         let teamColors = {};
 
+        // Definición de equipos por región
+        const europeTeams = [
+            { name: 'Ajax', url: 'https://www.dropbox.com/scl/fi/9njb84ywzym3hhx5i2lg5/ajx.txt?rlkey=jhym2pqc9m60sioha0mmcil0o&e=1&dl=1' },
+            { name: 'Arsenal', url: 'https://www.dropbox.com/scl/fi/wb6juf6y612xx28zrvu26/ars.txt?rlkey=6qe12dx31wj93kphgz5dh6qlz&e=1&dl=1' },
+            { name: 'Aston Villa', url: 'https://www.dropbox.com/scl/fi/ucubvl04pfvqkev518dyo/asv.txt?rlkey=ubr83xqdq2v5r2g9twadabnib&e=1&st=com1va32&dl=1' },
+            { name: 'Atalanta', url: 'https://www.dropbox.com/scl/fi/9w70qz8otcgwf57h25y07/ata.txt?rlkey=ussk413mrxz8iwe4d9tg7ls9i&e=1&st=u4t1vyqv&dl=1' },
+            { name: 'Atlético de Madrid', url: 'https://www.dropbox.com/scl/fi/tuhsywhyfywslnig6j5ar/atm.txt?rlkey=wg64adwz2y5eurb20m20201kr&e=1&dl=1' },
+            { name: 'Barcelona', url: 'https://www.dropbox.com/scl/fi/b2a0fyv07x3esuxpr1280/fcb.txt?rlkey=gjc2quuw368lwzf091a4tf89t&e=1&dl=1' },
+            { name: 'Bayer Leverkusen', url: 'https://www.dropbox.com/scl/fi/egj2qgnrkjtt7jlxuhrx0/ble.txt?rlkey=9qodoqwtvzaklfh2t96rykp9i&e=1&st=2jg7bb7k&dl=1' },
+            { name: 'Bayern de Múnich', url: 'https://www.dropbox.com/scl/fi/bq95u9q42jdhd156bw2dk/bay.txt?rlkey=9h8b1beoe8dimr9ryk1rd1mva&e=1&dl=1' },
+            { name: 'Borussia Dortmund', url: 'https://www.dropbox.com/scl/fi/6olskieubqse5hr31t6sz/bdo.txt?rlkey=wdgovvbf2npezjgjjul1101kt&e=1&dl=1' },
+            { name: 'Chelsea', url: 'https://www.dropbox.com/scl/fi/vaib05ni6t82hyrt5rg9v/che.txt?rlkey=fiv3v4p18gh9vc0ztma3v8pnv&e=1&dl=1' },
+            { name: 'Inter de Milán', url: 'https://www.dropbox.com/scl/fi/6hxb2kmntadzmqcm14zg9/int.txt?rlkey=y0gisxpu2fnixut8h3haxcydc&e=1&dl=1' },
+            { name: 'Juventus', url: 'https://www.dropbox.com/scl/fi/x9ysiu5eyrpkdaf1pfjpe/juv.txt?rlkey=jxocqh225uco9o2lx54mvtz61&e=1&dl=1' },
+            { name: 'Liverpool', url: 'https://www.dropbox.com/scl/fi/hz76l1lkyqvuuns4hrreo/liv.txt?rlkey=3afux4q929md83z041di2coxe&e=1&dl=1' },
+            { name: 'Manchester City', url: 'https://www.dropbox.com/scl/fi/wcq9i1o9bxppwbyu3ggv4/mci.txt?rlkey=kwxrxndbhcxisdf5339ldef1k&e=1&dl=1' },
+            { name: 'Manchester United', url: 'https://www.dropbox.com/scl/fi/2j17u24ig5s5hzbvg0zkp/man.txt?rlkey=9cs3sj1debd0cbw3mxkizrzfz&e=1&dl=1' },
+            { name: 'Milan', url: 'https://www.dropbox.com/scl/fi/klb7hcy0epivuvkmio8o2/mil.txt?rlkey=7plny75gkdl22tkkg8wkvmo1s&e=1&dl=1' },
+            { name: 'Nápoles', url: 'https://www.dropbox.com/scl/fi/zpou5oz6iv51u21helwdg/nap.txt?rlkey=gjekp32w79pxwtegk1s3oei06&e=1&dl=1' },
+            { name: 'Newcastle United', url: 'https://www.dropbox.com/scl/fi/46m0eyfru9g97ch8c4ryy/new.txt?rlkey=zbbt3pe37i2bocxh946sz1axf&e=1&st=bk9c4sji&dl=1' },
+            { name: 'PSG', url: 'https://www.dropbox.com/scl/fi/k2f61aq73xmm9eknqc0pm/psg.txt?rlkey=syd3nsi8zj826ysxx70ldtbur&e=1&dl=1' },
+            { name: 'RB Leipzig', url: 'https://www.dropbox.com/scl/fi/8ick97tco5apa2rgg01uv/rbl.txt?rlkey=kn17krqcqhyefeydngn2c3yqj&e=1&dl=1' },
+            { name: 'Real Madrid', url: 'https://www.dropbox.com/scl/fi/2xida739oitrf4gilso4v/rma.txt?rlkey=ybjbuajy747quooqkzt5rsai3&e=1&dl=1' },
+            { name: 'Sevilla', url: 'https://www.dropbox.com/scl/fi/n64w9h04e2f8h0tflt1kg/sev.txt?rlkey=z72w5eyq9vacdgr8655yzmthq&e=1&dl=1' },
+            { name: 'Tottenham Hotspur', url: 'https://www.dropbox.com/scl/fi/ldj3rdbrip4466xdvu54e/tot.txt?rlkey=fpj5emqz2bwxue6si2p5slkci&e=1&dl=1' },
+            { name: 'Villarreal', url: 'https://www.dropbox.com/scl/fi/bo2rw6u9sndoel5hzfcmn/vil.txt?rlkey=kz37s2mwg71cgls3903skid2p&e=1&dl=1' }
+        ];
+
+        const americaTeams = [
+            { name: 'Boca Juniors', url: 'https://www.dropbox.com/scl/fi/ztjlxjhzyvp8lcks1pwci/boc.txt?rlkey=qirdttv85ok9baw8xptcnsunz&e=1&st=x5a20e34&dl=1' },
+            { name: 'Club América', url: 'https://www.dropbox.com/scl/fi/chl8e22zvwt1tdbdw6ibf/ame.txt?rlkey=wj7s2h8hhl10r9xwie185scg7&st=srb3u6yw&dl=1' },
+            { name: 'Corinthians', url: 'https://www.dropbox.com/scl/fi/e487hkxngpg7figj4oq8w/cor.txt?rlkey=460krir84si5gxitykoixnkxq&st=ghpgy930&dl=1' },
+            { name: 'Flamengo', url: 'https://www.dropbox.com/scl/fi/6riipg98tgpsz85dhgoz0/fla.txt?rlkey=w0h7ths73fjyi2l55bk1sxrvf&st=tqx52qce&dl=1' },
+            { name: 'Inter Miami', url: 'https://www.dropbox.com/scl/fi/egmmh5aeoedbt789jffpk/mia.txt?rlkey=xnkhye50v5qosnv9058x06l2y&st=fhchguw1&dl=1' },
+            { name: 'Los Angeles Galaxy', url: 'https://www.dropbox.com/scl/fi/u486w1ja3szh5c962vggd/gxy.txt?rlkey=gc4dwwjjiblcpqm6shvpeo2he&st=kbtfyswi&dl=1' },
+            { name: 'Nacional', url: 'https://www.dropbox.com/scl/fi/sqm4m05g62wdw41lf15ha/nac.txt?rlkey=uphyfk82isuapippyhvnd3ri7&st=3fh096vc&dl=1' },
+            { name: 'Palmeiras', url: 'https://www.dropbox.com/scl/fi/dyjigos9mm1d0aiqdh5gc/pal.txt?rlkey=4laqdf9oricp4wlpagtj29b7m&st=pob7jib0&dl=1' },
+            { name: 'Peñarol', url: 'https://www.dropbox.com/scl/fi/jpktxsf5vskrx4zok4d0d/pen.txt?rlkey=zpquq9zpipq7672cfnickotlt&st=oa4zieg3&dl=1' },
+            { name: 'Racing Club', url: 'https://www.dropbox.com/scl/fi/2iwqtr4l06nb78eplyts5/rac.txt?rlkey=us90cnxa1x2slfhgp8ttp7wkl&st=52xtotxn&dl=1' },
+            { name: 'River Plate', url: 'https://www.dropbox.com/scl/fi/veyikysz0q9firvef1xfv/riv.txt?rlkey=9iar3rbxa63n2yl0n907p5j0n&st=fwktlehd&dl=1' },
+            { name: 'Universidad Católica', url: 'https://www.dropbox.com/scl/fi/veyikysz0q9firvef1xfv/riv.txt?rlkey=9iar3rbxa63n2yl0n907p5j0n&st=fwktlehd&dl=1' } // Nota: mismo enlace que River, pendiente de corrección
+        ];
+
         // Inicializar la página
         document.addEventListener('DOMContentLoaded', function() {
             loadTeamAbbreviations();
             loadTeamBadges().then(() => {
-                initTeamBadges();
+                // Cargar escudos de Europa por defecto
+                loadTeamBadgesForRegion('europa');
             });
             loadTeamColors();
             
@@ -968,6 +1042,16 @@
             // Mostrar/ocultar slider de agresividad
             document.getElementById('quickAggression').addEventListener('change', function() {
                 document.getElementById('quickAggressionSlider').style.display = this.checked ? 'flex' : 'none';
+            });
+
+            // Evento para cambio de región
+            const regionSelect = document.getElementById('regionSelect');
+            regionSelect.addEventListener('change', function() {
+                const region = this.value;
+                // Resetear toda la selección actual
+                resetAll();
+                // Recargar escudos de la región seleccionada
+                loadTeamBadgesForRegion(region);
             });
         });
         
@@ -1190,6 +1274,45 @@
             });
         }
 
+        // Función para cargar escudos según región
+        function loadTeamBadgesForRegion(region) {
+            const container = document.getElementById('team-badges-container');
+            container.innerHTML = '';
+            
+            let teamsToShow = [];
+            if (region === 'europa') {
+                teamsToShow = europeTeams;
+            } else {
+                teamsToShow = americaTeams;
+            }
+            
+            // Ordenar alfabéticamente
+            teamsToShow.sort((a, b) => a.name.localeCompare(b.name));
+            
+            teamsToShow.forEach((team, index) => {
+                if (teamBadges[team.name]) {
+                    const img = document.createElement('img');
+                    img.src = teamBadges[team.name];
+                    img.alt = team.name;
+                    img.title = team.name;
+                    img.onclick = () => loadTeamFromUrl(team.url, team.name);
+                    img.style = `--index: ${index};`;
+                    container.appendChild(img);
+                } else {
+                    // Fallback: mostrar texto si no hay escudo
+                    const div = document.createElement('div');
+                    div.textContent = team.name;
+                    div.style.cursor = 'pointer';
+                    div.style.padding = '10px';
+                    div.style.border = '2px solid var(--highlight)';
+                    div.style.borderRadius = '5px';
+                    div.style.backgroundColor = 'var(--bg-secondary)';
+                    div.onclick = () => loadTeamFromUrl(team.url, team.name);
+                    container.appendChild(div);
+                }
+            });
+        }
+
         // Función para cargar colores de equipos
         async function loadTeamColors() {
             try {
@@ -1263,50 +1386,6 @@
             }
         }
         
-        function initTeamBadges() {
-            const teams = [
-                { name: 'Ajax', url: 'https://www.dropbox.com/scl/fi/9njb84ywzym3hhx5i2lg5/ajx.txt?rlkey=jhym2pqc9m60sioha0mmcil0o&e=1&dl=1' },
-                { name: 'Arsenal', url: 'https://www.dropbox.com/scl/fi/wb6juf6y612xx28zrvu26/ars.txt?rlkey=6qe12dx31wj93kphgz5dh6qlz&e=1&dl=1' },
-                { name: 'Aston Villa', url: 'https://www.dropbox.com/scl/fi/ucubvl04pfvqkev518dyo/asv.txt?rlkey=ubr83xqdq2v5r2g9twadabnib&e=1&st=com1va32&dl=1' },
-                { name: 'Atalanta', url: 'https://www.dropbox.com/scl/fi/9w70qz8otcgwf57h25y07/ata.txt?rlkey=ussk413mrxz8iwe4d9tg7ls9i&e=1&st=u4t1vyqv&dl=1' },
-                { name: 'Atlético de Madrid', url: 'https://www.dropbox.com/scl/fi/tuhsywhyfywslnig6j5ar/atm.txt?rlkey=wg64adwz2y5eurb20m20201kr&e=1&dl=1' },
-                { name: 'Barcelona', url: 'https://www.dropbox.com/scl/fi/b2a0fyv07x3esuxpr1280/fcb.txt?rlkey=gjc2quuw368lwzf091a4tf89t&e=1&dl=1' },
-                { name: 'Bayer Leverkusen', url: 'https://www.dropbox.com/scl/fi/egj2qgnrkjtt7jlxuhrx0/ble.txt?rlkey=9qodoqwtvzaklfh2t96rykp9i&e=1&st=2jg7bb7k&dl=1' },
-                { name: 'Bayern de Múnich', url: 'https://www.dropbox.com/scl/fi/bq95u9q42jdhd156bw2dk/bay.txt?rlkey=9h8b1beoe8dimr9ryk1rd1mva&e=1&dl=1' },
-                { name: 'Borussia Dortmund', url: 'https://www.dropbox.com/scl/fi/6olskieubqse5hr31t6sz/bdo.txt?rlkey=wdgovvbf2npezjgjjul1101kt&e=1&dl=1' },
-                { name: 'Chelsea', url: 'https://www.dropbox.com/scl/fi/vaib05ni6t82hyrt5rg9v/che.txt?rlkey=fiv3v4p18gh9vc0ztma3v8pnv&e=1&dl=1' },
-                { name: 'Inter de Milán', url: 'https://www.dropbox.com/scl/fi/6hxb2kmntadzmqcm14zg9/int.txt?rlkey=y0gisxpu2fnixut8h3haxcydc&e=1&dl=1' },
-                { name: 'Juventus', url: 'https://www.dropbox.com/scl/fi/x9ysiu5eyrpkdaf1pfjpe/juv.txt?rlkey=jxocqh225uco9o2lx54mvtz61&e=1&dl=1' },
-                { name: 'Liverpool', url: 'https://www.dropbox.com/scl/fi/hz76l1lkyqvuuns4hrreo/liv.txt?rlkey=3afux4q929md83z041di2coxe&e=1&dl=1' },
-                { name: 'Manchester City', url: 'https://www.dropbox.com/scl/fi/wcq9i1o9bxppwbyu3ggv4/mci.txt?rlkey=kwxrxndbhcxisdf5339ldef1k&e=1&dl=1' },
-                { name: 'Manchester United', url: 'https://www.dropbox.com/scl/fi/2j17u24ig5s5hzbvg0zkp/man.txt?rlkey=9cs3sj1debd0cbw3mxkizrzfz&e=1&dl=1' },
-                { name: 'Milan', url: 'https://www.dropbox.com/scl/fi/klb7hcy0epivuvkmio8o2/mil.txt?rlkey=7plny75gkdl22tkkg8wkvmo1s&e=1&dl=1' },
-                { name: 'Nápoles', url: 'https://www.dropbox.com/scl/fi/zpou5oz6iv51u21helwdg/nap.txt?rlkey=gjekp32w79pxwtegk1s3oei06&e=1&dl=1' },
-                { name: 'Newcastle United', url: 'https://www.dropbox.com/scl/fi/46m0eyfru9g97ch8c4ryy/new.txt?rlkey=zbbt3pe37i2bocxh946sz1axf&e=1&st=bk9c4sji&dl=1' },
-                { name: 'PSG', url: 'https://www.dropbox.com/scl/fi/k2f61aq73xmm9eknqc0pm/psg.txt?rlkey=syd3nsi8zj826ysxx70ldtbur&e=1&dl=1' },
-                { name: 'RB Leipzig', url: 'https://www.dropbox.com/scl/fi/8ick97tco5apa2rgg01uv/rbl.txt?rlkey=kn17krqcqhyefeydngn2c3yqj&e=1&dl=1' },
-                { name: 'Real Madrid', url: 'https://www.dropbox.com/scl/fi/2xida739oitrf4gilso4v/rma.txt?rlkey=ybjbuajy747quooqkzt5rsai3&e=1&dl=1' },
-                { name: 'Sevilla', url: 'https://www.dropbox.com/scl/fi/n64w9h04e2f8h0tflt1kg/sev.txt?rlkey=z72w5eyq9vacdgr8655yzmthq&e=1&dl=1' },
-                { name: 'Tottenham Hotspur', url: 'https://www.dropbox.com/scl/fi/ldj3rdbrip4466xdvu54e/tot.txt?rlkey=fpj5emqz2bwxue6si2p5slkci&e=1&dl=1' },
-                { name: 'Villarreal', url: 'https://www.dropbox.com/scl/fi/bo2rw6u9sndoel5hzfcmn/vil.txt?rlkey=kz37s2mwg71cgls3903skid2p&e=1&dl=1' }
-            ];
-
-            teams.sort((a, b) => a.name.localeCompare(b.name));
-
-            const container = document.getElementById('team-badges-container');
-            teams.forEach((team, index) => {
-                if (teamBadges[team.name]) {
-                    const img = document.createElement('img');
-                    img.src = teamBadges[team.name];
-                    img.alt = team.name;
-                    img.title = team.name;
-                    img.onclick = () => loadTeamFromUrl(team.url, team.name);
-                    img.style = `--index: ${index};`;
-                    container.appendChild(img);
-                }
-            });
-        }
-
         async function loadTeamFromUrl(url, teamName) {
             currentTeamSelection = url;
             hasSelectedTeam = true;
@@ -1341,11 +1420,11 @@
                 
                 document.getElementById('teamAbbr').value = teamAbbrs[teamName] || '';
 
+                // Ocultar el contenedor de selección de equipo (como en el original)
                 const initialContainer = document.getElementById('initialDropdownContainer');
-                initialContainer.remove();
-                
-                // Hide the import link when players are displayed
-                document.querySelector('#initialDropdownContainer .import-squad-link').style.display = 'none';
+                if (initialContainer) {
+                    initialContainer.style.display = 'none';
+                }
                 
                 loadingMessage.style.display = 'none';
                 
@@ -2364,8 +2443,11 @@
             currentTeamSelection = '';
             document.getElementById('teamBadge').style.display = 'none';
             document.getElementById('teamBadgeLineup').style.display = 'none';
-            // Show the import link again when resetting
-            document.querySelector('.import-squad-link').style.display = 'inline';
+            // Mostrar de nuevo el contenedor de selección de equipo
+            const initialContainer = document.getElementById('initialDropdownContainer');
+            if (initialContainer) {
+                initialContainer.style.display = 'flex';
+            }
         }
         
         function showSelectCount() {
@@ -3451,7 +3533,6 @@
 
         // Funciones para el modal de alineación rápida - MODIFICADAS
         function openQuickLineupModal() {
-            // Eliminamos la confirmación aquí (se moverá a generateQuickLineup)
             document.getElementById('quickLineupModal').style.display = 'flex';
         }
 
@@ -3461,7 +3542,7 @@
 
         // Nueva función mejorada para generar alineación rápida basada en la página de referencia
         function generateQuickLineup() {
-            // Verificar si ya hay jugadores seleccionados y mostrar confirmación (aquí es donde debe aparecer)
+            // Verificar si ya hay jugadores seleccionados y mostrar confirmación
             if (selectedPlayers.filter(s => s.player).length > 0) {
                 if (!confirm('La alineación seleccionada hasta el momento será reemplazada por la nueva alineación. ¿Deseas continuar?')) {
                     return;
@@ -3761,7 +3842,7 @@
 
         // Cargar todas las bases de datos al iniciar
         loadTeamAbbreviations();
-        initTeamBadges();
+        // No llamamos a initTeamBadges aquí porque ya se hace en DOMContentLoaded
 
         // Check if in iframe
         if (window.self !== window.top) {

@@ -199,6 +199,11 @@
             font-weight: normal;
             color: var(--text-primary);
         }
+        
+        /* Negrita para títulos en modal de alineación rápida */
+        .quick-lineup-content .input-group label {
+            font-weight: bold;
+        }
 
         .quick-lineup-content select, .quick-lineup-content input[type="range"] {
             width: 100%;
@@ -328,7 +333,10 @@
         .pitch-row { display: flex; justify-content: center; align-items: center; flex-wrap: nowrap; gap: 22px; min-height: 68px; }
         .pitch-row-space-between { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 0; }
         .bench { margin-top: 14px; background: rgba(0,0,0,0.35); border-radius: 12px; padding: 12px 10px 10px; border: 1px solid rgba(255,255,255,0.1); }
+        /* Mejora fondo banquillo en modo claro */
+        body:not(.dark) .bench { background: rgba(235, 235, 245, 0.9); }
         .bench-label { font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); text-align: center; margin-bottom: 8px; }
+        body:not(.dark) .bench-label { color: rgba(0,0,0,0.6); }
         .bench-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
         .player-card-vis, .substitute-card { display: flex; flex-direction: column; align-items: center; width: 68px; cursor: pointer; transition: transform 0.1s; }
         .player-circle-vis { width: 46px; height: 46px; border-radius: 50%; background-size: cover; background-position: center; background-color: #2a3a50; border: 2.5px solid #fbbf24; box-shadow: 0 2px 8px rgba(0,0,0,0.35), 0 0 0 2px rgba(255,255,255,0.08); transition: transform 0.15s, box-shadow 0.15s; position: relative; }
@@ -348,6 +356,28 @@
 
         #visualFieldContainer { display: none; margin-top: 15px; }
         .lineup-output { transition: all 0.2s; }
+        
+        /* Estilo para el menú desplegable de cambio rápido de equipo */
+        #teamQuickSelectContainer {
+            display: inline-block;
+            margin-left: 12px;
+            vertical-align: middle;
+        }
+        #teamQuickSelect {
+            padding: 6px 10px;
+            font-size: 13px;
+            border-radius: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            #teamQuickSelectContainer {
+                display: block;
+                margin-left: 0;
+                margin-top: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -367,12 +397,18 @@
         <h1 onclick="if(confirm('¿Estás seguro? Los cambios se perderán.')) location.reload();">
             Haz tu alineación
         </h1>
-        <!-- Enlace importar plantilla justo debajo del título con icono SVG -->
-        <div style="text-align: center; margin-top: -20px; margin-bottom: 15px;">
+        <!-- Enlace importar plantilla justo debajo del título con icono SVG y menú desplegable de cambio rápido -->
+        <div style="text-align: center; margin-top: -20px; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px;">
             <a onclick="openSquadModal()" class="import-squad-link" style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg-secondary); padding: 6px 16px; border-radius: 30px; border: 1px solid var(--border-color);">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Importar otra plantilla
             </a>
+            <!-- Menú desplegable para cambiar rápidamente a otra plantilla (aparece después de seleccionar un escudo) -->
+            <div id="teamQuickSelectContainer" style="display: none;">
+                <select id="teamQuickSelect" class="region-dropdown">
+                    <option value="">Cambiar a...</option>
+                </select>
+            </div>
         </div>
         <div id="initialDropdownContainer">
             <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;">
@@ -435,7 +471,7 @@
                     <label for="suggested-subs">Sustituciones sugeridas</label>
                     <input onchange="toggleSuggestedConds()" type="checkbox" id="suggested-conds" />
                     <label for="suggested-conds">Condicionales sugeridos</label>
-                    <a onclick="openQuickLineupModal()" class="import-squad-link" style="cursor: pointer;">Alineación rápida</a>
+                    <a onclick="openQuickLineupModal()" class="import-squad-link" style="cursor: pointer;"><i class="fas fa-magic"></i> Alineación rápida</a>
                 </div>
             </div>
             <div class="lineup-section">
@@ -513,7 +549,7 @@
         <div class="squad-viewer-content">
             <span class="close-modal" onclick="closeSquadViewer()">×</span>
             <h3>Plantilla</h3>
-            <p class="description">Haz clic en cualquier columna para ordenar los valores de mayor a menor.</p>
+            <p class="description">Haz clic en cualquier columna para ordenar los valores de mayor a menor. Pasa el ratón por encima de las cabeceras para ver su significado.</p>
             <div class="squad-table-container">
                 <table id="squadTable" class="squad-table">
                     <!-- La tabla se llenará dinámicamente -->
@@ -1029,8 +1065,7 @@
      
     <script>
         // ------------------------------------------------------------------
-        // CÓDIGO ORIGINAL COMPLETO (con las modificaciones: eliminada funcionalidad de recolocar)
-        // Se incluyen todas las funciones originales intactas.
+        // CÓDIGO ORIGINAL COMPLETO CON LAS MODIFICACIONES SOLICITADAS
         // ------------------------------------------------------------------
         let players = [];
         let selectedPlayers = [];
@@ -1086,7 +1121,7 @@
         const americaTeams = [
             { name: 'Boca Juniors', url: 'https://www.dropbox.com/scl/fi/ztjlxjhzyvp8lcks1pwci/boc.txt?rlkey=qirdttv85ok9baw8xptcnsunz&e=1&st=x5a20e34&dl=1' },
             { name: 'Club América', url: 'https://www.dropbox.com/scl/fi/chl8e22zvwt1tdbdw6ibf/ame.txt?rlkey=wj7s2h8hhl10r9xwie185scg7&st=srb3u6yw&dl=1' },
-            { name: 'Corinthians', url: 'https://www.dropbox.com/scl/fi/e487hkxngpg7figj4oq8w/cor.txt?rlkey=460krir84si5gxitykoixnkxq&st=ghpgy930&dl=1' },
+            { name: 'Corinthians', url: 'https://www.dropbox.com/scl/fi/e487hkxngpg7figj4oq8w/cor.txt?rlkey=460krir84si5gxitykoixnkq&st=ghpgy930&dl=1' },
             { name: 'Flamengo', url: 'https://www.dropbox.com/scl/fi/6riipg98tgpsz85dhgoz0/fla.txt?rlkey=w0h7ths73fjyi2l55bk1sxrvf&st=tqx52qce&dl=1' },
             { name: 'Inter Miami', url: 'https://www.dropbox.com/scl/fi/egmmh5aeoedbt789jffpk/mia.txt?rlkey=xnkhye50v5qosnv9058x06l2y&st=fhchguw1&dl=1' },
             { name: 'Los Angeles Galaxy', url: 'https://www.dropbox.com/scl/fi/u486w1ja3szh5c962vggd/gxy.txt?rlkey=gc4dwwjjiblcpqm6shvpeo2he&st=kbtfyswi&dl=1' },
@@ -1129,6 +1164,41 @@
                 const region = this.value;
                 resetAll();
                 loadTeamBadgesForRegion(region);
+            });
+            
+            // Poblar el menú desplegable de cambio rápido de equipo
+            populateTeamQuickSelect();
+            document.getElementById('teamQuickSelect').addEventListener('change', function(e) {
+                const selectedVal = e.target.value;
+                if (!selectedVal) return;
+                // Buscar el equipo en europeTeams o americaTeams
+                let teamFound = europeTeams.find(t => t.name === selectedVal);
+                if (!teamFound) teamFound = americaTeams.find(t => t.name === selectedVal);
+                if (teamFound) {
+                    if (hasSelectedTeam && selectedPlayers.some(s => s.player !== null)) {
+                        if (!confirm('Ya has seleccionado jugadores. Si cambias de equipo, perderás la alineación actual. ¿Continuar?')) {
+                            document.getElementById('teamQuickSelect').value = '';
+                            return;
+                        }
+                    }
+                    loadTeamFromUrl(teamFound.url, teamFound.name);
+                }
+                document.getElementById('teamQuickSelect').value = '';
+            });
+            
+            // Alerta antes de cerrar la ventana si hay cambios
+            window.addEventListener('beforeunload', function(e) {
+                if (players.length > 0 && selectedPlayers.some(s => s.player !== null)) {
+                    e.preventDefault();
+                    e.returnValue = 'Hay cambios sin guardar. ¿Estás seguro de salir?';
+                    return e.returnValue;
+                }
+                const lineupText = document.getElementById('lineupOutput').value;
+                if (lineupText && lineupText.trim() !== '') {
+                    e.preventDefault();
+                    e.returnValue = 'Hay una alineación en el editor. ¿Deseas salir sin guardar?';
+                    return e.returnValue;
+                }
             });
         });
         
@@ -1176,14 +1246,35 @@
         function showLoading() { document.getElementById('loadingOverlay').style.display = 'flex'; isLoadingDB = true; }
         function hideLoading() { document.getElementById('loadingOverlay').style.display = 'none'; isLoadingDB = false; }
         
+        // Función mejorada para formatear nombres mostrando iniciales con punto y manejando guiones bajos
         function formatPlayerName(name) {
-            if (!name.includes('_')) return name;
-            const parts = name.split('_');
-            if (parts.length === 3 && parts[0].length === 1) return `${parts[0]}. ${parts[1]} ${parts[2]}`;
-            if (parts.length !== 2) return name.replace(/_/g, ' ');
-            const firstPart = parts[0], secondPart = parts[1];
-            if (secondPart.length === 1) return `${firstPart} ${secondPart}.`;
-            return `${firstPart} ${secondPart}`;
+            if (!name) return '';
+            let formatted = name;
+            // Reemplazar guiones bajos por espacios y manejar casos especiales
+            if (formatted.includes('_')) {
+                const parts = formatted.split('_');
+                if (parts.length === 3 && parts[0].length === 1) {
+                    formatted = `${parts[0]}. ${parts[1]} ${parts[2]}`;
+                } else if (parts.length !== 2) {
+                    formatted = formatted.replace(/_/g, ' ');
+                } else {
+                    const firstPart = parts[0], secondPart = parts[1];
+                    if (secondPart.length === 1) {
+                        formatted = `${firstPart} ${secondPart}.`;
+                    } else {
+                        formatted = `${firstPart} ${secondPart}`;
+                    }
+                }
+            }
+            // Aplicar regla: letra mayúscula seguida de espacio => añadir punto (ej: "S Lino" -> "S. Lino")
+            let words = formatted.split(' ');
+            for (let i = 0; i < words.length; i++) {
+                if (words[i].length === 1 && words[i].match(/[A-Z]/) && (i === 0 || (words[i-1].slice(-1) !== '.'))) {
+                    words[i] = words[i] + '.';
+                }
+            }
+            formatted = words.join(' ');
+            return formatted;
         }
         
         async function loadPlayerImages() {
@@ -1284,6 +1375,31 @@
                 }
             });
         }
+        
+        function populateTeamQuickSelect() {
+            const select = document.getElementById('teamQuickSelect');
+            select.innerHTML = '<option value="">Cambiar a...</option>';
+            // Grupo Europa
+            const euroGroup = document.createElement('optgroup');
+            euroGroup.label = 'Europa';
+            europeTeams.forEach(team => {
+                const option = document.createElement('option');
+                option.value = team.name;
+                option.textContent = team.name;
+                euroGroup.appendChild(option);
+            });
+            select.appendChild(euroGroup);
+            // Grupo América
+            const americaGroup = document.createElement('optgroup');
+            americaGroup.label = 'América';
+            americaTeams.forEach(team => {
+                const option = document.createElement('option');
+                option.value = team.name;
+                option.textContent = team.name;
+                americaGroup.appendChild(option);
+            });
+            select.appendChild(americaGroup);
+        }
 
         async function loadTeamColors() {
             try {
@@ -1335,6 +1451,8 @@
         async function loadTeamFromUrl(url, teamName) {
             currentTeamSelection = url;
             hasSelectedTeam = true;
+            // Mostrar el menú desplegable de cambio rápido
+            document.getElementById('teamQuickSelectContainer').style.display = 'inline-block';
             const badgeImg = document.getElementById('teamBadge');
             const badgeImgLineup = document.getElementById('teamBadgeLineup');
             if (teamBadges[teamName]) {
@@ -1539,10 +1657,12 @@
                         const dfClass = player.tk === maxAttr ? 'highlight' : '';
                         const mfClass = player.ps === maxAttr ? 'highlight' : '';
                         const fwClass = player.sh === maxAttr ? 'highlight' : '';
-                        let fitColor = '#ff6961';
-                        if (player.fit > 89) fitColor = 'green';
-                        else if (player.fit >= 84) fitColor = 'yellow';
-                        else if (player.fit >= 80) fitColor = 'orange';
+                        // Colores de fitness más modernos
+                        let fitColor = '';
+                        if (player.fit > 89) fitColor = '#9ccc65';
+                        else if (player.fit >= 84) fitColor = '#ffd54f';
+                        else if (player.fit >= 80) fitColor = '#ffb74d';
+                        else fitColor = '#e57373';
                         const fitPercentage = 50 + (player.fit * 0.5);
                         const selectedItem = selectedPlayers[selectedIndex];
                         const currentPosition = selectedItem ? selectedItem.position : player.position;
@@ -1633,7 +1753,7 @@
                 statsHTML = `
                     <table class="stats-table">
                         <thead><tr><th>PJ</th><th>Gls</th><th>Asi</th><th>MVP</th></thead>
-                        <tbody></td><td>${formatNumber(player.gam || 0)}</td><td>${formatNumber(player.gls || 0)}</td><td>${formatNumber(player.ass || 0)}</td><td>${formatNumber(player.mom || 0)}</td></tr>
+                        <tbody><tr><td>${formatNumber(player.gam || 0)}</td><td>${formatNumber(player.gls || 0)}</td><td>${formatNumber(player.ass || 0)}</td><td>${formatNumber(player.mom || 0)}</td></tr>
                         </tbody>
                     </table>
                     <div class="stats-info">
@@ -1725,6 +1845,27 @@
         function toggleSuggestedSubs() { const checkbox = document.getElementById('suggested-subs'); if (checkbox.checked) suggestedSubs = generateSuggestedSubs(); else suggestedSubs = []; updateLineup(); refreshVisualFieldIfNeeded(); }
         function toggleSuggestedConds() { const checkbox = document.getElementById('suggested-conds'); if (checkbox.checked) { const tactics = document.getElementById('tactics-btn').dataset.value || ''; suggestedConds = generateSuggestedConds(tactics); } else suggestedConds = []; updateLineup(); refreshVisualFieldIfNeeded(); }
         
+        // Validación de reglas posicionales para copiar/descargar
+        function validatePositionRules() {
+            const starters = selectedPlayers.slice(0,11).filter(s => s.player);
+            let dfCount = 0, mfCount = 0, amCount = 0, fwCount = 0;
+            starters.forEach(item => {
+                const pos = item.position;
+                if (pos === 'DF') dfCount++;
+                else if (pos === 'MF') mfCount++;
+                else if (pos === 'AM') amCount++;
+                else if (pos === 'FW') fwCount++;
+            });
+            let errors = [];
+            if (dfCount < 2) errors.push('Mínimo 2 defensas (DF) en el once titular.');
+            if (dfCount > 6) errors.push('Máximo 6 defensas (DF) en el once titular.');
+            if (mfCount < 1) errors.push('Mínimo 1 centrocampista (MF) en el once titular.');
+            if (mfCount > 6) errors.push('Máximo 6 centrocampistas (MF) en el once titular.');
+            if (amCount > 4) errors.push('Máximo 4 mediocentros ofensivos (AM) en el once titular.');
+            if (fwCount > 6) errors.push('Máximo 6 delanteros (FW) en el once titular.');
+            return errors;
+        }
+        
         function updateLineup() {
             const teamAbbr = document.getElementById('teamAbbr').value.toUpperCase() || '';
             const tactics = document.getElementById('tactics-btn').dataset.value || '';
@@ -1762,6 +1903,12 @@
             if (!tacticsBtn.dataset.value) { messages.push('Selecciona una táctica.'); tacticsBtn.classList.add('invalid'); valid = false; }
             if (!pkTakerBtn.dataset.value) { messages.push('Selecciona un lanzador de penaltis.'); pkTakerBtn.classList.add('invalid'); valid = false; }
             if (selectedPlayers.filter(s => s.player).length !== 16) { messages.push('Debes seleccionar 11 titulares y 5 suplentes.'); valid = false; }
+            // Validar reglas posicionales
+            const posErrors = validatePositionRules();
+            if (posErrors.length > 0) {
+                messages.push(...posErrors);
+                valid = false;
+            }
             if (!valid) alert('Requisitos no cumplidos:\n' + messages.join('\n'));
             return valid;
         }
@@ -1788,6 +1935,7 @@
         
         function resetAll() {
             document.getElementById('squadInput').value = ''; document.getElementById('mainContent').style.display = 'none'; players = []; selectedPlayers = []; removedIndices = []; customConditionals = []; suggestedSubs = []; suggestedConds = []; document.getElementById('suggested-subs').checked = false; document.getElementById('suggested-conds').checked = false; document.getElementById('message').textContent = ''; document.getElementById('message').className = ''; team = ''; hasSelectedTeam = false; currentTeamSelection = ''; document.getElementById('teamBadge').style.display = 'none'; document.getElementById('teamBadgeLineup').style.display = 'none'; const initialContainer = document.getElementById('initialDropdownContainer'); if (initialContainer) initialContainer.style.display = 'flex';
+            document.getElementById('teamQuickSelectContainer').style.display = 'none';
             if (visualModeActive) toggleVisualMode();
         }
         
@@ -1899,7 +2047,86 @@
 
         function openSquadViewer() { document.getElementById('squadViewerModal').style.display='flex'; populateSquadTable(); }
         function closeSquadViewer() { document.getElementById('squadViewerModal').style.display='none'; }
-        function populateSquadTable(){ const table=document.getElementById('squadTable'); table.innerHTML=''; const thead=document.createElement('thead'); const headerRow=document.createElement('tr'); const headers=[{text:'Nombre'},{text:'Edad'},{text:'Nac'},{text:'ST'},{text:'TK'},{text:'PS'},{text:'SH'},{text:'AG'},{text:'KAb'},{text:'TAb'},{text:'PAb'},{text:'SAb'},{text:'Gam'},{text:'Sub'},{text:'Min'},{text:'Mom'},{text:'Sav'},{text:'Con'},{text:'KTk'},{text:'KPs'},{text:'Sht'},{text:'Gls'},{text:'Ass'},{text:'DP'},{text:'Inj'},{text:'Sus'},{text:'Fit'}]; headers.forEach((header,idx)=>{ const th=document.createElement('th'); th.textContent=header.text; th.addEventListener('click',()=>sortTableByColumn(table,idx)); headerRow.appendChild(th); }); thead.appendChild(headerRow); table.appendChild(thead); const tbody=document.createElement('tbody'); players.forEach(player=>{ const row=document.createElement('tr'); const fields=['name','age','nat','st','tk','ps','sh','ag','kab','tab','pab','sab','gam','sub','min','mom','sav','con','ktk','kps','sht','gls','ass','dp','inj','sus','fit']; const maxAttr=Math.max(player.st,player.tk,player.ps,player.sh); fields.forEach((field,index)=>{ const td=document.createElement('td'); if(field==='name'){ td.textContent=formatPlayerName(player[field]); td.style.textAlign='left'; td.style.cursor='pointer'; td.addEventListener('click',()=>{ const highlighted=document.querySelector('.highlighted-row'); if(highlighted) highlighted.classList.remove('highlighted-row'); row.classList.add('highlighted-row'); }); } else if(field==='nat'){ const natCode=player[field].toLowerCase(); const flagUrl=flags[natCode]||''; const fullName=fullNames[natCode]||player[field].toUpperCase(); if(flagUrl) td.innerHTML=`<img src="${flagUrl}" class="flag-img" title="${fullName}">`; else td.textContent=player[field]; } else td.textContent=player[field]; if(field==='st' && player.st===maxAttr) td.classList.add('highlight'); if(field==='tk' && player.tk===maxAttr) td.classList.add('highlight'); if(field==='ps' && player.ps===maxAttr) td.classList.add('highlight'); if(field==='sh' && player.sh===maxAttr) td.classList.add('highlight'); if(field==='kab' && parseInt(player.kab)>=900) td.classList.add('experience-high'); if(field==='tab' && parseInt(player.tab)>=900) td.classList.add('experience-high'); if(field==='pab' && parseInt(player.pab)>=900) td.classList.add('experience-high'); if(field==='sab' && parseInt(player.sab)>=900) td.classList.add('experience-high'); row.appendChild(td); }); tbody.appendChild(row); }); table.appendChild(tbody); }
+        function populateSquadTable(){ 
+            const table=document.getElementById('squadTable'); 
+            table.innerHTML=''; 
+            const thead=document.createElement('thead'); 
+            const headerRow=document.createElement('tr'); 
+            const headers=[
+                {text:'Nombre', title:'Nombre del jugador'},
+                {text:'Edad', title:'Edad del jugador'},
+                {text:'Nac', title:'Nacionalidad'},
+                {text:'ST', title:'Media como portero'},
+                {text:'TK', title:'Media como defensa'},
+                {text:'PS', title:'Media como centrocampista'},
+                {text:'SH', title:'Media como delantero'},
+                {text:'AG', title:'Agresividad'},
+                {text:'KAb', title:'Experiencia como portero'},
+                {text:'TAb', title:'Experiencia como defensa'},
+                {text:'PAb', title:'Experiencia como centrocampista'},
+                {text:'SAb', title:'Experiencia como delantero'},
+                {text:'Gam', title:'Partidos jugados'},
+                {text:'Sub', title:'Veces sustituido'},
+                {text:'Min', title:'Minutos jugados'},
+                {text:'Mom', title:'Jugador del partido'},
+                {text:'Sav', title:'Paradas'},
+                {text:'Con', title:'Goles encajados'},
+                {text:'KTk', title:'Entradas'},
+                {text:'KPs', title:'Pases'},
+                {text:'Sht', title:'Tiros'},
+                {text:'Gls', title:'Goles'},
+                {text:'Ass', title:'Asistencias'},
+                {text:'DP', title:'Puntos de disciplina'},
+                {text:'Inj', title:'Partidos lesionado'},
+                {text:'Sus', title:'Partidos sancionado'},
+                {text:'Fit', title:'Forma física'}
+            ]; 
+            headers.forEach((header,idx)=>{ 
+                const th=document.createElement('th'); 
+                th.textContent=header.text; 
+                th.title = header.title;
+                th.addEventListener('click',()=>sortTableByColumn(table,idx)); 
+                headerRow.appendChild(th); 
+            }); 
+            thead.appendChild(headerRow); 
+            table.appendChild(thead); 
+            const tbody=document.createElement('tbody'); 
+            players.forEach(player=>{ 
+                const row=document.createElement('tr'); 
+                const fields=['name','age','nat','st','tk','ps','sh','ag','kab','tab','pab','sab','gam','sub','min','mom','sav','con','ktk','kps','sht','gls','ass','dp','inj','sus','fit']; 
+                const maxAttr=Math.max(player.st,player.tk,player.ps,player.sh); 
+                fields.forEach((field,index)=>{ 
+                    const td=document.createElement('td'); 
+                    if(field==='name'){ 
+                        td.textContent=formatPlayerName(player[field]); 
+                        td.style.textAlign='left'; 
+                        td.style.cursor='pointer'; 
+                        td.addEventListener('click',()=>{ 
+                            const highlighted=document.querySelector('.highlighted-row'); 
+                            if(highlighted) highlighted.classList.remove('highlighted-row'); 
+                            row.classList.add('highlighted-row'); 
+                        }); 
+                    } else if(field==='nat'){ 
+                        const natCode=player[field].toLowerCase(); 
+                        const flagUrl=flags[natCode]||''; 
+                        const fullName=fullNames[natCode]||player[field].toUpperCase(); 
+                        if(flagUrl) td.innerHTML=`<img src="${flagUrl}" class="flag-img" title="${fullName}">`; 
+                        else td.textContent=player[field]; 
+                    } else td.textContent=player[field]; 
+                    if(field==='st' && player.st===maxAttr) td.classList.add('highlight'); 
+                    if(field==='tk' && player.tk===maxAttr) td.classList.add('highlight'); 
+                    if(field==='ps' && player.ps===maxAttr) td.classList.add('highlight'); 
+                    if(field==='sh' && player.sh===maxAttr) td.classList.add('highlight'); 
+                    if(field==='kab' && parseInt(player.kab)>=900) td.classList.add('experience-high'); 
+                    if(field==='tab' && parseInt(player.tab)>=900) td.classList.add('experience-high'); 
+                    if(field==='pab' && parseInt(player.pab)>=900) td.classList.add('experience-high'); 
+                    if(field==='sab' && parseInt(player.sab)>=900) td.classList.add('experience-high'); 
+                    row.appendChild(td); 
+                }); 
+                tbody.appendChild(row); 
+            }); 
+            table.appendChild(tbody); 
+        }
         function sortTableByColumn(table,column){ const rows=Array.from(table.tBodies[0].rows); const isNumeric=column>1; rows.sort((a,b)=>{ let aValue=a.cells[column].textContent.trim(); let bValue=b.cells[column].textContent.trim(); if(column===0) return aValue.localeCompare(bValue); else if(isNumeric){ aValue=parseFloat(aValue)||0; bValue=parseFloat(bValue)||0; return bValue-aValue; } }); rows.forEach(row=>table.tBodies[0].appendChild(row)); }
 
         function loadLineupFromFile(file){ const reader=new FileReader(); reader.onload=function(e){ const content=e.target.result; if(selectedPlayers.filter(s=>s.player).length>0){ if(!confirm('Los cambios realizados hasta el momento se perderán. ¿Deseas continuar?')) return; } parseAndLoadLineup(content); document.getElementById('loadLineupFile').value=''; }; reader.readAsText(file); }
@@ -1924,9 +2151,7 @@
         function getTacticDescription(value){ const descriptions={'A':'Atacante','C':'Contragolpe','D':'Defensiva','E':'Europea','L':'Balones largos','N':'Equilibrada','P':'Pases cortos','T':'Temeraria'}; return descriptions[value]||''; }
         function toggleViewMode(compact){ isCompactView=compact; displayPlayers(); }
 
-        // ------------------------------------------------------------------
-        // NUEVA FUNCIÓN PARA VISTA VISUAL DEL CAMPO SIN RECOLOCACIÓN (solo estadísticas)
-        // ------------------------------------------------------------------
+        // VISTA VISUAL DEL CAMPO (sin recolocación, solo estadísticas)
         function renderVisualField() {
             const container = document.getElementById('visualFieldContainer');
             if (!container) return;
@@ -2024,7 +2249,6 @@
             `;
             container.innerHTML = pitchHtml;
             
-            // Asignar evento click para mostrar estadísticas
             document.querySelectorAll('#visualFieldContainer .player-card-vis, #visualFieldContainer .substitute-card').forEach(card => {
                 const playerName = card.getAttribute('data-player-name');
                 if (playerName) {
@@ -2054,11 +2278,6 @@
             }
         }
 
-        function captureVisualField() {
-            const btn = document.getElementById('visualCaptureBtn');
-            if (btn) btn.click();
-        }
-
         function toggleVisualMode() {
             visualModeActive = !visualModeActive;
             const textarea = document.getElementById('lineupOutput');
@@ -2068,7 +2287,7 @@
                 textarea.style.display = 'none';
                 visualContainer.style.display = 'block';
                 renderVisualField();
-                toggleBtn.innerHTML = 'Ver modo simple';
+                toggleBtn.innerHTML = 'Ver transcripción'; // Cambiado de "Ver modo simple" a "Ver transcripción"
                 toggleBtn.classList.remove('green');
                 toggleBtn.classList.add('process');
             } else {
@@ -2102,7 +2321,6 @@
         window.loadSquad = async function() { await originalLoadSquad(); refreshVisualFieldIfNeeded(); };
         window.generateQuickLineup = function() { originalGenerateQuickLineup(); refreshVisualFieldIfNeeded(); };
         
-        // Asegurar que el botón Importar otra plantilla funcione correctamente
         window.openSquadModal = openSquadModal;
     </script>
 </body>

@@ -378,6 +378,17 @@
                 margin-top: 8px;
             }
         }
+
+        /* --- NUEVO: GLOW PARA BOTÓN PROCESAR --- */
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px var(--process), 0 0 10px var(--process); }
+            50% { box-shadow: 0 0 20px var(--process), 0 0 40px var(--process); }
+            100% { box-shadow: 0 0 5px var(--process), 0 0 10px var(--process); }
+        }
+        .btn-glow {
+            animation: glow 1.5s infinite ease-in-out;
+            border: 2px solid var(--process);
+        }
     </style>
 </head>
 <body>
@@ -669,8 +680,7 @@
         <div class="squad-modal-content">
             <span class="close-modal" onclick="closeSquadModal()">×</span>
             <h3>Importar plantilla</h3><br />
-            <textarea id="squadInput" placeholder="Introduce tu plantilla aquí incluyendo la cabecera... (Name         Age Nat St Tk Ps Sh Ag KAb TAb PAb SAb Gam Sub  Min Mom Sav Con Ktk Kps Sht Gls Ass  DP Inj Sus Fit
-----------------------------------------------------------------------------------------------------------------)"></textarea>
+            <textarea id="squadInput" placeholder="Introduce tu plantilla aquí..."></textarea>
             <div class="button-group">
                 <button onclick="pasteFromClipboard()">
                     <i class="fas fa-clipboard"></i> Pegar 
@@ -682,7 +692,8 @@
                 <button onclick="resetAll()">
                     <i class="fas fa-sync"></i> Limpiar 
                 </button>
-                <button class="process" onclick="loadSquadFromModal()">
+                <!-- Botón Procesar con glow -->
+                <button class="process btn-glow" onclick="loadSquadFromModal()">
                     Procesar
                 </button>
             </div>
@@ -1068,11 +1079,9 @@
     <script>
         // ------------------------------------------------------------------
         // CÓDIGO MODIFICADO según solicitud:
-        // - Eliminado el proxy y la carga automática desde Dropbox.
-        // - Los escudos de Europa/América abren la URL en nueva ventana.
-        // - El texto de selección cambió y el contenedor inicial se oculta al cargar plantilla.
-        // - Mundial 2026 asigna abreviatura con la nacionalidad del primer jugador.
-        // - "Importar otra plantilla" -> "Importar plantilla".
+        // - Parseo de plantillas sin cabecera.
+        // - Glow en botón "Procesar".
+        // - Orden de jugadores en selects de condicionales.
         // ------------------------------------------------------------------
         let players = [];
         let selectedPlayers = [];
@@ -1648,15 +1657,28 @@
             messageDiv.className = type;
         }
         
+        // ------------------------------------------------------------------
+        // parseSquad modificado para aceptar plantillas sin cabecera
+        // ------------------------------------------------------------------
         function parseSquad(text) {
             const lines = text.split('\n').filter(line => line.trim() !== '');
             const playersList = [];
             let foundHeader = false;
+            let firstDataLine = -1;
+            // Detectar si hay cabecera: buscar línea que contenga "Name" y "Age" y "Nat"
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
-                if (line.includes('Name') && line.includes('Age') && line.includes('Nat')) { foundHeader = true; continue; }
-                if (line.includes('---')) continue;
-                if (foundHeader && line.trim() !== '') {
+                if (line.includes('Name') && line.includes('Age') && line.includes('Nat')) {
+                    foundHeader = true;
+                    firstDataLine = i + 1;
+                    break;
+                }
+            }
+            // Si no hay cabecera, asumimos que todas las líneas no vacías son datos
+            if (!foundHeader) {
+                // Eliminar líneas que sean solo separadores (----, ====, etc.)
+                const dataLines = lines.filter(line => !/^[\s\-=]+$/.test(line));
+                for (const line of dataLines) {
                     const parts = line.trim().split(/\s+/);
                     if (parts.length >= 27) {
                         const player = {
@@ -1676,6 +1698,32 @@
                         else { player.position = 'FW'; player.positionName = 'Delanteros'; }
                         playersList.push(player);
                     }
+                }
+                return playersList;
+            }
+            // Con cabecera: procesar desde firstDataLine
+            for (let i = firstDataLine; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.includes('---')) continue;
+                if (line.trim() === '') continue;
+                const parts = line.trim().split(/\s+/);
+                if (parts.length >= 27) {
+                    const player = {
+                        name: parts[0], age: parts[1], nat: parts[2],
+                        st: parseInt(parts[3]), tk: parseInt(parts[4]), ps: parseInt(parts[5]), sh: parseInt(parts[6]),
+                        ag: parts[7], kab: parts[8], tab: parts[9], pab: parts[10], sab: parts[11],
+                        gam: parts[12], sub: parts[13], min: parts[14], mom: parts[15], sav: parts[16], con: parts[17],
+                        ktk: parts[18], kps: parts[19], sht: parts[20], gls: parts[21], ass: parts[22], dp: parts[23],
+                        inj: parseInt(parts[24]), sus: parseInt(parts[25]), fit: parseInt(parts[26]),
+                        customPosition: null
+                    };
+                    player.isAvailable = player.inj === 0 && player.sus === 0;
+                    const maxAttr = Math.max(player.st, player.tk, player.ps, player.sh);
+                    if (maxAttr === player.st) { player.position = 'GK'; player.positionName = 'Porteros'; }
+                    else if (maxAttr === player.tk) { player.position = 'DF'; player.positionName = 'Defensas'; }
+                    else if (maxAttr === player.ps) { player.position = 'MF'; player.positionName = 'Centrocampistas'; }
+                    else { player.position = 'FW'; player.positionName = 'Delanteros'; }
+                    playersList.push(player);
                 }
             }
             return playersList;
@@ -2044,6 +2092,44 @@
         function showTutorial() { document.getElementById('tutorialModal').style.display = 'flex'; }
         function hideTutorial() { document.getElementById('tutorialModal').style.display = 'none'; }
 
+        // ------------------------------------------------------------------
+        // FUNCIÓN AUXILIAR para obtener jugadores ordenados según la alineación
+        // ------------------------------------------------------------------
+        function getOrderedPlayersWithNumbers() {
+            const positionOrder = {'GK':0,'DF':1,'DM':1.5,'MF':2,'AM':2.5,'FW':3};
+            // Titulares (primeros 11)
+            const starters = selectedPlayers.slice(0,11);
+            // Suplentes (siguientes 5)
+            const subs = selectedPlayers.slice(11,16);
+            // Ordenar titulares por posición
+            const sortedStarters = [...starters].sort((a,b)=>positionOrder[a.position]-positionOrder[b.position]);
+            // Ordenar suplentes por posición
+            const sortedSubs = [...subs].sort((a,b)=>positionOrder[a.position]-positionOrder[b.position]);
+            // Construir array con número asignado (1-11 titulares, 12-16 suplentes)
+            const result = [];
+            sortedStarters.forEach((item, idx) => {
+                if (item.player) {
+                    result.push({
+                        number: idx + 1,
+                        player: item.player,
+                        position: item.position,
+                        type: 'titular'
+                    });
+                }
+            });
+            sortedSubs.forEach((item, idx) => {
+                if (item.player) {
+                    result.push({
+                        number: 12 + idx,
+                        player: item.player,
+                        position: item.position,
+                        type: 'suplente'
+                    });
+                }
+            });
+            return result;
+        }
+
         function openConditionalsPopup() { document.getElementById('conditionals-popup').style.display = 'block'; document.getElementById('conditionals-overlay').style.display = 'block'; setupConditionalsPopup(); updateCurrentConditionals(); }
         function closeConditionalsPopup() { const activeTab = document.querySelector('#conditionals-popup .tab.active').dataset.tab; const content = document.getElementById(activeTab + '-tab'); const selects = content.querySelectorAll('select'); let hasSelections = false; selects.forEach(select => { if (select.value !== '') hasSelections = true; }); if (hasSelections && !confirm('¿Estás seguro de cerrar sin añadir el condicional?')) return; document.getElementById('conditionals-popup').style.display = 'none'; document.getElementById('conditionals-overlay').style.display = 'none'; }
 
@@ -2051,18 +2137,130 @@
             const tabs = document.querySelectorAll('#conditionals-popup .tab');
             const contents = document.querySelectorAll('#conditionals-popup .tab-content');
             tabs.forEach(tab => { tab.onclick = () => { tabs.forEach(t=>t.classList.remove('active')); contents.forEach(c=>c.classList.remove('active')); tab.classList.add('active'); document.getElementById(tab.dataset.tab+'-tab').classList.add('active'); }; });
-            const starters = selectedPlayers.slice(0,11); const subs = selectedPlayers.slice(11,16);
-            const allPlayers = [...starters, ...subs].filter(item=>item.player).map(item=>item.player);
+            
+            // Obtener jugadores ordenados según la alineación
+            const orderedPlayers = getOrderedPlayersWithNumbers();
+            // Separar titulares y suplentes para los selects que los distinguen
+            const starters = orderedPlayers.filter(p => p.type === 'titular');
+            const subs = orderedPlayers.filter(p => p.type === 'suplente');
+            
+            // --- Select de táctica ---
             const tacticSelect = document.getElementById('tactic-new'); tacticSelect.innerHTML = '<option value="">Seleccionar</option>'; const tacticDescriptions = {'A':'A (Atacante)','C':'C (Contragolpe)','D':'D (Defensiva)','E':'E (Europea)','L':'L (Balones largos)','N':'N (Equilibrada)','P':'P (Pases cortos)','T':'T (Temeraria)'}; Object.keys(tacticDescriptions).forEach(t=>{ tacticSelect.innerHTML += `<option value="${t}">${tacticDescriptions[t]}</option>`; });
+            
+            // --- Select de agresividad ---
             const aggressionSelect = document.getElementById('aggression-new'); aggressionSelect.innerHTML = '<option value="">Seleccionar</option>'; for(let i=0;i<=20;i++) aggressionSelect.innerHTML += `<option value="${i}">${i}</option>`;
-            const playerSelects = ['reposition-player']; playerSelects.forEach(id=>{ const select = document.getElementById(id); select.innerHTML = '<option value="">Seleccionar</option>'; if(starters.length>0){ const groupOption = document.createElement('option'); groupOption.disabled=true; groupOption.textContent='── Titulares ──'; groupOption.className='player-group-option'; select.appendChild(groupOption); starters.forEach((item,idx)=>{ if(item.player){ const num=idx+1; const fitInfo=` (${item.player.fit}%)`; select.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`; } }); } if(subs.length>0){ const groupOption = document.createElement('option'); groupOption.disabled=true; groupOption.textContent='── Suplentes ──'; groupOption.className='player-group-option'; select.appendChild(groupOption); subs.forEach((item,idx)=>{ if(item.player){ const num=11+idx+1; const fitInfo=` (${item.player.fit}%)`; select.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`; } }); } });
-            const subOffSelect = document.getElementById('sub-off'); subOffSelect.innerHTML = '<option value="">Seleccionar</option>'; if(starters.length>0){ const groupOption = document.createElement('option'); groupOption.disabled=true; groupOption.textContent='── Titulares ──'; groupOption.className='player-group-option'; subOffSelect.appendChild(groupOption); starters.forEach((item,idx)=>{ if(item.player){ const num=idx+1; const fitInfo=` (${item.player.fit}%)`; subOffSelect.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`; } }); } if(subs.length>0){ const groupOption = document.createElement('option'); groupOption.disabled=true; groupOption.textContent='── Suplentes ──'; groupOption.className='player-group-option'; subOffSelect.appendChild(groupOption); subs.forEach((item,idx)=>{ if(item.player){ const num=11+idx+1; const fitInfo=` (${item.player.fit}%)`; subOffSelect.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`; } }); }
-            const subOnSelect = document.getElementById('sub-on'); subOnSelect.innerHTML = '<option value="">Seleccionar</option>'; if(subs.length>0){ subs.forEach((item,idx)=>{ if(item.player){ const num=11+idx+1; const fitInfo=` (${item.player.fit}%)`; subOnSelect.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`; } }); }
-            document.getElementById('sub-off').addEventListener('change',function(){ const offValue=this.value; const onSelect=document.getElementById('sub-on'); for(let i=0;i<onSelect.options.length;i++) onSelect.options[i].style.display=''; if(offValue){ for(let i=0;i<onSelect.options.length;i++) if(onSelect.options[i].value===offValue) onSelect.options[i].style.display='none'; } });
+            
+            // --- Select de reposicionar jugador ---
+            const repositionSelect = document.getElementById('reposition-player'); repositionSelect.innerHTML = '<option value="">Seleccionar</option>';
+            if (starters.length > 0) {
+                const groupOption = document.createElement('option'); groupOption.disabled=true; groupOption.textContent='── Titulares ──'; groupOption.className='player-group-option'; repositionSelect.appendChild(groupOption);
+                starters.forEach(item => {
+                    const num = item.number;
+                    const fitInfo = ` (${item.player.fit}%)`;
+                    repositionSelect.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`;
+                });
+            }
+            if (subs.length > 0) {
+                const groupOption = document.createElement('option'); groupOption.disabled=true; groupOption.textContent='── Suplentes ──'; groupOption.className='player-group-option'; repositionSelect.appendChild(groupOption);
+                subs.forEach(item => {
+                    const num = item.number;
+                    const fitInfo = ` (${item.player.fit}%)`;
+                    repositionSelect.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`;
+                });
+            }
+            
+            // --- Select "Se retira" (solo titulares) ---
+            const subOffSelect = document.getElementById('sub-off'); subOffSelect.innerHTML = '<option value="">Seleccionar</option>';
+            if (starters.length > 0) {
+                const groupOption = document.createElement('option'); groupOption.disabled=true; groupOption.textContent='── Titulares ──'; groupOption.className='player-group-option'; subOffSelect.appendChild(groupOption);
+                starters.forEach(item => {
+                    const num = item.number;
+                    const fitInfo = ` (${item.player.fit}%)`;
+                    subOffSelect.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`;
+                });
+            }
+            
+            // --- Select "Entra" (solo suplentes) ---
+            const subOnSelect = document.getElementById('sub-on'); subOnSelect.innerHTML = '<option value="">Seleccionar</option>';
+            if (subs.length > 0) {
+                subs.forEach(item => {
+                    const num = item.number;
+                    const fitInfo = ` (${item.player.fit}%)`;
+                    subOnSelect.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})${fitInfo}</option>`;
+                });
+            }
+            
+            // --- Selects de condición (yellow, red, injured) - se usan en varias pestañas ---
             const conditionSelects = ['tactic-if-yellow','tactic-if-red','tactic-if-injured','sub-if-yellow','sub-if-red','sub-if-injured','reposition-if-yellow','reposition-if-red','reposition-if-injured','aggression-if-yellow','aggression-if-red','aggression-if-injured'];
-            conditionSelects.forEach(id=>{ const select = document.getElementById(id); select.innerHTML = '<option value="">Seleccionar</option>'; if(starters.length>0){ const groupOption = document.createElement('option'); groupOption.disabled=true; groupOption.textContent='── Titulares ──'; groupOption.className='player-group-option'; select.appendChild(groupOption); starters.forEach((item,idx)=>{ if(item.player){ const num=idx+1; select.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})</option>`; } }); } if(subs.length>0){ const groupOption = document.createElement('option'); groupOption.disabled=true; groupOption.textContent='── Suplentes ──'; groupOption.className='player-group-option'; select.appendChild(groupOption); subs.forEach((item,idx)=>{ if(item.player){ const num=11+idx+1; select.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})</option>`; } }); } ['GK','DF','DM','MF','AM','FW'].forEach(pos=>{ select.innerHTML += `<option value="${pos}">${pos}</option>`; }); });
-            ['tactic','reposition','aggression','sub'].forEach(prefix=>{ const minSelect1=document.getElementById(prefix+'-min-value1'); const minSelect2=document.getElementById(prefix+'-min-value2'); const minSelect3=document.getElementById(prefix+'-min-value3'); if(minSelect1&&minSelect2&&minSelect3){ minSelect1.innerHTML='<option value="">1-30</option>'; for(let i=1;i<=30;i++) minSelect1.innerHTML+=`<option value="${i}">${i}</option>`; minSelect2.innerHTML='<option value="">31-60</option>'; for(let i=31;i<=60;i++) minSelect2.innerHTML+=`<option value="${i}">${i}</option>`; minSelect3.innerHTML='<option value="">61-120</option>'; for(let i=61;i<=120;i++) minSelect3.innerHTML+=`<option value="${i}">${i}</option>`; minSelect1.addEventListener('change',()=>{ if(minSelect1.value!==''){ minSelect2.value=''; minSelect3.value=''; } }); minSelect2.addEventListener('change',()=>{ if(minSelect2.value!==''){ minSelect1.value=''; minSelect3.value=''; } }); minSelect3.addEventListener('change',()=>{ if(minSelect3.value!==''){ minSelect1.value=''; minSelect2.value=''; } }); } const shotsSelect=document.getElementById(prefix+'-shots-value'); if(shotsSelect){ shotsSelect.innerHTML='<option value="">Seleccionar</option>'; for(let i=0;i<=30;i++) shotsSelect.innerHTML+=`<option value="${i}">${i}</option>`; } });
-            const scoreSelects = document.querySelectorAll('[id$="-score-value"]'); scoreSelects.forEach(select=>{ select.innerHTML='<option value="">Seleccionar</option>'; for(let i=-3;i<=3;i++) select.innerHTML+=`<option value="${i}">${i}</option>`; });
+            conditionSelects.forEach(id => {
+                const select = document.getElementById(id);
+                select.innerHTML = '<option value="">Seleccionar</option>';
+                if (starters.length > 0) {
+                    const groupOption = document.createElement('option'); groupOption.disabled=true; groupOption.textContent='── Titulares ──'; groupOption.className='player-group-option'; select.appendChild(groupOption);
+                    starters.forEach(item => {
+                        const num = item.number;
+                        select.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})</option>`;
+                    });
+                }
+                if (subs.length > 0) {
+                    const groupOption = document.createElement('option'); groupOption.disabled=true; groupOption.textContent='── Suplentes ──'; groupOption.className='player-group-option'; select.appendChild(groupOption);
+                    subs.forEach(item => {
+                        const num = item.number;
+                        select.innerHTML += `<option value="${num}">${num} ${formatPlayerName(item.player.name)} (${item.position})</option>`;
+                    });
+                }
+                // Añadir opciones por posición (GK, DF, ...)
+                ['GK','DF','DM','MF','AM','FW'].forEach(pos => {
+                    select.innerHTML += `<option value="${pos}">${pos}</option>`;
+                });
+            });
+            
+            // --- Selects de minutos y disparos (genéricos) ---
+            ['tactic','reposition','aggression','sub'].forEach(prefix => {
+                const minSelect1 = document.getElementById(prefix+'-min-value1');
+                const minSelect2 = document.getElementById(prefix+'-min-value2');
+                const minSelect3 = document.getElementById(prefix+'-min-value3');
+                if (minSelect1 && minSelect2 && minSelect3) {
+                    minSelect1.innerHTML = '<option value="">1-30</option>';
+                    for (let i = 1; i <= 30; i++) minSelect1.innerHTML += `<option value="${i}">${i}</option>`;
+                    minSelect2.innerHTML = '<option value="">31-60</option>';
+                    for (let i = 31; i <= 60; i++) minSelect2.innerHTML += `<option value="${i}">${i}</option>`;
+                    minSelect3.innerHTML = '<option value="">61-120</option>';
+                    for (let i = 61; i <= 120; i++) minSelect3.innerHTML += `<option value="${i}">${i}</option>`;
+                    // Eventos para que solo uno tenga valor
+                    minSelect1.addEventListener('change', () => { if (minSelect1.value !== '') { minSelect2.value = ''; minSelect3.value = ''; } });
+                    minSelect2.addEventListener('change', () => { if (minSelect2.value !== '') { minSelect1.value = ''; minSelect3.value = ''; } });
+                    minSelect3.addEventListener('change', () => { if (minSelect3.value !== '') { minSelect1.value = ''; minSelect2.value = ''; } });
+                }
+                const shotsSelect = document.getElementById(prefix+'-shots-value');
+                if (shotsSelect) {
+                    shotsSelect.innerHTML = '<option value="">Seleccionar</option>';
+                    for (let i = 0; i <= 30; i++) shotsSelect.innerHTML += `<option value="${i}">${i}</option>`;
+                }
+            });
+            
+            // --- Selects de resultado (score) ---
+            const scoreSelects = document.querySelectorAll('[id$="-score-value"]');
+            scoreSelects.forEach(select => {
+                select.innerHTML = '<option value="">Seleccionar</option>';
+                for (let i = -3; i <= 3; i++) select.innerHTML += `<option value="${i}">${i}</option>`;
+            });
+            
+            // --- Manejar cambio en "Se retira" para ocultar ese jugador en "Entra" ---
+            document.getElementById('sub-off').addEventListener('change', function() {
+                const offValue = this.value;
+                const onSelect = document.getElementById('sub-on');
+                for (let i = 0; i < onSelect.options.length; i++) {
+                    onSelect.options[i].style.display = '';
+                }
+                if (offValue) {
+                    for (let i = 0; i < onSelect.options.length; i++) {
+                        if (onSelect.options[i].value === offValue) {
+                            onSelect.options[i].style.display = 'none';
+                        }
+                    }
+                }
+            });
         }
 
         function addConditional(tab) {

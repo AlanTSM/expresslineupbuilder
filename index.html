@@ -1898,7 +1898,7 @@
                 const ratio = goals > 0 ? formatNumber(Math.round(minutes / goals)) : 'N/A';
                 let extraStat = '';
                 if (player.position === 'DF') extraStat = `<p><b>Entradas:</b> ${formatNumber(player.ktk || 0)}</p>`;
-                else if (player.position === 'MF') extraStat = `<p><b>Pases:</b> ${formatNumber(player.kps || 0)}</p>`;
+                else if (player.position === 'MF') extraStat = `<p><b>Pases clave:</b> ${formatNumber(player.kps || 0)}</p>`;
                 else if (player.position === 'FW') extraStat = `<p><b>Tiros:</b> ${formatNumber(player.sht || 0)}</p>`;
                 statsHTML = `
                     <table class="stats-table">
@@ -2370,7 +2370,7 @@
                 {text:'Sav', title:'Paradas'},
                 {text:'Con', title:'Goles encajados'},
                 {text:'KTk', title:'Entradas'},
-                {text:'KPs', title:'Pases'},
+                {text:'KPs', title:'Pases clave'},
                 {text:'Sht', title:'Tiros'},
                 {text:'Gls', title:'Goles'},
                 {text:'Ass', title:'Asistencias'},
